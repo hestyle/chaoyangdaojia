@@ -16,6 +16,10 @@
 @interface HSMyAccountViewController ()
 
 @property (nonatomic, strong) UIScrollView *contentScrollView;
+@property (nonatomic, strong) UIView *refreshView;
+@property (nonatomic, strong) UIImageView *refreshImageView;
+@property (nonatomic, strong) UILabel *refreshLabel;
+@property (nonatomic, strong) UILabel *lastRefreshTimeLabel;
 
 @property (nonatomic, strong) UIView *accountInfoView;
 @property (nonatomic, strong) UIImageView *avatarImageView;
@@ -81,9 +85,53 @@
 
 - (void)initView{
     self.contentScrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [self.contentScrollView setDelegate:self];
     [self.contentScrollView setBackgroundColor:[UIColor grayColor]];
     [self.contentScrollView setContentSize:CGSizeMake(0, [UIScreen mainScreen].bounds.size.height)];
     [self.view addSubview:self.contentScrollView];
+    
+    self.refreshView = [UIView new];
+    [self.refreshView setTag:0];
+    [self.contentScrollView addSubview:self.refreshView];
+    [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentScrollView.mas_top).with.offset(-60);
+        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.height.mas_equalTo(60);
+    }];
+    
+    self.refreshLabel = [UILabel new];
+    [self.refreshLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.refreshLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
+    [self.refreshView addSubview:self.refreshLabel];
+    [self.refreshLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.refreshView.mas_top).with.offset(7.5);
+        make.centerX.mas_equalTo(self.refreshView.mas_centerX).with.offset(10);
+        make.size.mas_equalTo(CGSizeMake(100, 20));
+    }];
+    
+    self.lastRefreshTimeLabel = [UILabel new];
+    NSDate *date = [NSDate date];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    // 获取当前时间日期展示字符串 如：2019-05-23-13:58:59
+    [self.lastRefreshTimeLabel setText:[NSString stringWithFormat:@"最后更新: %@", [formatter stringFromDate:date]]];
+    [self.lastRefreshTimeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.lastRefreshTimeLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
+    [self.refreshView addSubview:self.lastRefreshTimeLabel];
+    [self.lastRefreshTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.refreshLabel.mas_bottom).with.offset(2.5);
+        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX).with.offset(10);
+        make.size.mas_equalTo(CGSizeMake(180, 20));
+    }];
+
+    self.refreshImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"refresh_arrow"]];
+    [self.refreshView addSubview:self.refreshImageView];
+    [self.refreshImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.lastRefreshTimeLabel.mas_left).with.offset(-20);
+        make.centerY.mas_equalTo(self.refreshView.mas_centerY);
+        make.size.mas_equalTo(CGSizeMake(30, 50));
+    }];
     
     // 初始化navigationBar
     [self initNavigationBar];
@@ -145,6 +193,40 @@
     [self.tabBarController.navigationItem setRightBarButtonItem:nil];
 }
 
+#pragma mark -  UIScrollView Delegate
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (scrollView.contentOffset.y <= -60) {
+        if (self.refreshView.tag == 0) {
+            self.refreshLabel.text = @"松开刷新";
+        }
+        self.refreshView.tag = 1;
+    } else {
+        //防止用户在下拉到contentOffset.y <= -50后不松手，然后又往回滑动，需要将值设为默认状态
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    if (self.refreshView.tag == 1) {
+        [UIView animateWithDuration:.3 animations:^{
+            self.refreshLabel.text = @"加载中";
+            scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+        }];
+        //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:.3 animations:^{
+                self.refreshView.tag = 0;
+                self.refreshLabel.text = @"下拉刷新";
+                scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            }];
+        });
+        // 重新访问账号信息
+        [self getUserInfo];
+    }
+}
+
+#pragma mark -  private
 - (void)getUserInfo{
     // 访问getinfo接口
     HSNetworkManager *manager = [HSNetworkManager manager];
@@ -214,7 +296,7 @@
     [self.accountInfoView setBackgroundColor:[UIColor whiteColor]];
     [self.contentScrollView addSubview:self.accountInfoView];
     [self.accountInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentScrollView.mas_top);
+        make.top.mas_equalTo(self.refreshView.mas_bottom);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
         make.height.mas_equalTo(80);

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HSMyAccountViewController : UIViewController
+@interface HSMyAccountViewController : UIViewController <UIScrollViewDelegate>
 
 @end
 
