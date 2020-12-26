@@ -1,3 +1,5 @@
-platform:ios, '8.0'
+platform:ios, '9.0'
 target 'chaoyangdaojia'
 pod 'Masonry', '~> 1.1.0'
+pod 'AFNetworking', '~> 4.0'
+pod 'Toast', '~> 4.0.0'
