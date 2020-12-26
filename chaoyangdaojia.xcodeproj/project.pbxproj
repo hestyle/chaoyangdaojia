@@ -19,6 +19,7 @@
 		D07F4AF02594C08900CA0670 /* HSFirstPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEF2594C08900CA0670 /* HSFirstPageViewController.m */; };
 		D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843822595D4B500197F8C /* HSNetworkManager.m */; };
 		D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843852595DF6100197F8C /* HSNetworkUrl.m */; };
+		D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */; };
 		D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */; };
 		D590E466C16D7216F3FFCE40 /* libPods-chaoyangdaojia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */; };
 /* End PBXBuildFile section */
@@ -50,6 +51,7 @@
 		D0C843822595D4B500197F8C /* HSNetworkManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSNetworkManager.m; sourceTree = "<group>"; };
 		D0C843842595DF6100197F8C /* HSNetworkUrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetworkUrl.h; sourceTree = "<group>"; };
 		D0C843852595DF6100197F8C /* HSNetworkUrl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSNetworkUrl.m; sourceTree = "<group>"; };
+		D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MyAccount.xcassets; sourceTree = "<group>"; };
 		D0DBB59C2595876C00B31A33 /* HSLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSLoginViewController.h; sourceTree = "<group>"; };
 		D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -165,6 +167,7 @@
 				D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */,
 				D0DBB59C2595876C00B31A33 /* HSLoginViewController.h */,
 				D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */,
+				D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */,
 			);
 			path = MyAccount;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 			files = (
 				D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */,
 				D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */,
+				D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
