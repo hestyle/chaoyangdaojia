@@ -7,6 +7,7 @@
 //
 
 #import "HSMyAccountViewController.h"
+#import "HSLoginViewController.h"
 #import <Masonry/Masonry.h>
 
 @interface HSMyAccountViewController ()
@@ -18,6 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
+    [self.navigationController setToolbarHidden:NO];
     UILabel *textLabel = [[UILabel alloc] init];
     [textLabel setText:@"我的"];
     
@@ -27,6 +29,19 @@
         make.height.mas_equalTo(20);
         make.center.mas_equalTo(self.view);
     }];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userInfoDict = [userDefault objectForKey:@"USER_INFO"];
+    if (userInfoDict == nil) {
+        // 跳转到登录
+        HSLoginViewController *loginViewController = [HSLoginViewController new];
+        [self.navigationController pushViewController:loginViewController animated:YES];
+    } else {
+        // 访问getinfo接口
+        
+    }
 }
 
 /*

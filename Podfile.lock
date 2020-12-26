@@ -1,16 +1,38 @@
 PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
   - Masonry (1.1.0)
+  - Toast (4.0.0)
 
 DEPENDENCIES:
+  - AFNetworking (~> 4.0)
   - Masonry (~> 1.1.0)
+  - Toast (~> 4.0.0)
 
 SPEC REPOS:
   trunk:
+    - AFNetworking
     - Masonry
+    - Toast
 
 SPEC CHECKSUMS:
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
-PODFILE CHECKSUM: f70128a625b592201b0f7efc4b7b5c3c74c3435f
+PODFILE CHECKSUM: 0b51b0f9de6952acebb86b4a27783e155591b816
 
 COCOAPODS: 1.10.0
