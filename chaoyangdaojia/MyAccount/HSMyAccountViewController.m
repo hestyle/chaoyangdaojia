@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    [self.navigationController setToolbarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO];
     UILabel *textLabel = [[UILabel alloc] init];
     [textLabel setText:@"我的"];
     

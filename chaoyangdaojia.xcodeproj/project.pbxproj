@@ -8,12 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288CE259338F100C8A2D1 /* AppDelegate.m */; };
-		D05288D2259338F100C8A2D1 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288D1259338F100C8A2D1 /* SceneDelegate.m */; };
-		D05288D5259338F100C8A2D1 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288D4259338F100C8A2D1 /* ViewController.m */; };
-		D05288D8259338F100C8A2D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05288D6259338F100C8A2D1 /* Main.storyboard */; };
 		D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05288D9259338F600C8A2D1 /* Assets.xcassets */; };
 		D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05288DB259338F600C8A2D1 /* LaunchScreen.storyboard */; };
 		D05288E0259338F600C8A2D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288DF259338F600C8A2D1 /* main.m */; };
+		D07F4ADB2594BA3600CA0670 /* HSMainTableBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4ADA2594BA3600CA0670 /* HSMainTableBarController.m */; };
+		D07F4AE32594C02200CA0670 /* HSMyAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */; };
+		D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE52594C04E00CA0670 /* HSCartViewController.m */; };
+		D07F4AE92594C05E00CA0670 /* HSShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE82594C05E00CA0670 /* HSShopViewController.m */; };
+		D07F4AEC2594C06D00CA0670 /* HSSortViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */; };
+		D07F4AF02594C08900CA0670 /* HSFirstPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEF2594C08900CA0670 /* HSFirstPageViewController.m */; };
+		D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843822595D4B500197F8C /* HSNetworkManager.m */; };
+		D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843852595DF6100197F8C /* HSNetworkUrl.m */; };
+		D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */; };
 		D590E466C16D7216F3FFCE40 /* libPods-chaoyangdaojia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */; };
 /* End PBXBuildFile section */
 
@@ -24,15 +30,28 @@
 		D05288CA259338F100C8A2D1 /* chaoyangdaojia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chaoyangdaojia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05288CD259338F100C8A2D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D05288CE259338F100C8A2D1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D05288D0259338F100C8A2D1 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		D05288D1259338F100C8A2D1 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
-		D05288D3259338F100C8A2D1 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		D05288D4259338F100C8A2D1 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		D05288D7259338F100C8A2D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D05288D9259338F600C8A2D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D05288DC259338F600C8A2D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D05288DE259338F600C8A2D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D05288DF259338F600C8A2D1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D07F4AD92594BA3600CA0670 /* HSMainTableBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMainTableBarController.h; sourceTree = "<group>"; };
+		D07F4ADA2594BA3600CA0670 /* HSMainTableBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMainTableBarController.m; sourceTree = "<group>"; };
+		D07F4AE12594C02200CA0670 /* HSMyAccountViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMyAccountViewController.h; sourceTree = "<group>"; };
+		D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMyAccountViewController.m; sourceTree = "<group>"; };
+		D07F4AE42594C04E00CA0670 /* HSCartViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCartViewController.h; sourceTree = "<group>"; };
+		D07F4AE52594C04E00CA0670 /* HSCartViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCartViewController.m; sourceTree = "<group>"; };
+		D07F4AE72594C05E00CA0670 /* HSShopViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSShopViewController.h; sourceTree = "<group>"; };
+		D07F4AE82594C05E00CA0670 /* HSShopViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSShopViewController.m; sourceTree = "<group>"; };
+		D07F4AEA2594C06D00CA0670 /* HSSortViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSSortViewController.h; sourceTree = "<group>"; };
+		D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSSortViewController.m; sourceTree = "<group>"; };
+		D07F4AEE2594C08900CA0670 /* HSFirstPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFirstPageViewController.h; sourceTree = "<group>"; };
+		D07F4AEF2594C08900CA0670 /* HSFirstPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFirstPageViewController.m; sourceTree = "<group>"; };
+		D0C843812595D4B500197F8C /* HSNetworkManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetworkManager.h; sourceTree = "<group>"; };
+		D0C843822595D4B500197F8C /* HSNetworkManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSNetworkManager.m; sourceTree = "<group>"; };
+		D0C843842595DF6100197F8C /* HSNetworkUrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetworkUrl.h; sourceTree = "<group>"; };
+		D0C843852595DF6100197F8C /* HSNetworkUrl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSNetworkUrl.m; sourceTree = "<group>"; };
+		D0DBB59C2595876C00B31A33 /* HSLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSLoginViewController.h; sourceTree = "<group>"; };
+		D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +80,6 @@
 				0C09EC4C808211ABFC454204 /* Pods-chaoyangdaojia.debug.xcconfig */,
 				3EBD767773293FBA077A2885 /* Pods-chaoyangdaojia.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -86,19 +104,80 @@
 		D05288CC259338F100C8A2D1 /* chaoyangdaojia */ = {
 			isa = PBXGroup;
 			children = (
+				D0DBB59F2595CF4000B31A33 /* Common */,
+				D07F4AE02594BCE000CA0670 /* MyAccount */,
+				D07F4ADF2594BCC900CA0670 /* Cart */,
+				D07F4ADE2594BC9400CA0670 /* Shop */,
+				D07F4ADD2594BC3700CA0670 /* Sort */,
+				D07F4ADC2594BBCF00CA0670 /* FirstPage */,
 				D05288CD259338F100C8A2D1 /* AppDelegate.h */,
 				D05288CE259338F100C8A2D1 /* AppDelegate.m */,
-				D05288D0259338F100C8A2D1 /* SceneDelegate.h */,
-				D05288D1259338F100C8A2D1 /* SceneDelegate.m */,
-				D05288D3259338F100C8A2D1 /* ViewController.h */,
-				D05288D4259338F100C8A2D1 /* ViewController.m */,
-				D05288D6259338F100C8A2D1 /* Main.storyboard */,
 				D05288D9259338F600C8A2D1 /* Assets.xcassets */,
 				D05288DB259338F600C8A2D1 /* LaunchScreen.storyboard */,
 				D05288DE259338F600C8A2D1 /* Info.plist */,
 				D05288DF259338F600C8A2D1 /* main.m */,
+				D07F4AD92594BA3600CA0670 /* HSMainTableBarController.h */,
+				D07F4ADA2594BA3600CA0670 /* HSMainTableBarController.m */,
 			);
 			path = chaoyangdaojia;
+			sourceTree = "<group>";
+		};
+		D07F4ADC2594BBCF00CA0670 /* FirstPage */ = {
+			isa = PBXGroup;
+			children = (
+				D07F4AEE2594C08900CA0670 /* HSFirstPageViewController.h */,
+				D07F4AEF2594C08900CA0670 /* HSFirstPageViewController.m */,
+			);
+			path = FirstPage;
+			sourceTree = "<group>";
+		};
+		D07F4ADD2594BC3700CA0670 /* Sort */ = {
+			isa = PBXGroup;
+			children = (
+				D07F4AEA2594C06D00CA0670 /* HSSortViewController.h */,
+				D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */,
+			);
+			path = Sort;
+			sourceTree = "<group>";
+		};
+		D07F4ADE2594BC9400CA0670 /* Shop */ = {
+			isa = PBXGroup;
+			children = (
+				D07F4AE72594C05E00CA0670 /* HSShopViewController.h */,
+				D07F4AE82594C05E00CA0670 /* HSShopViewController.m */,
+			);
+			path = Shop;
+			sourceTree = "<group>";
+		};
+		D07F4ADF2594BCC900CA0670 /* Cart */ = {
+			isa = PBXGroup;
+			children = (
+				D07F4AE42594C04E00CA0670 /* HSCartViewController.h */,
+				D07F4AE52594C04E00CA0670 /* HSCartViewController.m */,
+			);
+			path = Cart;
+			sourceTree = "<group>";
+		};
+		D07F4AE02594BCE000CA0670 /* MyAccount */ = {
+			isa = PBXGroup;
+			children = (
+				D07F4AE12594C02200CA0670 /* HSMyAccountViewController.h */,
+				D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */,
+				D0DBB59C2595876C00B31A33 /* HSLoginViewController.h */,
+				D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */,
+			);
+			path = MyAccount;
+			sourceTree = "<group>";
+		};
+		D0DBB59F2595CF4000B31A33 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				D0C843812595D4B500197F8C /* HSNetworkManager.h */,
+				D0C843822595D4B500197F8C /* HSNetworkManager.m */,
+				D0C843842595DF6100197F8C /* HSNetworkUrl.h */,
+				D0C843852595DF6100197F8C /* HSNetworkUrl.m */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,7 +240,6 @@
 			files = (
 				D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */,
 				D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */,
-				D05288D8259338F100C8A2D1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,24 +275,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D05288D5259338F100C8A2D1 /* ViewController.m in Sources */,
+				D07F4ADB2594BA3600CA0670 /* HSMainTableBarController.m in Sources */,
+				D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */,
 				D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */,
+				D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */,
+				D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */,
+				D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */,
+				D07F4AEC2594C06D00CA0670 /* HSSortViewController.m in Sources */,
+				D07F4AE92594C05E00CA0670 /* HSShopViewController.m in Sources */,
+				D07F4AF02594C08900CA0670 /* HSFirstPageViewController.m in Sources */,
 				D05288E0259338F600C8A2D1 /* main.m in Sources */,
-				D05288D2259338F100C8A2D1 /* SceneDelegate.m in Sources */,
+				D07F4AE32594C02200CA0670 /* HSMyAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		D05288D6259338F100C8A2D1 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D05288D7259338F100C8A2D1 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		D05288DB259338F600C8A2D1 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
