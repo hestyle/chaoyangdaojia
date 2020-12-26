@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    [self.navigationController setToolbarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO];
     [self setTitle:@"登录"];
     
     self.logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
