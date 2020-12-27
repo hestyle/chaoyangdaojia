@@ -75,13 +75,13 @@
     // 绘制view
     [self initView];
     
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSDictionary *headers = [userDefault dictionaryForKey:@"NETWORK_HEADERS"];
-    // 检查userDefault中是否存在X-AppToken，存在则认为已登录
-    if (headers != nil || [[headers allKeys] containsObject:@"X-AppToken"]) {
-        // 请求账号信息
-        [self getUserInfo];
-    }
+//    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+//    NSDictionary *headers = [userDefault dictionaryForKey:@"NETWORK_HEADERS"];
+//    // 检查userDefault中是否存在X-AppToken，存在则认为已登录
+//    if (headers != nil || [[headers allKeys] containsObject:@"X-AppToken"]) {
+//        // 请求账号信息
+//        [self getUserInfo];
+//    }
 }
 
 - (void)initView{
@@ -171,12 +171,25 @@
         [self.authenticationLabel setText:@"已实名认证 >"];
     }
     // 设置用户头像
-    if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
+    NSString *path_sandox = NSHomeDirectory();
+    NSString *avatarPathSuffix = [userDefault objectForKey:@"AVATAR_PATH"];
+    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:avatarPathSuffix];
+    UIImage *image = [UIImage imageWithContentsOfFile:avatarPath];
+    if (image != nil) {
+        [self.avatarImageView setImage:image];
+    } else if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
         // 异步加载网络图片
         __weak __typeof__(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
-            UIImage *avatarImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:avatarUrl]];
+            NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
+            UIImage *avatarImage = [UIImage imageWithData:avatarData];
+            // 缓存图片
+            NSString *path_sandox = NSHomeDirectory();
+            NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
+            [avatarData writeToFile:newPath atomically:YES];
+            NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+            [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 主线程更新ui
                 [weakSelf.avatarImageView setImage:avatarImage];
@@ -255,7 +268,14 @@
             UIImage *avatarImage = [UIImage imageNamed:@"noavatar"];
             if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
                 NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
-                avatarImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:avatarUrl]];
+                NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
+                avatarImage = [UIImage imageWithData:avatarData];
+                // 缓存图片
+                NSString *path_sandox = NSHomeDirectory();
+                NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
+                [avatarData writeToFile:newPath atomically:YES];
+                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+                [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 设置用户名、积分

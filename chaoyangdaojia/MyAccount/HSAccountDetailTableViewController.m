@@ -328,7 +328,15 @@
         make.right.mas_equalTo(avatarCell.contentView.mas_right).offset(-20);
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
-    self.avatarImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noavatar"]];
+    self.avatarImageView = [[UIImageView alloc] init];
+    // 读取缓存中的图片
+    NSString *path_sandox = NSHomeDirectory();
+    NSString *avatarPathSuffix = [userDefault objectForKey:@"AVATAR_PATH"];
+    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:avatarPathSuffix];
+    UIImage *image = [UIImage imageWithContentsOfFile:avatarPath];
+    if (image != nil) {
+        [self.avatarImageView setImage:image];
+    }
     [avatarCell.contentView addSubview:self.avatarImageView];
     [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(avatarCell.contentView);
