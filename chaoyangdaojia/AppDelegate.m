@@ -22,6 +22,7 @@
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
     NSDictionary *attributes=@{NSForegroundColorAttributeName:[UIColor whiteColor]};
     [navigationController.navigationBar setTitleTextAttributes:attributes];
+    [navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     [navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"main_navigationbar_background"] forBarMetrics:UIBarMetricsDefault];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = navigationController;

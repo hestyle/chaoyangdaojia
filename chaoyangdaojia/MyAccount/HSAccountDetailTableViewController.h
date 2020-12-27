@@ -1,8 +1,8 @@
 //
-//  HSMyAccountViewController.h
+//  HSAccountDetailTableViewController.h
 //  chaoyangdaojia
 //
-//  Created by hestyle on 2020/12/24.
+//  Created by hestyle on 2020/12/27.
 //  Copyright © 2020 hestyle. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HSMyAccountViewController : UIViewController <UIScrollViewDelegate>
+@interface HSAccountDetailTableViewController : UITableViewController
 
 @end
 

@@ -14,6 +14,8 @@ NSString * const kGetTelCodeUrl = @"http://app.sunnysct.cn/api/home/send/telcode
 NSString * const kLoginUrl = @"http://app.sunnysct.cn/api/home/userlogin/login";
 // 获取账号信息
 NSString * const kGetUserInfoUrl = @"http://app.sunnysct.cn/api/home/userinfo/getinfo";
+// 修改账号信息
+NSString * const kModifyUserInfoUrl = @"http://app.sunnysct.cn/api/home/userinfo/upuinfo";
 @implementation HSNetworkUrl
 
 @end

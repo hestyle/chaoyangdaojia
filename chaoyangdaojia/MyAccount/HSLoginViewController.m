@@ -229,6 +229,17 @@
                 [weakSelf.navigationController popViewControllerAnimated:YES];
             }
         });
+        NSDictionary *userInfoDict = responseDict[@"uinfo"];
+        if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
+            // 缓存图片到本地
+            NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
+            NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
+            NSString *path_sandox = NSHomeDirectory();
+            NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
+            [avatarData writeToFile:newPath atomically:YES];
+            NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+            [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
+        }
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.view makeToast:@"接口请求错误！"];

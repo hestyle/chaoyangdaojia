@@ -14,6 +14,8 @@ extern NSString * const kGetTelCodeUrl;
 extern NSString * const kLoginUrl;
 // 获取账号信息
 extern NSString * const kGetUserInfoUrl;
+// 修改账号信息
+extern NSString * const kModifyUserInfoUrl;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HSNetworkUrl : NSObject
