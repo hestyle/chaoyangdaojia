@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D003017D25983E360068DB6C /* HSAccountDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D003017C25983E360068DB6C /* HSAccountDetailTableViewController.m */; };
 		D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288CE259338F100C8A2D1 /* AppDelegate.m */; };
 		D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05288D9259338F600C8A2D1 /* Assets.xcassets */; };
 		D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05288DB259338F600C8A2D1 /* LaunchScreen.storyboard */; };
@@ -28,6 +29,8 @@
 		0C09EC4C808211ABFC454204 /* Pods-chaoyangdaojia.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chaoyangdaojia.debug.xcconfig"; path = "Target Support Files/Pods-chaoyangdaojia/Pods-chaoyangdaojia.debug.xcconfig"; sourceTree = "<group>"; };
 		2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-chaoyangdaojia.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBD767773293FBA077A2885 /* Pods-chaoyangdaojia.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chaoyangdaojia.release.xcconfig"; path = "Target Support Files/Pods-chaoyangdaojia/Pods-chaoyangdaojia.release.xcconfig"; sourceTree = "<group>"; };
+		D003017B25983E360068DB6C /* HSAccountDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAccountDetailTableViewController.h; sourceTree = "<group>"; };
+		D003017C25983E360068DB6C /* HSAccountDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSAccountDetailTableViewController.m; sourceTree = "<group>"; };
 		D05288CA259338F100C8A2D1 /* chaoyangdaojia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chaoyangdaojia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05288CD259338F100C8A2D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D05288CE259338F100C8A2D1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -168,6 +171,8 @@
 				D0DBB59C2595876C00B31A33 /* HSLoginViewController.h */,
 				D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */,
 				D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */,
+				D003017B25983E360068DB6C /* HSAccountDetailTableViewController.h */,
+				D003017C25983E360068DB6C /* HSAccountDetailTableViewController.m */,
 			);
 			path = MyAccount;
 			sourceTree = "<group>";
@@ -283,6 +288,7 @@
 				D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */,
 				D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */,
 				D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */,
+				D003017D25983E360068DB6C /* HSAccountDetailTableViewController.m in Sources */,
 				D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */,
 				D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */,
 				D07F4AEC2594C06D00CA0670 /* HSSortViewController.m in Sources */,

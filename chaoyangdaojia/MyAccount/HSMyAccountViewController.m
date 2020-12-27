@@ -8,6 +8,7 @@
 
 #import "HSMyAccountViewController.h"
 #import "HSLoginViewController.h"
+#import "HSAccountDetailTableViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
 #import <Toast/Toast.h>
@@ -193,7 +194,7 @@
     [self.tabBarController.navigationItem setRightBarButtonItem:nil];
 }
 
-#pragma mark -  UIScrollView Delegate
+#pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (scrollView.contentOffset.y <= -60) {
         if (self.refreshView.tag == 0) {
@@ -224,6 +225,12 @@
         // 重新访问账号信息
         [self getUserInfo];
     }
+}
+
+#pragma mark - event
+- (void)gotoAccountDetail{
+    HSAccountDetailTableViewController *controller = [[HSAccountDetailTableViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark -  private
@@ -301,6 +308,11 @@
         make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
         make.height.mas_equalTo(80);
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoAccountDetail)];
+    [tapGesture setNumberOfTapsRequired:1];
+    [self.accountInfoView setUserInteractionEnabled:YES];
+    [self.accountInfoView addGestureRecognizer:tapGesture];
     
     self.avatarImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noavatar"]];
     [self.accountInfoView addSubview:self.avatarImageView];
