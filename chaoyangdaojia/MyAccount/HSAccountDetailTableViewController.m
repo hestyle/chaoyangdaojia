@@ -253,6 +253,8 @@
     UIDatePicker *datePicker = [UIDatePicker new];
     [datePicker setLocale:[NSLocale localeWithLocaleIdentifier:@"zh"]];
     [datePicker setDatePickerMode:UIDatePickerModeDate];
+    // 生日最大值为当前日期
+    [datePicker setMaximumDate:[NSDate new]];
     [alert.view addSubview:datePicker];
     [datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(alert.view).mas_offset(30);
