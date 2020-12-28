@@ -16,6 +16,8 @@ extern NSString * const kLoginUrl;
 extern NSString * const kGetUserInfoUrl;
 // 修改账号信息
 extern NSString * const kModifyUserInfoUrl;
+// 获取头像上传路径
+extern NSString * const kGetOOSInfoUrl;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HSNetworkUrl : NSObject
