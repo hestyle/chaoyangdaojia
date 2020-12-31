@@ -18,6 +18,12 @@ extern NSString * const kGetUserInfoUrl;
 extern NSString * const kModifyUserInfoUrl;
 // 获取头像上传路径
 extern NSString * const kGetOOSInfoUrl;
+// 获取亲友生日by page
+extern NSString * const kGetFriendBirthdaysByPageUrl;
+// 添加亲友生日提醒
+extern NSString * const kAddFriendBirthdayRemind;
+// 删除亲友生日提醒
+extern NSString * const kDeleteFriendBirthdayRemind;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HSNetworkUrl : NSObject

@@ -9,6 +9,7 @@
 #import "HSAccountDetailTableViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
+#import "HSFriendBirthdayRemindTableViewController.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -92,7 +93,7 @@
             [self.tableView makeToast:@"点击了修改实名认证！" duration:3 position:CSToastPositionCenter];
         } else if (indexPath.row == 5) {
             // 修改亲友生日提醒
-            [self.tableView makeToast:@"点击了修改亲友生日提醒！" duration:3 position:CSToastPositionCenter];
+            [self gotoFriendBirthdayRemind];
         }
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
@@ -333,6 +334,11 @@
         }];
     }]];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)gotoFriendBirthdayRemind{
+    HSFriendBirthdayRemindTableViewController *controller = [HSFriendBirthdayRemindTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - UIImagePicker
