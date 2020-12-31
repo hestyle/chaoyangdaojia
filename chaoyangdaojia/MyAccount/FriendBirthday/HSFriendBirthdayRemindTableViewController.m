@@ -91,7 +91,7 @@
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(cell.contentView).mas_offset(20);
         make.top.mas_equalTo(cell.contentView).mas_offset(5);
-        make.size.mas_equalTo(CGSizeMake(100, 20));
+        make.height.mas_equalTo(20);
     }];
     // 宽度足够时，压缩
     [nameLabel setPreferredMaxLayoutWidth:100];
@@ -99,7 +99,7 @@
                                  forAxis:UILayoutConstraintAxisHorizontal];
     
     UILabel *zunchenLabel = [UILabel new];
-    [zunchenLabel setText:friendBirthday[@"zunchen"]];
+    [zunchenLabel setText:[NSString stringWithFormat:@" %@ ", friendBirthday[@"zunchen"]]];
     [zunchenLabel setTextColor:[UIColor redColor]];
     [zunchenLabel.layer setBorderWidth:0.5];
     [zunchenLabel.layer setBorderColor:[[UIColor redColor] CGColor]];
@@ -108,11 +108,8 @@
     [zunchenLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel.mas_right).mas_offset(5);
         make.bottom.mas_equalTo(nameLabel);
-        make.size.mas_equalTo(CGSizeMake(100, 20));
+        make.height.mas_equalTo(16);
     }];
-    [zunchenLabel setPreferredMaxLayoutWidth:100];
-    [zunchenLabel setContentHuggingPriority:UILayoutPriorityRequired
-                                 forAxis:UILayoutConstraintAxisHorizontal];
     
     UILabel *birthdayLabel = [UILabel new];
     [birthdayLabel setText:friendBirthday[@"birthday"]];
@@ -121,7 +118,7 @@
     [birthdayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel);
         make.top.mas_equalTo(nameLabel.mas_bottom).mas_offset(5);
-        make.size.mas_equalTo(CGSizeMake(100, 15));
+        make.height.mas_equalTo(15);
     }];
     [birthdayLabel sizeToFit];
     
@@ -133,7 +130,7 @@
     [remindTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(cell.contentView);
         make.right.mas_equalTo(cell.contentView).mas_offset(-20);
-        make.size.mas_equalTo(CGSizeMake(120, 15));
+        make.height.mas_equalTo(15);
     }];
     [remindTimeLabel sizeToFit];
     
