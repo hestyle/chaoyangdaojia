@@ -16,6 +16,14 @@ NSString * const kLoginUrl = @"http://app.sunnysct.cn/api/home/userlogin/login";
 NSString * const kGetUserInfoUrl = @"http://app.sunnysct.cn/api/home/userinfo/getinfo";
 // 修改账号信息
 NSString * const kModifyUserInfoUrl = @"http://app.sunnysct.cn/api/home/userinfo/upuinfo";
+// 获取头像上传路径
+NSString * const kGetOOSInfoUrl = @"http://app.sunnysct.cn/api/home/userinfo/getoosinfo?path=avatar";
+// 获取亲友生日by page
+NSString * const kGetFriendBirthdaysByPageUrl = @"http://app.sunnysct.cn/api/home/userinfo/birthday_list";
+// 添加亲友生日提醒
+NSString * const kAddFriendBirthdayRemind = @"http://app.sunnysct.cn/api/home/userinfo/birthday_add";
+// 删除亲友生日提醒
+NSString * const kDeleteFriendBirthdayRemind = @"http://app.sunnysct.cn/api/home/userinfo/birthday_del";
 @implementation HSNetworkUrl
 
 @end

@@ -23,6 +23,25 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
     dispatch_once(&onceToken, ^{
         hsNetworkManager = [[HSNetworkManager alloc] init];
         afHttpSessionManager = [AFHTTPSessionManager manager];
+        
+        AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+        //allowInvalidCertificates 是否允许无效证书（也就是自建的证书），默认为NO
+        //如果是需要验证自建证书，需要设置为YES
+        securityPolicy.allowInvalidCertificates = YES;
+        //validatesDomainName 是否需要验证域名，默认为YES；
+        //假如证书的域名与你请求的域名不一致，需把该项设置为NO
+        //主要用于这种情况：客户端请求的是子域名，而证书上的是另外一个域名。因为SSL证书上的域名是独立的，假如证书上注册的域名是www.google.com，那么mail.google.com是无法验证通过的；当然，有钱可以注册通配符的域名*.google.com，但这个还是比较贵的。
+        securityPolicy.validatesDomainName = NO;
+        //validatesCertificateChain 是否验证整个证书链，默认为YES
+        //设置为YES，会将服务器返回的Trust Object上的证书链与本地导入的证书进行对比，这就意味着，假如你的证书链是这样的：
+        //GeoTrust Global CA
+        //    Google Internet Authority G2
+        //        *.google.com
+        //那么，除了导入*.google.com之外，还需要导入证书链上所有的CA证书（GeoTrust Global CA, Google Internet Authority G2）；
+        //如是自建证书的时候，可以设置为YES，增强安全性；假如是信任的CA所签发的证书，则建议关闭该验证；
+        //securityPolicy.validatesCertificateChain = NO;
+        [afHttpSessionManager setSecurityPolicy:securityPolicy];
+        
         [afHttpSessionManager setRequestSerializer:[AFJSONRequestSerializer serializer]];
         [afHttpSessionManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
         [afHttpSessionManager setResponseSerializer:[AFHTTPResponseSerializer serializer]];
@@ -87,6 +106,38 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
                 [userDefault setObject:mutableHeaders.copy forKey:@"NETWORK_HEADERS"];
             }
             success(responseDict);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        failure(error);
+    }];
+}
+
+/**
+ *上传图片
+ */
+- (void)uploadFileWithUrl:(NSString *)url parameters:(NSDictionary *)paramters fileDataDict:(NSDictionary *)fileDataDict success:(Success)success failure:(Failure)failure {
+    [afHttpSessionManager POST:url parameters:nil headers:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        // 将参数放入formData
+        for (NSString *key in paramters) {
+            NSString *valueString = paramters[key];
+            [formData appendPartWithFileData:[valueString dataUsingEncoding:NSUTF8StringEncoding] name:key fileName:@"" mimeType:@"text/plain; charset=UTF-8"];
+        }
+        // 将文件内容放入formData
+        [formData appendPartWithFileData:fileDataDict[@"fileData"] name:@"file" fileName:fileDataDict[@"fileName"] mimeType:fileDataDict[@"mimeType"]];
+    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (responseObject == nil) {
+            success(nil);
+        } else {
+            // 将返回的结果转成dict
+            NSError *error = nil;
+            NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                options:NSJSONReadingMutableContainers
+                                                                  error:&error];
+            if (error != nil) {
+                success(nil);
+            } else {
+                success(responseDict);
+            }
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         failure(error);

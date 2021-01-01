@@ -9,6 +9,7 @@
 #import "HSAccountDetailTableViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
+#import "HSFriendBirthdayRemindTableViewController.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -20,6 +21,7 @@
 @property (nonatomic, strong) UILabel *genderLabel;
 @property (nonatomic, strong) UILabel *birthdayLabel;
 @property (nonatomic, strong) UILabel *authenticationLabel;
+@property (nonatomic, strong) NSDictionary *oosInfoDict;
 
 @end
 
@@ -33,6 +35,9 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self initTableCellArray];
+    
+    // 获取头像上传路径
+    [self getOOSInfo];
 }
 
 #pragma mark tableView
@@ -73,7 +78,7 @@
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             // 修改头像
-            [self.tableView makeToast:@"点击了修改头像！" duration:3 position:CSToastPositionCenter];
+            [self modifyAvatar];
         } else if (indexPath.row == 1) {
             // 修改用户名
             [self modifyNickName];
@@ -88,7 +93,7 @@
             [self.tableView makeToast:@"点击了修改实名认证！" duration:3 position:CSToastPositionCenter];
         } else if (indexPath.row == 5) {
             // 修改亲友生日提醒
-            [self.tableView makeToast:@"点击了修改亲友生日提醒！" duration:3 position:CSToastPositionCenter];
+            [self gotoFriendBirthdayRemind];
         }
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
@@ -96,7 +101,31 @@
 
 #pragma mark - event
 - (void)modifyAvatar{
-    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"修改头像" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak __typeof__(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        // 判断摄像头是否可用
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+            UIImagePickerController *imagePickerController = [UIImagePickerController new];
+            // 设置控制器选择的资源类型
+            [imagePickerController setDelegate:self];
+            [imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [weakSelf presentViewController:imagePickerController animated:YES completion:nil];
+        } else {
+            [weakSelf.tableView makeToast:@"该设备无摄像头或者不可用！" duration:3 position:CSToastPositionCenter];
+        }
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"相册选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIImagePickerController *imagePickerController = [UIImagePickerController new];
+        // 设置控制器选择的资源类型
+        [imagePickerController setDelegate:self];
+        [imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        [weakSelf presentViewController:imagePickerController animated:YES completion:nil];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)modifyNickName{
@@ -253,6 +282,8 @@
     UIDatePicker *datePicker = [UIDatePicker new];
     [datePicker setLocale:[NSLocale localeWithLocaleIdentifier:@"zh"]];
     [datePicker setDatePickerMode:UIDatePickerModeDate];
+    // 生日最大值为当前日期
+    [datePicker setMaximumDate:[NSDate new]];
     [alert.view addSubview:datePicker];
     [datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(alert.view).mas_offset(30);
@@ -305,7 +336,96 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)gotoFriendBirthdayRemind{
+    HSFriendBirthdayRemindTableViewController *controller = [HSFriendBirthdayRemindTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+#pragma mark - UIImagePicker
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    if (self.oosInfoDict == nil) {
+        [self.tableView makeToast:@"头像上传失败，未获得上传路径！" duration:3 position:CSToastPositionCenter];
+        return;
+    }
+    // 拼接上传的文件名
+    NSMutableString *fileName = [[NSMutableString alloc] initWithFormat:@"%@/%@", self.oosInfoDict[@"host"], self.oosInfoDict[@"key"]];
+    NSString *randomChs = @"QWERTYUIOPASDFGHJKLZXCVBNMmnbvcxzlkjhgfdsapoiuytrewq";
+    for (int i = 0; i < 10; ++i) {
+        [fileName appendFormat:@"%hu", [randomChs characterAtIndex:arc4random() % 52]];
+    }
+    [fileName appendString:@".png"];
+    // 构造parameters
+    NSMutableDictionary *parameters = [self.oosInfoDict mutableCopy];
+    [parameters removeObjectForKey:@"host"];
+    NSString *hostName = self.oosInfoDict[@"host"];
+    parameters[@"key"] = [fileName substringFromIndex:[hostName length]];
+    // 构造上传的文件信息
+    NSData *imageData = UIImagePNGRepresentation(image);
+    NSDictionary *fileDataDict = @{@"fileName":@"avatar.png",@"mimeType":@"image/png",@"fileData":imageData};
+    __weak __typeof__(self) weakSelf = self;
+    HSNetworkManager *manager = [HSNetworkManager manager];
+    [manager uploadFileWithUrl:[hostName stringByAppendingString:@"/"] parameters:[parameters copy] fileDataDict:fileDataDict success:^(NSDictionary *responseDict) {
+        NSDictionary *avatarParameterDict = @{@"type":@"avatar",@"value":fileName};
+        // 再修改头像
+        [manager postDataWithUrl:kModifyUserInfoUrl parameters:avatarParameterDict success:^(NSDictionary *responseDict) {
+            // 修改成功
+            if ([responseDict[@"errcode"] isEqual:@(0)]) {
+                NSString *path_sandox = NSHomeDirectory();
+                NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
+                [imageData writeToFile:newPath atomically:YES];
+                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+                [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
+                // 更新头像缓存
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // 更新ui
+                    [weakSelf.avatarImageView setImage:image];
+                    [weakSelf.tableView makeToast:@"修改成功！" duration:3 position:CSToastPositionCenter];
+                });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.tableView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+                });
+                NSLog(@"接口 %@ 返回数据格式错误! responseDict = %@", kModifyUserInfoUrl, responseDict);
+            }
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view makeToast:@"头像上传失败！"];
+            });
+            NSLog(@"%@", error);
+        }];
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"头像上传失败！"];
+        });
+        NSLog(@"%@", error);
+    }];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    [self.view makeToast:@"已取消修改头像！"];
+}
+
 #pragma mark - private
+
+- (void)getOOSInfo{
+    __weak __typeof__(self) weakSelf = self;
+    HSNetworkManager *manager = [HSNetworkManager manager];
+    [manager postDataWithUrl:kGetOOSInfoUrl parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {
+        // 获取成功
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            weakSelf.oosInfoDict = responseDict[@"oosinfo"];
+        } else {
+            weakSelf.oosInfoDict = nil;
+            NSLog(@"接口 %@ 返回数据格式错误! responseDict = %@", kModifyUserInfoUrl, responseDict);
+        }
+    } failure:^(NSError *error) {
+        weakSelf.oosInfoDict = nil;
+        NSLog(@"%@", error);
+    }];
+}
 
 - (void)initTableCellArray{
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];

@@ -47,6 +47,16 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param failure   void(^Failure)(NSError *error)回调
  */
 - (void)postDataWithUrl:(NSString *)url parameters:(NSDictionary *)paramters success:(Success)success failure:(Failure)failure;
+
+/**
+ *  文件上传
+ *
+ *  @param url       NSString 请求url
+ *  @param paramters NSDictionary 参数
+ *  @param success   void(^Success)(id json)回调
+ *  @param failure   void(^Failure)(NSError *error)回调
+ */
+- (void)uploadFileWithUrl:(NSString *)url parameters:(NSDictionary *)paramters fileDataDict:(NSDictionary *)fileDataDict success:(Success)success failure:(Failure)failure;
 @end
 
 NS_ASSUME_NONNULL_END
