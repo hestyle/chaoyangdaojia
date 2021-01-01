@@ -20,10 +20,24 @@
 @property (nonatomic, strong) UILabel *refreshLabel;
 @property (nonatomic, strong) UILabel *lastRefreshTimeLabel;
 
+@property NSUInteger nextLoadPage;
+@property (nonatomic, strong) UIView *loadMoreView;
+@property (nonatomic, strong) UILabel *loadMoreLabel;
+
 @property (nonatomic, strong) NSMutableArray *friendBirthdayArray;
 @property (nonatomic, strong) UIBarButtonItem *rightAddFriendBirthdayBarButtonItem;
 
 @end
+
+/* API请求中1页包含的数量 */
+static const NSInteger mPerPage = 10;
+/* cell高度 */
+static const NSInteger mHeightForRow = 50;
+static const NSInteger mRefreshViewHeight = 60;
+static const NSInteger mLoadMoreViewHeight = 60;
+/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
+static const NSInteger mTableViewBaseContentOffsetY = -88;
+
 
 @implementation HSFriendBirthdayRemindTableViewController
 
@@ -173,23 +187,44 @@
 
 #pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (scrollView.contentOffset.y <= -60) {
+    CGFloat loadMoreOffset = mTableViewBaseContentOffsetY + mLoadMoreViewHeight;
+    if ([self.friendBirthdayArray count] * mHeightForRow > self.view.bounds.size.height + mTableViewBaseContentOffsetY) {
+        // tableView的contentheight超过了navigationBar下方到屏幕底部的高度
+        loadMoreOffset += [self.friendBirthdayArray count] * mHeightForRow - (self.view.bounds.size.height + mTableViewBaseContentOffsetY);
+    }
+    if (scrollView.contentOffset.y <= (mTableViewBaseContentOffsetY - mRefreshViewHeight)) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
-        self.refreshView.tag = 1;
+        self.refreshView.tag = -1;
+    } else if (scrollView.contentOffset.y >= loadMoreOffset) {
+        if (self.loadMoreView.tag == 0) {
+            if (self.nextLoadPage != 0) {
+                [self.loadMoreLabel setText:@"松开加载"];
+            } else {
+                [self.loadMoreLabel setText:@"我是有底线的！"];
+            }
+        }
+        self.loadMoreView.tag = 1;
     } else {
-        //防止用户在下拉到contentOffset.y <= -50后不松手，然后又往回滑动，需要将值设为默认状态
+        // 上拉不足触发加载、下拉不足触发刷新
         self.refreshView.tag = 0;
         self.refreshLabel.text = @"下拉刷新";
+        
+        self.loadMoreView.tag = 0;
+        if (self.nextLoadPage != 0) {
+            [self.loadMoreLabel setText:@"上拉加载更多"];
+        } else {
+            [self.loadMoreLabel setText:@"我是有底线的！"];
+        }
     }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    if (self.refreshView.tag == 1) {
+    if (self.refreshView.tag == -1) {
         [UIView animateWithDuration:.3 animations:^{
             self.refreshLabel.text = @"加载中";
-            scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+            scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
         }];
         //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -197,10 +232,18 @@
                 self.refreshView.tag = 0;
                 self.refreshLabel.text = @"下拉刷新";
                 scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+                NSLog(@"已触发下拉刷新！");
             }];
         });
         // 重新第1页
         [self getFriendBirthdaysByPage:1];
+    } else if (self.loadMoreView.tag == 1) {
+        self.loadMoreView.tag = 0;
+        // 加载下一页
+        if (self.nextLoadPage != 0) {
+            NSLog(@"已触发上拉加载更多！");
+            [self getFriendBirthdaysByPage:self.nextLoadPage];
+        }
     }
     NSLog(@"scrollView.contentOffset.y = %f", scrollView.contentOffset.y);
 }
@@ -211,10 +254,10 @@
     [self.refreshView setTag:0];
     [self.tableView addSubview:self.refreshView];
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.tableView.mas_top).with.offset(-60);
+        make.top.mas_equalTo(self.tableView.mas_top).with.offset(-mRefreshViewHeight);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
         make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
-        make.height.mas_equalTo(60);
+        make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
     self.refreshLabel = [UILabel new];
@@ -249,6 +292,28 @@
         make.centerY.mas_equalTo(self.refreshView.mas_centerY);
         make.size.mas_equalTo(CGSizeMake(30, 50));
     }];
+    
+    self.nextLoadPage = 0;
+    self.loadMoreView = [UIView new];
+    [self.loadMoreView setTag:0];
+    [self.loadMoreView.layer setBorderWidth:0.5];
+    [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
+    [self.tableView addSubview:self.loadMoreView];
+    [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.tableView).mas_offset([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY);
+        make.centerX.mas_equalTo(self.tableView.mas_centerX);
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.height.mas_equalTo(mLoadMoreViewHeight);
+    }];
+    self.loadMoreLabel = [UILabel new];
+    [self.loadMoreLabel setText:@"上拉加载更多"];
+    [self.loadMoreLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.loadMoreLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
+    [self.loadMoreView addSubview:self.loadMoreLabel];
+    [self.loadMoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.loadMoreView);
+        make.height.mas_equalTo(20);
+    }];
 }
 
 - (void)getFriendBirthdaysByPage:(NSUInteger)page {
@@ -263,12 +328,37 @@
                 [weakSelf.friendBirthdayArray removeAllObjects];
             }
             NSArray *listData = responseDict[@"list"];
+            // 判断是否有下一页
+            if ([listData count] < mPerPage) {
+                weakSelf.nextLoadPage = 0;
+            } else {
+                weakSelf.nextLoadPage = page + 1;
+            }
             if (![listData isEqual:[NSNull null]] && listData != nil) {
                 [weakSelf.friendBirthdayArray addObjectsFromArray:listData];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 更新ui
                 [weakSelf.tableView reloadData];
+                NSLog(@"[UIScreen mainScreen].bounds.size.height = %f", [UIScreen mainScreen].bounds.size.height);
+                NSLog(@"view.bounds.size.height = %f", weakSelf.view.bounds.size.height);
+                if ([weakSelf.friendBirthdayArray count] * mHeightForRow >= weakSelf.view.bounds.size.height + mTableViewBaseContentOffsetY) {
+                    // tableView的contentSize.height > 屏幕高度
+                    [weakSelf.loadMoreView mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.top.mas_equalTo([weakSelf.friendBirthdayArray count] * mHeightForRow);
+                        make.centerX.mas_equalTo(weakSelf.tableView.mas_centerX);
+                        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+                        make.height.mas_equalTo(mLoadMoreViewHeight);
+                    }];
+                } else {
+                    // tableView内容过少
+                    [weakSelf.loadMoreView mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.top.mas_equalTo(weakSelf.tableView).mas_offset([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY);
+                        make.centerX.mas_equalTo(weakSelf.tableView.mas_centerX);
+                        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+                        make.height.mas_equalTo(mLoadMoreViewHeight);
+                    }];
+                }
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
