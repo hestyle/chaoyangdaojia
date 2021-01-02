@@ -25,6 +25,7 @@
 		D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843852595DF6100197F8C /* HSNetworkUrl.m */; };
 		D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */; };
 		D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */; };
+		D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DC6FA225A0574900B501C8 /* HSSettingsTableViewController.m */; };
 		D590E466C16D7216F3FFCE40 /* libPods-chaoyangdaojia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,8 @@
 		D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MyAccount.xcassets; sourceTree = "<group>"; };
 		D0DBB59C2595876C00B31A33 /* HSLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSLoginViewController.h; sourceTree = "<group>"; };
 		D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSLoginViewController.m; sourceTree = "<group>"; };
+		D0DC6FA125A0574900B501C8 /* HSSettingsTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSSettingsTableViewController.h; sourceTree = "<group>"; };
+		D0DC6FA225A0574900B501C8 /* HSSettingsTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSSettingsTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +199,7 @@
 		D07F4AE02594BCE000CA0670 /* MyAccount */ = {
 			isa = PBXGroup;
 			children = (
+				D0DC6FA025A056F100B501C8 /* Settings */,
 				D05712C8259A013B005B4A7A /* FriendBirthday */,
 				D07F4AE12594C02200CA0670 /* HSMyAccountViewController.h */,
 				D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */,
@@ -217,6 +221,15 @@
 				D0C843852595DF6100197F8C /* HSNetworkUrl.m */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		D0DC6FA025A056F100B501C8 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D0DC6FA125A0574900B501C8 /* HSSettingsTableViewController.h */,
+				D0DC6FA225A0574900B501C8 /* HSSettingsTableViewController.m */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +341,7 @@
 				D05712CB259A022C005B4A7A /* HSFriendBirthdayEditViewController.m in Sources */,
 				D05288E0259338F600C8A2D1 /* main.m in Sources */,
 				D06DA605259D669000C64B7C /* HSFriendBirthday.m in Sources */,
+				D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */,
 				D0903DFD2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m in Sources */,
 				D07F4AE32594C02200CA0670 /* HSMyAccountViewController.m in Sources */,
 			);

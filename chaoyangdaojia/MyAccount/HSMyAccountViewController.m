@@ -11,6 +11,7 @@
 #import "HSAccountDetailTableViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
+#import "HSSettingsTableViewController.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -310,9 +311,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)initNavigationBar{
-    UIImageView *leftSettingImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [leftSettingImageView setImage:[UIImage imageNamed:@"app_setting"]];
-    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftSettingImageView];
+    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsViewController)];
     [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
     
     UIImageView *rightMessageImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
@@ -777,5 +776,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     }];
 }
 
-
+- (void)gotoSettingsViewController{
+    HSSettingsTableViewController *controller = [HSSettingsTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
+}
 @end
