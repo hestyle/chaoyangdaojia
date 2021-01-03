@@ -10,6 +10,8 @@
 
 // 获取验证码
 extern NSString * const kGetTelCodeUrl;
+// 验证码验证
+extern NSString * const kCheckVerifyCode;
 // 登录
 extern NSString * const kLoginUrl;
 // 获取账号信息
@@ -24,6 +26,8 @@ extern NSString * const kGetFriendBirthdaysByPageUrl;
 extern NSString * const kAddFriendBirthdayRemind;
 // 删除亲友生日提醒
 extern NSString * const kDeleteFriendBirthdayRemind;
+// 设置交易密码
+extern NSString * const kSetPayPassword;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HSNetworkUrl : NSObject

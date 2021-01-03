@@ -11,6 +11,7 @@
 #import "HSAccountDetailTableViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
+#import "HSSettingsTableViewController.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -66,6 +67,10 @@
 
 @end
 
+static const NSInteger mRefreshViewHeight = 60;
+/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
+static const NSInteger mTableViewBaseContentOffsetY = -88;
+
 @implementation HSMyAccountViewController
 
 - (void)viewDidLoad {
@@ -95,10 +100,10 @@
     [self.refreshView setTag:0];
     [self.contentScrollView addSubview:self.refreshView];
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentScrollView.mas_top).with.offset(-60);
+        make.top.mas_equalTo(self.contentScrollView.mas_top).with.offset(-mRefreshViewHeight);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
-        make.height.mas_equalTo(60);
+        make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
     self.refreshLabel = [UILabel new];
@@ -209,7 +214,7 @@
 
 #pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (scrollView.contentOffset.y <= -60) {
+    if (scrollView.contentOffset.y <= (mTableViewBaseContentOffsetY - mRefreshViewHeight)) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
@@ -225,7 +230,7 @@
     if (self.refreshView.tag == 1) {
         [UIView animateWithDuration:.3 animations:^{
             self.refreshLabel.text = @"加载中";
-            scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+            scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
         }];
         //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -240,13 +245,13 @@
     }
 }
 
-#pragma mark - event
+#pragma mark - Event
 - (void)gotoAccountDetail{
     HSAccountDetailTableViewController *controller = [[HSAccountDetailTableViewController alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-#pragma mark -  private
+#pragma mark - Private
 - (void)getUserInfo{
     // 访问getinfo接口
     HSNetworkManager *manager = [HSNetworkManager manager];
@@ -306,9 +311,7 @@
 }
 
 - (void)initNavigationBar{
-    UIImageView *leftSettingImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [leftSettingImageView setImage:[UIImage imageNamed:@"app_setting"]];
-    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftSettingImageView];
+    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsViewController)];
     [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
     
     UIImageView *rightMessageImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
@@ -773,14 +776,8 @@
     }];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)gotoSettingsViewController{
+    HSSettingsTableViewController *controller = [HSSettingsTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
-*/
-
 @end
