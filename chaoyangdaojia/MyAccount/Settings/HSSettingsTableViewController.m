@@ -7,6 +7,7 @@
 //
 
 #import "HSSettingsTableViewController.h"
+#import "HSPayPasswordSettingViewController.h"
 #import <Masonry/Masonry.h>
 
 @interface HSSettingsTableViewController ()
@@ -51,6 +52,11 @@ static const NSInteger mHeightForRow = 50;
         return;
     }
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.row == 0) {
+        // 支付密码设置
+        HSPayPasswordSettingViewController *controller = [HSPayPasswordSettingViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -10,6 +10,8 @@
 
 // 获取验证码
 NSString * const kGetTelCodeUrl = @"http://app.sunnysct.cn/api/home/send/telcode";
+// 验证码验证
+NSString * const kCheckVerifyCode = @"http://app.sunnysct.cn/api/home/userinfo/check_msgcode";
 // 登录
 NSString * const kLoginUrl = @"http://app.sunnysct.cn/api/home/userlogin/login";
 // 获取账号信息
@@ -24,6 +26,8 @@ NSString * const kGetFriendBirthdaysByPageUrl = @"http://app.sunnysct.cn/api/hom
 NSString * const kAddFriendBirthdayRemind = @"http://app.sunnysct.cn/api/home/userinfo/birthday_add";
 // 删除亲友生日提醒
 NSString * const kDeleteFriendBirthdayRemind = @"http://app.sunnysct.cn/api/home/userinfo/birthday_del";
+// 设置交易密码
+NSString * const kSetPayPassword = @"http://app.sunnysct.cn/api/home/userinfo/setjymm";
 @implementation HSNetworkUrl
 
 @end
