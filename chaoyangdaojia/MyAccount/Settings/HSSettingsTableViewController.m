@@ -8,6 +8,7 @@
 
 #import "HSSettingsTableViewController.h"
 #import "HSPayPasswordSettingViewController.h"
+#import "HSCommonProblemTableViewController.h"
 #import <Masonry/Masonry.h>
 
 @interface HSSettingsTableViewController ()
@@ -55,6 +56,9 @@ static const NSInteger mHeightForRow = 50;
     if (indexPath.row == 0) {
         // 支付密码设置
         HSPayPasswordSettingViewController *controller = [HSPayPasswordSettingViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.row == 5) {
+        HSCommonProblemTableViewController *controller = [HSCommonProblemTableViewController new];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
