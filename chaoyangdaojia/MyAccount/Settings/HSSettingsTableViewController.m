@@ -10,6 +10,7 @@
 #import "HSPayPasswordSettingViewController.h"
 #import "HSCommonProblemTableViewController.h"
 #import "HSFeedbackViewController.h"
+#import "HSAboutUsViewController.h"
 #import <Masonry/Masonry.h>
 
 @interface HSSettingsTableViewController ()
@@ -63,6 +64,9 @@ static const NSInteger mHeightForRow = 50;
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.row == 6) {
         HSFeedbackViewController *controller = [HSFeedbackViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.row == 7) {
+        HSAboutUsViewController *controller = [HSAboutUsViewController new];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
@@ -231,23 +235,6 @@ static const NSInteger mHeightForRow = 50;
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     
-    UITableViewCell *contactUsCell = [UITableViewCell new];
-    UILabel *contactUsTitleLabel = [UILabel new];
-    [contactUsTitleLabel setText:@"联系我们"];
-    [contactUsCell.contentView addSubview:contactUsTitleLabel];
-    [contactUsTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(30);
-        make.left.mas_equalTo(contactUsCell.contentView).mas_offset(20);
-        make.centerY.mas_equalTo(contactUsCell.contentView);
-    }];
-    UIImageView *contactUsDetailImageView = [[UIImageView alloc] initWithImage:gotoDetailImage];
-    [contactUsCell.contentView addSubview:contactUsDetailImageView];
-    [contactUsDetailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(contactUsCell.contentView);
-        make.right.mas_equalTo(contactUsCell.contentView.mas_right).offset(-20);
-        make.size.mas_equalTo(CGSizeMake(15, 15));
-    }];
-    
     UITableViewCell *userAgreementPrivacyPolicyCell = [UITableViewCell new];
     UILabel *userAgreementPrivacyPolicyTitleLabel = [UILabel new];
     [userAgreementPrivacyPolicyTitleLabel setText:@"用户协议&隐私政策"];
@@ -279,7 +266,7 @@ static const NSInteger mHeightForRow = 50;
         make.size.mas_equalTo(CGSizeMake(200, 35));
     }];
     
-    self.cellArray = @[paymentPasswordCell, checkUpdateCell, cleanCasheCell, messagePushCell, shareAppCell, commonProblemCell, feedBackCell, aboutUsCell, contactUsCell, userAgreementPrivacyPolicyCell, logoutCell];
+    self.cellArray = @[paymentPasswordCell, checkUpdateCell, cleanCasheCell, messagePushCell, shareAppCell, commonProblemCell, feedBackCell, aboutUsCell, userAgreementPrivacyPolicyCell, logoutCell];
 }
 
 @end

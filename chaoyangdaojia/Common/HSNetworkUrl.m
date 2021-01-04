@@ -32,6 +32,9 @@ NSString * const kSetPayPassword = @"http://app.sunnysct.cn/api/home/userinfo/se
 NSString * const kGetCommonProblemByPage = @"http://app.sunnysct.cn/api/home/index/help_list";
 // 反馈问题
 NSString * const kFeedbackProblem = @"http://app.sunnysct.cn/api/home/userinfo/fankui";
+// 关于我们
+NSString * const kGetAboutUsInfo = @"http://app.sunnysct.cn/api/home/userlogin/aboutus";
+
 @implementation HSNetworkUrl
 
 @end

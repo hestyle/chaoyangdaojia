@@ -30,6 +30,7 @@
 		D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */; };
 		D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DC6FA225A0574900B501C8 /* HSSettingsTableViewController.m */; };
 		D0E5984325A2A51200FEFE4B /* HSFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984225A2A51200FEFE4B /* HSFeedbackViewController.m */; };
+		D0E5984625A2BF7800FEFE4B /* HSAboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984525A2BF7800FEFE4B /* HSAboutUsViewController.m */; };
 		D590E466C16D7216F3FFCE40 /* libPods-chaoyangdaojia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +82,8 @@
 		D0DC6FA225A0574900B501C8 /* HSSettingsTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSSettingsTableViewController.m; sourceTree = "<group>"; };
 		D0E5984125A2A51200FEFE4B /* HSFeedbackViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFeedbackViewController.h; sourceTree = "<group>"; };
 		D0E5984225A2A51200FEFE4B /* HSFeedbackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFeedbackViewController.m; sourceTree = "<group>"; };
+		D0E5984425A2BF7800FEFE4B /* HSAboutUsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAboutUsViewController.h; sourceTree = "<group>"; };
+		D0E5984525A2BF7800FEFE4B /* HSAboutUsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSAboutUsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +251,8 @@
 				D0986B9225A1F8E900D47929 /* HSCommonProblemDetailViewController.m */,
 				D0E5984125A2A51200FEFE4B /* HSFeedbackViewController.h */,
 				D0E5984225A2A51200FEFE4B /* HSFeedbackViewController.m */,
+				D0E5984425A2BF7800FEFE4B /* HSAboutUsViewController.h */,
+				D0E5984525A2BF7800FEFE4B /* HSAboutUsViewController.m */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -350,6 +355,7 @@
 			files = (
 				D0986B8A25A1D37200D47929 /* HSPayPasswordSettingViewController.m in Sources */,
 				D07F4ADB2594BA3600CA0670 /* HSMainTableBarController.m in Sources */,
+				D0E5984625A2BF7800FEFE4B /* HSAboutUsViewController.m in Sources */,
 				D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */,
 				D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */,
 				D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */,

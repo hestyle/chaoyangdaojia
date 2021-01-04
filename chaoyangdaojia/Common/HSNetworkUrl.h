@@ -32,6 +32,9 @@ extern NSString * const kSetPayPassword;
 extern NSString * const kGetCommonProblemByPage;
 // 反馈问题
 extern NSString * const kFeedbackProblem;
+// 关于我们
+extern NSString * const kGetAboutUsInfo;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HSNetworkUrl : NSObject
