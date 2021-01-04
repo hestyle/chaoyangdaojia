@@ -34,6 +34,8 @@ extern NSString * const kGetCommonProblemByPage;
 extern NSString * const kFeedbackProblem;
 // 关于我们
 extern NSString * const kGetAboutUsInfo;
+// 获取用户协议
+extern NSString * const kGetUserPolicy;
 
 NS_ASSUME_NONNULL_BEGIN
 

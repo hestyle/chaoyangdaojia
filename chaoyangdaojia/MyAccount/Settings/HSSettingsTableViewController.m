@@ -11,6 +11,7 @@
 #import "HSCommonProblemTableViewController.h"
 #import "HSFeedbackViewController.h"
 #import "HSAboutUsViewController.h"
+#import "HSUserPolicyViewController.h"
 #import <Masonry/Masonry.h>
 
 @interface HSSettingsTableViewController ()
@@ -67,6 +68,9 @@ static const NSInteger mHeightForRow = 50;
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.row == 7) {
         HSAboutUsViewController *controller = [HSAboutUsViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.row == 8) {
+        HSUserPolicyViewController *controller = [HSUserPolicyViewController new];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
