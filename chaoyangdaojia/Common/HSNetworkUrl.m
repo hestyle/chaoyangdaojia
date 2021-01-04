@@ -30,6 +30,8 @@ NSString * const kDeleteFriendBirthdayRemind = @"http://app.sunnysct.cn/api/home
 NSString * const kSetPayPassword = @"http://app.sunnysct.cn/api/home/userinfo/setjymm";
 // 获取常见问题by page
 NSString * const kGetCommonProblemByPage = @"http://app.sunnysct.cn/api/home/index/help_list";
+// 反馈问题
+NSString * const kFeedbackProblem = @"http://app.sunnysct.cn/api/home/userinfo/fankui";
 @implementation HSNetworkUrl
 
 @end

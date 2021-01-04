@@ -9,6 +9,7 @@
 #import "HSSettingsTableViewController.h"
 #import "HSPayPasswordSettingViewController.h"
 #import "HSCommonProblemTableViewController.h"
+#import "HSFeedbackViewController.h"
 #import <Masonry/Masonry.h>
 
 @interface HSSettingsTableViewController ()
@@ -59,6 +60,9 @@ static const NSInteger mHeightForRow = 50;
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.row == 5) {
         HSCommonProblemTableViewController *controller = [HSCommonProblemTableViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.row == 6) {
+        HSFeedbackViewController *controller = [HSFeedbackViewController new];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }

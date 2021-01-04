@@ -30,6 +30,8 @@ extern NSString * const kDeleteFriendBirthdayRemind;
 extern NSString * const kSetPayPassword;
 // 获取常见问题by page
 extern NSString * const kGetCommonProblemByPage;
+// 反馈问题
+extern NSString * const kFeedbackProblem;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HSNetworkUrl : NSObject
