@@ -9,6 +9,9 @@
 #import "HSSettingsTableViewController.h"
 #import "HSPayPasswordSettingViewController.h"
 #import "HSCommonProblemTableViewController.h"
+#import "HSFeedbackViewController.h"
+#import "HSAboutUsViewController.h"
+#import "HSUserPolicyViewController.h"
 #import <Masonry/Masonry.h>
 
 @interface HSSettingsTableViewController ()
@@ -60,6 +63,15 @@ static const NSInteger mHeightForRow = 50;
     } else if (indexPath.row == 5) {
         HSCommonProblemTableViewController *controller = [HSCommonProblemTableViewController new];
         [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.row == 6) {
+        HSFeedbackViewController *controller = [HSFeedbackViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.row == 7) {
+        HSAboutUsViewController *controller = [HSAboutUsViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.row == 8) {
+        HSUserPolicyViewController *controller = [HSUserPolicyViewController new];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
@@ -72,7 +84,21 @@ static const NSInteger mHeightForRow = 50;
 
 #pragma mark - Event
 - (void)logoutAction {
-    NSLog(@"点击了退出登录！");
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"是否退出登录?" preferredStyle:UIAlertControllerStyleAlert];
+    __weak __typeof__(self) weakSelf = self;
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        // 清空账号缓存
+        NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+        [userDefault removeObjectForKey:@"USER_INFO"];
+        [userDefault removeObjectForKey:@"AVATAR_PATH"];
+        [userDefault removeObjectForKey:@"NETWORK_HEADERS"];
+        // 返回
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - Private
@@ -227,23 +253,6 @@ static const NSInteger mHeightForRow = 50;
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     
-    UITableViewCell *contactUsCell = [UITableViewCell new];
-    UILabel *contactUsTitleLabel = [UILabel new];
-    [contactUsTitleLabel setText:@"联系我们"];
-    [contactUsCell.contentView addSubview:contactUsTitleLabel];
-    [contactUsTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(30);
-        make.left.mas_equalTo(contactUsCell.contentView).mas_offset(20);
-        make.centerY.mas_equalTo(contactUsCell.contentView);
-    }];
-    UIImageView *contactUsDetailImageView = [[UIImageView alloc] initWithImage:gotoDetailImage];
-    [contactUsCell.contentView addSubview:contactUsDetailImageView];
-    [contactUsDetailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(contactUsCell.contentView);
-        make.right.mas_equalTo(contactUsCell.contentView.mas_right).offset(-20);
-        make.size.mas_equalTo(CGSizeMake(15, 15));
-    }];
-    
     UITableViewCell *userAgreementPrivacyPolicyCell = [UITableViewCell new];
     UILabel *userAgreementPrivacyPolicyTitleLabel = [UILabel new];
     [userAgreementPrivacyPolicyTitleLabel setText:@"用户协议&隐私政策"];
@@ -261,21 +270,20 @@ static const NSInteger mHeightForRow = 50;
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     
-    UITableViewCell *logoutCell = [UITableViewCell new];
     self.logoutButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.logoutButton setBackgroundImage:[UIImage imageNamed:@"common_background"] forState:UIControlStateNormal];
+    [self.logoutButton setBackgroundColor:[UIColor orangeColor]];
     [self.logoutButton.layer setCornerRadius:5];
-    [self.logoutButton setTintColor:[UIColor blackColor]];
     [self.logoutButton setTitle:@"退出登录" forState:UIControlStateNormal];
     [self.logoutButton setTitle:@"" forState:UIControlStateHighlighted];
     [self.logoutButton addTarget:self action:@selector(logoutAction) forControlEvents:UIControlEventTouchUpInside];
-    [logoutCell.contentView addSubview:self.logoutButton];
+    [self.tableView addSubview:self.logoutButton];
     [self.logoutButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.mas_equalTo(logoutCell.contentView);
+        make.centerX.mas_equalTo(self.tableView);
         make.size.mas_equalTo(CGSizeMake(200, 35));
+        make.top.mas_equalTo(self.tableView).mas_offset(9 * mHeightForRow + 20);
     }];
     
-    self.cellArray = @[paymentPasswordCell, checkUpdateCell, cleanCasheCell, messagePushCell, shareAppCell, commonProblemCell, feedBackCell, aboutUsCell, contactUsCell, userAgreementPrivacyPolicyCell, logoutCell];
+    self.cellArray = @[paymentPasswordCell, checkUpdateCell, cleanCasheCell, messagePushCell, shareAppCell, commonProblemCell, feedBackCell, aboutUsCell, userAgreementPrivacyPolicyCell];
 }
 
 @end
