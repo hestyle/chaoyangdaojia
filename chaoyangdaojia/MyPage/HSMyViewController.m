@@ -77,76 +77,17 @@ static BOOL isHadGotoLoginViewController = NO;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
     // 绘制view
     [self initView];
 }
 
-- (void)initView{
-    self.contentScrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.contentScrollView setDelegate:self];
-    [self.contentScrollView setBackgroundColor:[UIColor grayColor]];
-    [self.contentScrollView setContentSize:CGSizeMake(0, [UIScreen mainScreen].bounds.size.height)];
-    [self.view addSubview:self.contentScrollView];
-    
-    self.refreshView = [UIView new];
-    [self.refreshView setTag:0];
-    [self.contentScrollView addSubview:self.refreshView];
-    [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentScrollView.mas_top).with.offset(-mRefreshViewHeight);
-        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
-        make.height.mas_equalTo(mRefreshViewHeight);
-    }];
-    
-    self.refreshLabel = [UILabel new];
-    [self.refreshLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.refreshLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
-    [self.refreshView addSubview:self.refreshLabel];
-    [self.refreshLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.refreshView.mas_top).with.offset(7.5);
-        make.centerX.mas_equalTo(self.refreshView.mas_centerX).with.offset(10);
-        make.size.mas_equalTo(CGSizeMake(100, 20));
-    }];
-    
-    self.lastRefreshTimeLabel = [UILabel new];
-    NSDate *date = [NSDate date];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    // 获取当前时间日期展示字符串 如：2019-05-23-13:58:59
-    [self.lastRefreshTimeLabel setText:[NSString stringWithFormat:@"最后更新: %@", [formatter stringFromDate:date]]];
-    [self.lastRefreshTimeLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.lastRefreshTimeLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
-    [self.refreshView addSubview:self.lastRefreshTimeLabel];
-    [self.lastRefreshTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.refreshLabel.mas_bottom).with.offset(2.5);
-        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX).with.offset(10);
-        make.size.mas_equalTo(CGSizeMake(180, 20));
-    }];
-
-    self.refreshImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"refresh_arrow"]];
-    [self.refreshView addSubview:self.refreshImageView];
-    [self.refreshImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.lastRefreshTimeLabel.mas_left).with.offset(-20);
-        make.centerY.mas_equalTo(self.refreshView.mas_centerY);
-        make.size.mas_equalTo(CGSizeMake(30, 50));
-    }];
-    
-    // 初始化navigationBar
-    [self initNavigationBar];
-    // 初始化accountView
-    [self initAccountView];
-    // 初始化orderView
-    [self initOrderView];
-    // 初始化myFunctionView
-    [self initMyFunctionView];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     // 显示两侧的tabBar按钮
-    [self.navigationController setNavigationBarHidden:NO];
     [self.tabBarController setTitle:@"我的"];
+    [self.navigationController setNavigationBarHidden:NO];
     [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
     [self.tabBarController.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
     
@@ -249,6 +190,67 @@ static BOOL isHadGotoLoginViewController = NO;
     }
 }
 
+- (void)initView {
+    self.contentScrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [self.contentScrollView setDelegate:self];
+    [self.contentScrollView setShowsVerticalScrollIndicator:NO];
+    [self.contentScrollView setBackgroundColor:[UIColor colorWithWhite:0.85 alpha:1.0]];
+    [self.contentScrollView setContentSize:CGSizeMake(0, 80 + 122.5 + 500 + 15 + 100)];
+    [self.view addSubview:self.contentScrollView];
+    
+    self.refreshView = [UIView new];
+    [self.refreshView setTag:0];
+    [self.contentScrollView addSubview:self.refreshView];
+    [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentScrollView.mas_top).with.offset(-mRefreshViewHeight);
+        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.height.mas_equalTo(mRefreshViewHeight);
+    }];
+    
+    self.refreshLabel = [UILabel new];
+    [self.refreshLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.refreshLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
+    [self.refreshView addSubview:self.refreshLabel];
+    [self.refreshLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.refreshView.mas_top).with.offset(7.5);
+        make.centerX.mas_equalTo(self.refreshView.mas_centerX).with.offset(10);
+        make.size.mas_equalTo(CGSizeMake(100, 20));
+    }];
+    
+    self.lastRefreshTimeLabel = [UILabel new];
+    NSDate *date = [NSDate date];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    // 获取当前时间日期展示字符串 如：2019-05-23-13:58:59
+    [self.lastRefreshTimeLabel setText:[NSString stringWithFormat:@"最后更新: %@", [formatter stringFromDate:date]]];
+    [self.lastRefreshTimeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.lastRefreshTimeLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
+    [self.refreshView addSubview:self.lastRefreshTimeLabel];
+    [self.lastRefreshTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.refreshLabel.mas_bottom).with.offset(2.5);
+        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX).with.offset(10);
+        make.size.mas_equalTo(CGSizeMake(180, 20));
+    }];
+
+    self.refreshImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"refresh_arrow"]];
+    [self.refreshView addSubview:self.refreshImageView];
+    [self.refreshImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.lastRefreshTimeLabel.mas_left).with.offset(-20);
+        make.centerY.mas_equalTo(self.refreshView.mas_centerY);
+        make.size.mas_equalTo(CGSizeMake(30, 50));
+    }];
+    
+    // 初始化navigationBar
+    [self initNavigationBar];
+    // 初始化accountView
+    [self initAccountView];
+    // 初始化orderView
+    [self initOrderView];
+    // 初始化myFunctionView
+    [self initMyFunctionView];
+}
+
 - (void)initNavigationBar{
     self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsViewController)];
     [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
@@ -331,7 +333,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.orderInfoView setBackgroundColor:[UIColor whiteColor]];
     [self.contentScrollView addSubview:self.orderInfoView];
     [self.orderInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.accountInfoView.mas_bottom).with.offset(10);
+        make.top.mas_equalTo(self.accountInfoView.mas_bottom).with.offset(5);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo(mainWidth);
         make.height.mas_equalTo(122.5);
@@ -459,7 +461,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.myCollectionView setBackgroundColor:[UIColor whiteColor]];
     [self.contentScrollView addSubview:self.myCollectionView];
     [self.myCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.orderInfoView.mas_bottom).with.offset(10);
+        make.top.mas_equalTo(self.orderInfoView.mas_bottom).with.offset(5);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo(mainWidth);
         make.height.mas_equalTo(50);
@@ -615,7 +617,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.electronicInvoiceView setBackgroundColor:[UIColor whiteColor]];
     [self.contentScrollView addSubview:self.electronicInvoiceView];
     [self.electronicInvoiceView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.myDeliveryAddressView.mas_bottom).with.offset(10);
+        make.top.mas_equalTo(self.myDeliveryAddressView.mas_bottom).with.offset(5);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo(mainWidth);
         make.height.mas_equalTo(50);
