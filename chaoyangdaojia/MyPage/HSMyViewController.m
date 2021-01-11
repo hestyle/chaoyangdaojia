@@ -70,6 +70,8 @@
 static const NSInteger mRefreshViewHeight = 60;
 /* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
 static const NSInteger mTableViewBaseContentOffsetY = -88;
+/* 当前页面只有登录了才能显示，没登录就跳转到登录，需要防止从登录页面（未登录）状态下返回此页面 */
+static BOOL isHadGotoLoginViewController = NO;
 
 @implementation HSMyViewController
 
@@ -210,9 +212,17 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     // 访问getinfo接口
     HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
     if (!userAccoutManager.isLogin) {
-        // 跳转到登录
-        HSLoginViewController *loginViewController = [HSLoginViewController new];
-        [self.navigationController pushViewController:loginViewController animated:YES];
+        // 未登录
+        if (!isHadGotoLoginViewController) {
+            // 之前未到登录页面，则直接跳转到登录页面
+            HSLoginViewController *loginViewController = [HSLoginViewController new];
+            [self.navigationController pushViewController:loginViewController animated:YES];
+            isHadGotoLoginViewController = YES;
+        } else {
+            // 之前已到登录页面，跳转到首页
+            isHadGotoLoginViewController = NO;
+            [self.tabBarController setSelectedIndex:0];
+        }
         return;
     }
     // 设置用户名、积分
