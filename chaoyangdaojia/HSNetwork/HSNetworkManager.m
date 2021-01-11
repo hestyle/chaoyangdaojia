@@ -18,7 +18,7 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
 /**
  * 创建单例对象
  */
-+ (HSNetworkManager *)manager {
++ (HSNetworkManager *)shareManager {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         hsNetworkManager = [[HSNetworkManager alloc] init];

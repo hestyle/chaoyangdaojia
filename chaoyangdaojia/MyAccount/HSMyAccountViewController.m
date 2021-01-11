@@ -9,10 +9,9 @@
 #import "HSMyAccountViewController.h"
 #import "HSLoginViewController.h"
 #import "HSAccountDetailTableViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
-#import "HSAccount.h"
 #import "HSSettingsTableViewController.h"
+#import "HSNetwork.h"
+#import "HSAccount.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 

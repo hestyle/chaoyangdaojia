@@ -7,8 +7,7 @@
 //
 
 #import "HSFeedbackViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -70,7 +69,7 @@ static const NSUInteger maxContentLength = 200;
     [self.proposalTextView endEditing:YES];
     [self.contactPhoneNumberTextField endEditing:YES];
     NSDictionary *data = @{@"content":proposalStr, @"phone":phoneNumberStr};
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kFeedbackProblem parameters:@{@"data":data} success:^(NSDictionary *responseDict) {
         dispatch_async(dispatch_get_main_queue(), ^{

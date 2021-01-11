@@ -42,6 +42,7 @@
 		3EBD767773293FBA077A2885 /* Pods-chaoyangdaojia.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chaoyangdaojia.release.xcconfig"; path = "Target Support Files/Pods-chaoyangdaojia/Pods-chaoyangdaojia.release.xcconfig"; sourceTree = "<group>"; };
 		D003017B25983E360068DB6C /* HSAccountDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAccountDetailTableViewController.h; sourceTree = "<group>"; };
 		D003017C25983E360068DB6C /* HSAccountDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSAccountDetailTableViewController.m; sourceTree = "<group>"; };
+		D04360D425AC305100C04580 /* HSNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetwork.h; sourceTree = "<group>"; };
 		D05288CA259338F100C8A2D1 /* chaoyangdaojia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chaoyangdaojia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05288CD259338F100C8A2D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D05288CE259338F100C8A2D1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -145,7 +146,7 @@
 			children = (
 				D0E5984A25A33B5F00FEFE4B /* HSAccount */,
 				D06DA602259D666600C64B7C /* Model */,
-				D0DBB59F2595CF4000B31A33 /* Common */,
+				D0DBB59F2595CF4000B31A33 /* HSNetwork */,
 				D07F4AE02594BCE000CA0670 /* MyAccount */,
 				D07F4ADF2594BCC900CA0670 /* Cart */,
 				D07F4ADE2594BC9400CA0670 /* Shop */,
@@ -235,15 +236,16 @@
 			path = MyAccount;
 			sourceTree = "<group>";
 		};
-		D0DBB59F2595CF4000B31A33 /* Common */ = {
+		D0DBB59F2595CF4000B31A33 /* HSNetwork */ = {
 			isa = PBXGroup;
 			children = (
 				D0C843812595D4B500197F8C /* HSNetworkManager.h */,
 				D0C843822595D4B500197F8C /* HSNetworkManager.m */,
 				D0C843842595DF6100197F8C /* HSNetworkUrl.h */,
 				D0C843852595DF6100197F8C /* HSNetworkUrl.m */,
+				D04360D425AC305100C04580 /* HSNetwork.h */,
 			);
-			path = Common;
+			path = HSNetwork;
 			sourceTree = "<group>";
 		};
 		D0DC6FA025A056F100B501C8 /* Settings */ = {

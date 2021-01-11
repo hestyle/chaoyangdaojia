@@ -7,8 +7,7 @@
 //
 
 #import "HSUserAccountManger.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 
 @interface HSUserAccountManger ()
 
@@ -27,7 +26,7 @@ static NSString * const mAvatarKey = @"AVATAR_PATH";
     dispatch_once(&onceToken, ^{
         userAccountManger = [[HSUserAccountManger alloc] init];
         // 读取app-token，验证是否登录了
-        HSNetworkManager *networkManager = [HSNetworkManager manager];
+        HSNetworkManager *networkManager = [HSNetworkManager shareManager];
         NSString *xAppTokenString = [networkManager getXAppToken];
         if (xAppTokenString == nil || [xAppTokenString length] == 0) {
             [userAccountManger notLoginInfoSet];
@@ -53,7 +52,7 @@ static NSString * const mAvatarKey = @"AVATAR_PATH";
  * 刷新userInfo
  */
 - (void)refreshUserInfoFromNetWork {
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kGetUserInfoUrl parameters:@{} success:^(NSDictionary *responseDict) {
         // 账号信息获取成功
@@ -91,7 +90,7 @@ static NSString * const mAvatarKey = @"AVATAR_PATH";
     userInfoDict = nil;
     avatarPath = nil;
     // 移除token
-    HSNetworkManager *networkManager = [HSNetworkManager manager];
+    HSNetworkManager *networkManager = [HSNetworkManager shareManager];
     [networkManager removeXAppToken];
     // 删除userInfo缓存
     [self writeUserInfoToCache];

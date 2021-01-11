@@ -7,8 +7,7 @@
 //
 
 #import "HSPayPasswordSettingViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -105,7 +104,7 @@
 #pragma mark - Event
 - (void)getVerifyCodeAction {
     NSDictionary *paramters = @{@"phone":self.phoneNumberStr, @"type":@"setpaypwd"};
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kGetTelCodeUrl parameters:paramters success:^(NSDictionary *responseDict) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -131,7 +130,7 @@
         return;
     }
     NSDictionary *paramters = @{@"phone":self.phoneNumberStr, @"type":@"setpaypwd", @"code":self.verifyCodeTextField.text};
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kCheckVerifyCode parameters:paramters success:^(NSDictionary *responseDict) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -158,7 +157,7 @@
 
 - (void)setPayPasswordAction {
     NSDictionary *paramters = @{@"pwd":self.firstPasswordString};
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kSetPayPassword parameters:paramters success:^(NSDictionary *responseDict) {
         dispatch_async(dispatch_get_main_queue(), ^{

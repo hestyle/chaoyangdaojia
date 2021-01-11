@@ -7,10 +7,9 @@
 //
 
 #import "HSAccountDetailTableViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
-#import "HSAccount.h"
 #import "HSFriendBirthdayRemindTableViewController.h"
+#import "HSNetwork.h"
+#import "HSAccount.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -150,7 +149,7 @@
     __weak __typeof__(self) weakSelf = self;
     [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"nickname",@"value":[textField text]};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
@@ -185,7 +184,7 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"修改性别" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     __weak __typeof__(self) weakSelf = self;
     [alert addAction:[UIAlertAction actionWithTitle:@"男" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"sex",@"value":@"1"};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
@@ -214,7 +213,7 @@
         }];
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"女" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"sex",@"value":@"2"};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
@@ -243,7 +242,7 @@
         }];
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"保密" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"sex",@"value":@"0"};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
@@ -306,7 +305,7 @@
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *dateString = [dateFormatter stringFromDate:[datePicker date]];
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"birthday",@"value":dateString};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
@@ -366,7 +365,7 @@
     NSData *imageData = UIImagePNGRepresentation(image);
     NSDictionary *fileDataDict = @{@"fileName":@"avatar.png",@"mimeType":@"image/png",@"fileData":imageData};
     __weak __typeof__(self) weakSelf = self;
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     [manager uploadFileWithUrl:[hostName stringByAppendingString:@"/"] parameters:[parameters copy] fileDataDict:fileDataDict success:^(NSDictionary *responseDict) {
         NSDictionary *avatarParameterDict = @{@"type":@"avatar",@"value":fileName};
         // 再修改头像
@@ -410,7 +409,7 @@
 
 - (void)getOOSInfo{
     __weak __typeof__(self) weakSelf = self;
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     [manager postDataWithUrl:kGetOOSInfoUrl parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {
         // 获取成功
         if ([responseDict[@"errcode"] isEqual:@(0)]) {

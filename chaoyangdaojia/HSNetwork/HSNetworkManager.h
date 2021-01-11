@@ -10,11 +10,12 @@
 
 //block回调传值
 /**
- *   请求成功回调json数据
+ * 请求成功回调json数据
  *
- *  @param dict dict串
+ * @param responseDict dict串
  */
 typedef void(^Success)(NSDictionary *responseDict);
+
 /**
  *  请求失败回调错误信息
  *
@@ -25,8 +26,10 @@ typedef void(^Failure)(NSError *error);
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HSNetworkManager : NSObject
-//单例模式
-+ (HSNetworkManager *)manager;
+/**
+ *  单例模式
+ */
++ (HSNetworkManager *)shareManager;
 
 /**
  *  GET请求

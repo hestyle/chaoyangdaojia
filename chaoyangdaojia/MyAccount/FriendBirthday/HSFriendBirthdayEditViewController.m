@@ -7,8 +7,7 @@
 //
 
 #import "HSFriendBirthdayEditViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -144,7 +143,7 @@
         [self.view makeToast:@"请设置提醒时间！"];
         return;
     }
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     NSDictionary *data = @{@"birthday":self.friendBirthdayTextField.text, @"txtype":@(self.txtype), @"name":self.friendNameTextField.text, @"zunchen":self.friendCourtesyTitleTextField.text};
     if (self.friendBirthdayDict != nil && [[self.friendBirthdayDict allKeys] containsObject:@"id"]) {
         // 如果friendBirthdayDict包含id，说明是更新，带上id

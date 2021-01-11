@@ -7,8 +7,7 @@
 //
 
 #import "HSUserPolicyViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -61,7 +60,7 @@
 }
 
 - (void)getUserPolicyInfo {
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:kGetUserPolicy parameters:@{} success:^(NSDictionary *responseDict) {
         if (![responseDict[@"errcode"] isEqual:@(0)]) {

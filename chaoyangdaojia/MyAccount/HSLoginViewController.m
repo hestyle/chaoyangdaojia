@@ -7,8 +7,7 @@
 //
 
 #import "HSLoginViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import "HSAccount.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
@@ -157,7 +156,7 @@
         return;
     }
     NSDictionary *paramters = @{@"phone":phoneNumberStr, @"type":@"login"};
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kGetTelCodeUrl parameters:paramters success:^(NSDictionary *responseDict) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -195,7 +194,7 @@
     }
     NSDictionary *data = @{@"phone":phoneNumberStr, @"type":@"login", @"username": phoneNumberStr, @"code": verifyCodeStr};
     NSDictionary *paramters = @{@"data":data};
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kLoginUrl parameters:paramters success:^(NSDictionary *responseDict) {
         dispatch_async(dispatch_get_main_queue(), ^{

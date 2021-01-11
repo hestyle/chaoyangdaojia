@@ -7,8 +7,7 @@
 //
 
 #import "HSAboutUsViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -108,7 +107,7 @@
 }
 
 - (void)getAboutUsInfo {
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:kGetAboutUsInfo parameters:@{} success:^(NSDictionary *responseDict) {
         dispatch_async(dispatch_get_main_queue(), ^{
