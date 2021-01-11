@@ -9,6 +9,7 @@
 #import "HSAccountDetailTableViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
+#import "HSAccount.h"
 #import "HSFriendBirthdayRemindTableViewController.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -154,11 +155,11 @@
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"nickname"] = [weakSelf.nickNameLabel text];
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"nickname"] = [textField text];
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.nickNameLabel setText:textField.text];
@@ -189,11 +190,11 @@
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"sex"] = @"1";
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"sex"] = @"1";
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.genderLabel setText:@"男"];
@@ -218,11 +219,11 @@
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"sex"] = @"2";
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"sex"] = @"2";
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.genderLabel setText:@"女"];
@@ -247,11 +248,11 @@
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"sex"] = @"0";
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"sex"] = @"0";
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.genderLabel setText:@"保密"];
@@ -310,11 +311,11 @@
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"birthday"] = dateString;
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"birthday"] = dateString;
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.birthdayLabel setText:dateString];
@@ -372,12 +373,9 @@
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:avatarParameterDict success:^(NSDictionary *responseDict) {
             // 修改成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSString *path_sandox = NSHomeDirectory();
-                NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
-                [imageData writeToFile:newPath atomically:YES];
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
                 // 更新头像缓存
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                [userAccountManger updateAvatar:imageData];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.avatarImageView setImage:image];
@@ -428,8 +426,8 @@
 }
 
 - (void)initTableCellArray{
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userInfoDict = [userDefault objectForKey:@"USER_INFO"];
+    HSUserAccountManger *userAccountManager = [HSUserAccountManger shareManager];
+    NSDictionary *userInfoDict = userAccountManager.userInfoDict;
     UIImage *detailImage = [UIImage imageNamed:@"goto_detail"];
     // 头像
     UITableViewCell *avatarCell = [[UITableViewCell alloc] init];
@@ -451,8 +449,7 @@
     self.avatarImageView = [[UIImageView alloc] init];
     // 读取缓存中的图片
     NSString *path_sandox = NSHomeDirectory();
-    NSString *avatarPathSuffix = [userDefault objectForKey:@"AVATAR_PATH"];
-    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:avatarPathSuffix];
+    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:userAccountManager.avatarPath];
     UIImage *image = [UIImage imageWithContentsOfFile:avatarPath];
     if (image != nil) {
         [self.avatarImageView setImage:image];

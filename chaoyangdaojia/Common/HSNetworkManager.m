@@ -162,4 +162,20 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
         [userDefault setObject:mutableHeaders.copy forKey:@"NETWORK_HEADERS"];
     }
 }
+
+/**
+*  获取token
+*/
+- (NSString *)getXAppToken {
+    return mutableHeaders[@"X-AppToken"];
+}
+
+/*
+ * 移除token
+ */
+- (void)removeXAppToken {
+    [mutableHeaders removeObjectForKey:@"X-AppToken"];
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    [userDefault setObject:mutableHeaders.copy forKey:@"NETWORK_HEADERS"];
+}
 @end

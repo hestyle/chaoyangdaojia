@@ -11,6 +11,7 @@
 #import "HSAccountDetailTableViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
+#import "HSAccount.h"
 #import "HSSettingsTableViewController.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
@@ -79,14 +80,6 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     
     // 绘制view
     [self initView];
-    
-//    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-//    NSDictionary *headers = [userDefault dictionaryForKey:@"NETWORK_HEADERS"];
-//    // 检查userDefault中是否存在X-AppToken，存在则认为已登录
-//    if (headers != nil || [[headers allKeys] containsObject:@"X-AppToken"]) {
-//        // 请求账号信息
-//        [self getUserInfo];
-//    }
 }
 
 - (void)initView{
@@ -156,54 +149,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
     [self.tabBarController.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
     
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSDictionary *headers = [userDefault dictionaryForKey:@"NETWORK_HEADERS"];
-    // 检查userDefault中是否存在X-AppToken，不存在则认为未登录
-    if (headers == nil || ![[headers allKeys] containsObject:@"X-AppToken"]) {
-        // 跳转到登录
-        HSLoginViewController *loginViewController = [HSLoginViewController new];
-        [self.navigationController pushViewController:loginViewController animated:YES];
-        return;
-    }
-    // 从缓存中读取账号信息
-    NSDictionary *userInfoDict = [userDefault objectForKey:@"USER_INFO"];
-    [self.usernameLabel setText:userInfoDict[@"nickname"]];
-    [self.scoreLabel setText:[NSString stringWithFormat:@"%@", userInfoDict[@"lscore"]]];
-    // 是否实名认证
-    if ([userInfoDict[@"isrenzheng"] isEqual:@(0)]) {
-        [self.authenticationLabel setText:@"未实名认证 >"];
-    } else {
-        [self.authenticationLabel setText:@"已实名认证 >"];
-    }
-    // 设置用户头像
-    NSString *path_sandox = NSHomeDirectory();
-    NSString *avatarPathSuffix = [userDefault objectForKey:@"AVATAR_PATH"];
-    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:avatarPathSuffix];
-    UIImage *image = [UIImage imageWithContentsOfFile:avatarPath];
-    if (image != nil) {
-        [self.avatarImageView setImage:image];
-    } else if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
-        // 异步加载网络图片
-        __weak __typeof__(self) weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
-            NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
-            UIImage *avatarImage = [UIImage imageWithData:avatarData];
-            // 缓存图片
-            NSString *path_sandox = NSHomeDirectory();
-            NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
-            [avatarData writeToFile:newPath atomically:YES];
-            NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-            [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // 主线程更新ui
-                [weakSelf.avatarImageView setImage:avatarImage];
-            });
-        });
-    } else {
-        // 设置默认头像
-        [self.avatarImageView setImage:[UIImage imageNamed:@"noavatar"]];
-    }
+    [self getUserInfo];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -232,6 +178,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
             self.refreshLabel.text = @"加载中";
             scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
         }];
+        // 重新访问账号信息
+        [self refreshUserInfo];
         //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:.3 animations:^{
@@ -240,8 +188,6 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
                 scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
             }];
         });
-        // 重新访问账号信息
-        [self getUserInfo];
     }
 }
 
@@ -252,62 +198,46 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 #pragma mark - Private
-- (void)getUserInfo{
-    // 访问getinfo接口
-    HSNetworkManager *manager = [HSNetworkManager manager];
+- (void)refreshUserInfo {
+    HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
+    [userAccoutManager refreshUserInfoFromNetWork];
     __weak __typeof__(self) weakSelf = self;
-    [manager postDataWithUrl:kGetUserInfoUrl parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {
-        // 获取成功
-        if ([responseDict[@"errcode"] isEqual:@(0)]) {
-            NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-            NSDictionary *userInfoDict = responseDict[@"uinfo"];
-            NSMutableDictionary *realUserInfoDict = [NSMutableDictionary new];
-            // 挑选value ！= nil的key/value
-            for (NSString *keyString in [userInfoDict allKeys]) {
-                if (![userInfoDict[keyString] isEqual:[NSNull null]]) {
-                    realUserInfoDict[keyString] = userInfoDict[keyString];
-                }
-            }
-            [userDefault setObject:realUserInfoDict forKey:@"USER_INFO"];
-            // 请求用户头像，如果存在url，否则加载默认的头像
-            UIImage *avatarImage = [UIImage imageNamed:@"noavatar"];
-            if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
-                NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
-                NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
-                avatarImage = [UIImage imageWithData:avatarData];
-                // 缓存图片
-                NSString *path_sandox = NSHomeDirectory();
-                NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
-                [avatarData writeToFile:newPath atomically:YES];
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // 设置用户名、积分
-                [weakSelf.usernameLabel setText:userInfoDict[@"nickname"]];
-                [weakSelf.scoreLabel setText:[NSString stringWithFormat:@"%@", userInfoDict[@"lscore"]]];
-                // 是否实名认证
-                if ([userInfoDict[@"isrenzheng"] isEqual:@(0)]) {
-                    [weakSelf.authenticationLabel setText:@"未实名认证 >"];
-                } else {
-                    [weakSelf.authenticationLabel setText:@"已实名认证 >"];
-                }
-                // 设置用户头像
-                [weakSelf.avatarImageView setImage:avatarImage];
-            });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [weakSelf getUserInfo];
+    });
+}
+
+- (void)getUserInfo {
+    // 访问getinfo接口
+    HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
+    if (!userAccoutManager.isLogin) {
+        // 跳转到登录
+        HSLoginViewController *loginViewController = [HSLoginViewController new];
+        [self.navigationController pushViewController:loginViewController animated:YES];
+        return;
+    }
+    // 设置用户名、积分
+    NSDictionary *userInfoDict = userAccoutManager.userInfoDict;
+    if (userInfoDict != nil) {
+        [self.usernameLabel setText:userInfoDict[@"nickname"]];
+        [self.scoreLabel setText:[NSString stringWithFormat:@"%@", userInfoDict[@"lscore"]]];
+        // 是否实名认证
+        if ([userInfoDict[@"isrenzheng"] isEqual:@(0)]) {
+            [self.authenticationLabel setText:@"未实名认证 >"];
         } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.view makeToast:responseDict[@"接口返回数据格式错误！"]];
-            });
-            NSLog(@"接口 %@ 返回数据格式错误! responseDict = %@", kGetUserInfoUrl, responseDict);
+            [self.authenticationLabel setText:@"已实名认证 >"];
         }
-        
-    } failure:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.view makeToast:@"接口请求错误！"];
-        });
-        NSLog(@"%@", error);
-    }];
+    }
+    // 设置用户头像
+    if (userAccoutManager.avatarPath != nil) {
+        NSString *path_sandox = NSHomeDirectory();
+        NSString *avatarPath = [path_sandox stringByAppendingPathComponent:userAccoutManager.avatarPath];
+        UIImage *avatarImage = [UIImage imageWithContentsOfFile:avatarPath];
+        [self.avatarImageView setImage:avatarImage];
+    } else {
+        // 设置默认头像
+        [self.avatarImageView setImage:[UIImage imageNamed:@"noavatar"]];
+    }
 }
 
 - (void)initNavigationBar{

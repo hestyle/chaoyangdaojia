@@ -9,6 +9,7 @@
 #import "HSLoginViewController.h"
 #import "HSNetworkManager.h"
 #import "HSNetworkUrl.h"
+#import "HSAccount.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -143,15 +144,8 @@
     }];
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+#pragma mark - Private
 /**
  *获取验证码
  */
@@ -214,37 +208,22 @@
             }
             // 登录成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSDictionary *userInfoDict = responseDict[@"uinfo"];
-                NSMutableDictionary *realUserInfoDict = [NSMutableDictionary new];
-                // 挑选value ！= nil的key/value
-                for (NSString *keyString in [userInfoDict allKeys]) {
-                    if (![userInfoDict[keyString] isEqual:[NSNull null]]) {
-                        realUserInfoDict[keyString] = userInfoDict[keyString];
-                    }
-                }
-                [userDefault setObject:realUserInfoDict forKey:@"USER_INFO"];
-                NSLog(@"%@", responseDict[@"uinfo"]);
                 // 登录成功，返回前一个页面
                 [weakSelf.navigationController popViewControllerAnimated:YES];
             }
         });
-        NSDictionary *userInfoDict = responseDict[@"uinfo"];
-        if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
-            // 缓存图片到本地
-            NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
-            NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
-            NSString *path_sandox = NSHomeDirectory();
-            NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
-            [avatarData writeToFile:newPath atomically:YES];
-            NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-            [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            // 更新userInfo
+            NSDictionary *userInfoDict = responseDict[@"uinfo"];
+            HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
+            [userAccoutManager loginSuccess:userInfoDict];
         }
+        NSLog(@"接口 url = %@ 返回数据 responseDict = %@", kLoginUrl, responseDict);
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.view makeToast:@"接口请求错误！"];
         });
-        NSLog(@"%@", error);
+        NSLog(@"url = %@, error = %@", kLoginUrl, error);
     }];
 }
 

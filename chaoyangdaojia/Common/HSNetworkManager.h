@@ -57,6 +57,16 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param failure   void(^Failure)(NSError *error)回调
  */
 - (void)uploadFileWithUrl:(NSString *)url parameters:(NSDictionary *)paramters fileDataDict:(NSDictionary *)fileDataDict success:(Success)success failure:(Failure)failure;
+
+/*
+ * 获取token
+ */
+- (NSString *)getXAppToken;
+/*
+ * 移除token
+ */
+- (void)removeXAppToken;
+
 @end
 
 NS_ASSUME_NONNULL_END

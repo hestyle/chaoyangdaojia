@@ -12,6 +12,7 @@
 #import "HSFeedbackViewController.h"
 #import "HSAboutUsViewController.h"
 #import "HSUserPolicyViewController.h"
+#import "HSAccount.h"
 #import <Masonry/Masonry.h>
 
 @interface HSSettingsTableViewController ()
@@ -91,10 +92,8 @@ static const NSInteger mHeightForRow = 50;
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         // 清空账号缓存
-        NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-        [userDefault removeObjectForKey:@"USER_INFO"];
-        [userDefault removeObjectForKey:@"AVATAR_PATH"];
-        [userDefault removeObjectForKey:@"NETWORK_HEADERS"];
+        HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+        [userAccountManger logoutSuccess];
         // 返回
         [weakSelf.navigationController popViewControllerAnimated:YES];
     }]];

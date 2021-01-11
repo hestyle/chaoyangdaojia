@@ -32,6 +32,7 @@
 		D0E5984325A2A51200FEFE4B /* HSFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984225A2A51200FEFE4B /* HSFeedbackViewController.m */; };
 		D0E5984625A2BF7800FEFE4B /* HSAboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984525A2BF7800FEFE4B /* HSAboutUsViewController.m */; };
 		D0E5984925A3042400FEFE4B /* HSUserPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984825A3042400FEFE4B /* HSUserPolicyViewController.m */; };
+		D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5985025A33DF100FEFE4B /* HSUserAccountManger.m */; };
 		D590E466C16D7216F3FFCE40 /* libPods-chaoyangdaojia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +88,9 @@
 		D0E5984525A2BF7800FEFE4B /* HSAboutUsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSAboutUsViewController.m; sourceTree = "<group>"; };
 		D0E5984725A3042400FEFE4B /* HSUserPolicyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSUserPolicyViewController.h; sourceTree = "<group>"; };
 		D0E5984825A3042400FEFE4B /* HSUserPolicyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSUserPolicyViewController.m; sourceTree = "<group>"; };
+		D0E5984B25A33C3200FEFE4B /* HSAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAccount.h; sourceTree = "<group>"; };
+		D0E5984F25A33DF100FEFE4B /* HSUserAccountManger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSUserAccountManger.h; sourceTree = "<group>"; };
+		D0E5985025A33DF100FEFE4B /* HSUserAccountManger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSUserAccountManger.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +143,7 @@
 		D05288CC259338F100C8A2D1 /* chaoyangdaojia */ = {
 			isa = PBXGroup;
 			children = (
+				D0E5984A25A33B5F00FEFE4B /* HSAccount */,
 				D06DA602259D666600C64B7C /* Model */,
 				D0DBB59F2595CF4000B31A33 /* Common */,
 				D07F4AE02594BCE000CA0670 /* MyAccount */,
@@ -262,6 +267,16 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		D0E5984A25A33B5F00FEFE4B /* HSAccount */ = {
+			isa = PBXGroup;
+			children = (
+				D0E5984B25A33C3200FEFE4B /* HSAccount.h */,
+				D0E5984F25A33DF100FEFE4B /* HSUserAccountManger.h */,
+				D0E5985025A33DF100FEFE4B /* HSUserAccountManger.m */,
+			);
+			path = HSAccount;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -380,6 +395,7 @@
 				D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */,
 				D0903DFD2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m in Sources */,
 				D07F4AE32594C02200CA0670 /* HSMyAccountViewController.m in Sources */,
+				D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
