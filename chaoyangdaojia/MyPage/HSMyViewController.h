@@ -1,5 +1,5 @@
 //
-//  HSFirstPageViewController.h
+//  HSMyViewController.h
 //  chaoyangdaojia
 //
 //  Created by hestyle on 2020/12/24.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HSFirstPageViewController : UIViewController
+@interface HSMyViewController : UIViewController <UIScrollViewDelegate>
 
 @end
 

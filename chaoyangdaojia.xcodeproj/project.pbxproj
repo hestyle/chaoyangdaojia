@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D003017D25983E360068DB6C /* HSAccountDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D003017C25983E360068DB6C /* HSAccountDetailTableViewController.m */; };
+		D003017D25983E360068DB6C /* HSMyDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D003017C25983E360068DB6C /* HSMyDetailTableViewController.m */; };
 		D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288CE259338F100C8A2D1 /* AppDelegate.m */; };
 		D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05288D9259338F600C8A2D1 /* Assets.xcassets */; };
 		D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05288DB259338F600C8A2D1 /* LaunchScreen.storyboard */; };
@@ -15,11 +15,11 @@
 		D05712CB259A022C005B4A7A /* HSFriendBirthdayEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D05712CA259A022C005B4A7A /* HSFriendBirthdayEditViewController.m */; };
 		D06DA605259D669000C64B7C /* HSFriendBirthday.m in Sources */ = {isa = PBXBuildFile; fileRef = D06DA604259D669000C64B7C /* HSFriendBirthday.m */; };
 		D07F4ADB2594BA3600CA0670 /* HSMainTableBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4ADA2594BA3600CA0670 /* HSMainTableBarController.m */; };
-		D07F4AE32594C02200CA0670 /* HSMyAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */; };
+		D07F4AE32594C02200CA0670 /* HSMyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE22594C02200CA0670 /* HSMyViewController.m */; };
 		D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE52594C04E00CA0670 /* HSCartViewController.m */; };
 		D07F4AE92594C05E00CA0670 /* HSShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE82594C05E00CA0670 /* HSShopViewController.m */; };
 		D07F4AEC2594C06D00CA0670 /* HSSortViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */; };
-		D07F4AF02594C08900CA0670 /* HSFirstPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEF2594C08900CA0670 /* HSFirstPageViewController.m */; };
+		D07F4AF02594C08900CA0670 /* HSFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEF2594C08900CA0670 /* HSFirstViewController.m */; };
 		D0903DFD2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0903DFC2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m */; };
 		D0986B8A25A1D37200D47929 /* HSPayPasswordSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B8825A1D37200D47929 /* HSPayPasswordSettingViewController.m */; };
 		D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B8C25A1F06500D47929 /* HSCommonProblemTableViewController.m */; };
@@ -40,8 +40,8 @@
 		0C09EC4C808211ABFC454204 /* Pods-chaoyangdaojia.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chaoyangdaojia.debug.xcconfig"; path = "Target Support Files/Pods-chaoyangdaojia/Pods-chaoyangdaojia.debug.xcconfig"; sourceTree = "<group>"; };
 		2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-chaoyangdaojia.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBD767773293FBA077A2885 /* Pods-chaoyangdaojia.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chaoyangdaojia.release.xcconfig"; path = "Target Support Files/Pods-chaoyangdaojia/Pods-chaoyangdaojia.release.xcconfig"; sourceTree = "<group>"; };
-		D003017B25983E360068DB6C /* HSAccountDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAccountDetailTableViewController.h; sourceTree = "<group>"; };
-		D003017C25983E360068DB6C /* HSAccountDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSAccountDetailTableViewController.m; sourceTree = "<group>"; };
+		D003017B25983E360068DB6C /* HSMyDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMyDetailTableViewController.h; sourceTree = "<group>"; };
+		D003017C25983E360068DB6C /* HSMyDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMyDetailTableViewController.m; sourceTree = "<group>"; };
 		D04360D425AC305100C04580 /* HSNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetwork.h; sourceTree = "<group>"; };
 		D05288CA259338F100C8A2D1 /* chaoyangdaojia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chaoyangdaojia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05288CD259338F100C8A2D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -56,16 +56,16 @@
 		D06DA604259D669000C64B7C /* HSFriendBirthday.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFriendBirthday.m; sourceTree = "<group>"; };
 		D07F4AD92594BA3600CA0670 /* HSMainTableBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMainTableBarController.h; sourceTree = "<group>"; };
 		D07F4ADA2594BA3600CA0670 /* HSMainTableBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMainTableBarController.m; sourceTree = "<group>"; };
-		D07F4AE12594C02200CA0670 /* HSMyAccountViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMyAccountViewController.h; sourceTree = "<group>"; };
-		D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMyAccountViewController.m; sourceTree = "<group>"; };
+		D07F4AE12594C02200CA0670 /* HSMyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMyViewController.h; sourceTree = "<group>"; };
+		D07F4AE22594C02200CA0670 /* HSMyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMyViewController.m; sourceTree = "<group>"; };
 		D07F4AE42594C04E00CA0670 /* HSCartViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCartViewController.h; sourceTree = "<group>"; };
 		D07F4AE52594C04E00CA0670 /* HSCartViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCartViewController.m; sourceTree = "<group>"; };
 		D07F4AE72594C05E00CA0670 /* HSShopViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSShopViewController.h; sourceTree = "<group>"; };
 		D07F4AE82594C05E00CA0670 /* HSShopViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSShopViewController.m; sourceTree = "<group>"; };
 		D07F4AEA2594C06D00CA0670 /* HSSortViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSSortViewController.h; sourceTree = "<group>"; };
 		D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSSortViewController.m; sourceTree = "<group>"; };
-		D07F4AEE2594C08900CA0670 /* HSFirstPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFirstPageViewController.h; sourceTree = "<group>"; };
-		D07F4AEF2594C08900CA0670 /* HSFirstPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFirstPageViewController.m; sourceTree = "<group>"; };
+		D07F4AEE2594C08900CA0670 /* HSFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFirstViewController.h; sourceTree = "<group>"; };
+		D07F4AEF2594C08900CA0670 /* HSFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFirstViewController.m; sourceTree = "<group>"; };
 		D0903DFB2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFriendBirthdayRemindTableViewController.h; sourceTree = "<group>"; };
 		D0903DFC2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFriendBirthdayRemindTableViewController.m; sourceTree = "<group>"; };
 		D0986B8825A1D37200D47929 /* HSPayPasswordSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSPayPasswordSettingViewController.m; sourceTree = "<group>"; };
@@ -147,10 +147,10 @@
 				D0E5984A25A33B5F00FEFE4B /* HSAccount */,
 				D06DA602259D666600C64B7C /* Model */,
 				D0DBB59F2595CF4000B31A33 /* HSNetwork */,
-				D07F4AE02594BCE000CA0670 /* MyAccount */,
-				D07F4ADF2594BCC900CA0670 /* Cart */,
-				D07F4ADE2594BC9400CA0670 /* Shop */,
-				D07F4ADD2594BC3700CA0670 /* Sort */,
+				D07F4AE02594BCE000CA0670 /* MyPage */,
+				D07F4ADF2594BCC900CA0670 /* CartPage */,
+				D07F4ADE2594BC9400CA0670 /* ShopPage */,
+				D07F4ADD2594BC3700CA0670 /* SortPage */,
 				D07F4ADC2594BBCF00CA0670 /* FirstPage */,
 				D05288CD259338F100C8A2D1 /* AppDelegate.h */,
 				D05288CE259338F100C8A2D1 /* AppDelegate.m */,
@@ -187,53 +187,53 @@
 		D07F4ADC2594BBCF00CA0670 /* FirstPage */ = {
 			isa = PBXGroup;
 			children = (
-				D07F4AEE2594C08900CA0670 /* HSFirstPageViewController.h */,
-				D07F4AEF2594C08900CA0670 /* HSFirstPageViewController.m */,
+				D07F4AEE2594C08900CA0670 /* HSFirstViewController.h */,
+				D07F4AEF2594C08900CA0670 /* HSFirstViewController.m */,
 			);
 			path = FirstPage;
 			sourceTree = "<group>";
 		};
-		D07F4ADD2594BC3700CA0670 /* Sort */ = {
+		D07F4ADD2594BC3700CA0670 /* SortPage */ = {
 			isa = PBXGroup;
 			children = (
 				D07F4AEA2594C06D00CA0670 /* HSSortViewController.h */,
 				D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */,
 			);
-			path = Sort;
+			path = SortPage;
 			sourceTree = "<group>";
 		};
-		D07F4ADE2594BC9400CA0670 /* Shop */ = {
+		D07F4ADE2594BC9400CA0670 /* ShopPage */ = {
 			isa = PBXGroup;
 			children = (
 				D07F4AE72594C05E00CA0670 /* HSShopViewController.h */,
 				D07F4AE82594C05E00CA0670 /* HSShopViewController.m */,
 			);
-			path = Shop;
+			path = ShopPage;
 			sourceTree = "<group>";
 		};
-		D07F4ADF2594BCC900CA0670 /* Cart */ = {
+		D07F4ADF2594BCC900CA0670 /* CartPage */ = {
 			isa = PBXGroup;
 			children = (
 				D07F4AE42594C04E00CA0670 /* HSCartViewController.h */,
 				D07F4AE52594C04E00CA0670 /* HSCartViewController.m */,
 			);
-			path = Cart;
+			path = CartPage;
 			sourceTree = "<group>";
 		};
-		D07F4AE02594BCE000CA0670 /* MyAccount */ = {
+		D07F4AE02594BCE000CA0670 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
 				D0DC6FA025A056F100B501C8 /* Settings */,
 				D05712C8259A013B005B4A7A /* FriendBirthday */,
-				D07F4AE12594C02200CA0670 /* HSMyAccountViewController.h */,
-				D07F4AE22594C02200CA0670 /* HSMyAccountViewController.m */,
+				D07F4AE12594C02200CA0670 /* HSMyViewController.h */,
+				D07F4AE22594C02200CA0670 /* HSMyViewController.m */,
 				D0DBB59C2595876C00B31A33 /* HSLoginViewController.h */,
 				D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */,
 				D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */,
-				D003017B25983E360068DB6C /* HSAccountDetailTableViewController.h */,
-				D003017C25983E360068DB6C /* HSAccountDetailTableViewController.m */,
+				D003017B25983E360068DB6C /* HSMyDetailTableViewController.h */,
+				D003017C25983E360068DB6C /* HSMyDetailTableViewController.m */,
 			);
-			path = MyAccount;
+			path = MyPage;
 			sourceTree = "<group>";
 		};
 		D0DBB59F2595CF4000B31A33 /* HSNetwork */ = {
@@ -381,7 +381,7 @@
 				D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */,
 				D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */,
 				D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */,
-				D003017D25983E360068DB6C /* HSAccountDetailTableViewController.m in Sources */,
+				D003017D25983E360068DB6C /* HSMyDetailTableViewController.m in Sources */,
 				D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */,
 				D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */,
 				D07F4AEC2594C06D00CA0670 /* HSSortViewController.m in Sources */,
@@ -389,14 +389,14 @@
 				D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */,
 				D07F4AE92594C05E00CA0670 /* HSShopViewController.m in Sources */,
 				D0E5984325A2A51200FEFE4B /* HSFeedbackViewController.m in Sources */,
-				D07F4AF02594C08900CA0670 /* HSFirstPageViewController.m in Sources */,
+				D07F4AF02594C08900CA0670 /* HSFirstViewController.m in Sources */,
 				D05712CB259A022C005B4A7A /* HSFriendBirthdayEditViewController.m in Sources */,
 				D05288E0259338F600C8A2D1 /* main.m in Sources */,
 				D06DA605259D669000C64B7C /* HSFriendBirthday.m in Sources */,
 				D0E5984925A3042400FEFE4B /* HSUserPolicyViewController.m in Sources */,
 				D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */,
 				D0903DFD2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m in Sources */,
-				D07F4AE32594C02200CA0670 /* HSMyAccountViewController.m in Sources */,
+				D07F4AE32594C02200CA0670 /* HSMyViewController.m in Sources */,
 				D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,5 +1,5 @@
 //
-//  HSAccountDetailTableViewController.h
+//  HSMyDetailTableViewController.h
 //  chaoyangdaojia
 //
 //  Created by hestyle on 2020/12/27.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HSAccountDetailTableViewController : UITableViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface HSMyDetailTableViewController : UITableViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @end
 

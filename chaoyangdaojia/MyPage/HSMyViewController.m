@@ -1,21 +1,21 @@
 //
-//  HSMyAccountViewController.m
+//  HSMyViewController.m
 //  chaoyangdaojia
 //
 //  Created by hestyle on 2020/12/24.
 //  Copyright © 2020 hestyle. All rights reserved.
 //
 
-#import "HSMyAccountViewController.h"
+#import "HSMyViewController.h"
 #import "HSLoginViewController.h"
-#import "HSAccountDetailTableViewController.h"
+#import "HSMyDetailTableViewController.h"
 #import "HSSettingsTableViewController.h"
 #import "HSNetwork.h"
 #import "HSAccount.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
-@interface HSMyAccountViewController ()
+@interface HSMyViewController ()
 
 @property (nonatomic, strong) UIScrollView *contentScrollView;
 @property (nonatomic, strong) UIView *refreshView;
@@ -71,7 +71,7 @@ static const NSInteger mRefreshViewHeight = 60;
 /* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
 static const NSInteger mTableViewBaseContentOffsetY = -88;
 
-@implementation HSMyAccountViewController
+@implementation HSMyViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -191,8 +191,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 #pragma mark - Event
-- (void)gotoAccountDetail{
-    HSAccountDetailTableViewController *controller = [[HSAccountDetailTableViewController alloc] init];
+- (void)gotoMyDetail {
+    HSMyDetailTableViewController *controller = [[HSMyDetailTableViewController alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -261,7 +261,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.height.mas_equalTo(80);
     }];
     // 添加点击事件
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoAccountDetail)];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoMyDetail)];
     [tapGesture setNumberOfTapsRequired:1];
     [self.accountInfoView setUserInteractionEnabled:YES];
     [self.accountInfoView addGestureRecognizer:tapGesture];

@@ -1,19 +1,19 @@
 //
-//  HSAccountDetailTableViewController.m
+//  HSMyDetailTableViewController.m
 //  chaoyangdaojia
 //
 //  Created by hestyle on 2020/12/27.
 //  Copyright © 2020 hestyle. All rights reserved.
 //
 
-#import "HSAccountDetailTableViewController.h"
+#import "HSMyDetailTableViewController.h"
 #import "HSFriendBirthdayRemindTableViewController.h"
 #import "HSNetwork.h"
 #import "HSAccount.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
-@interface HSAccountDetailTableViewController ()
+@interface HSMyDetailTableViewController ()
 
 @property (nonatomic, strong) NSArray<UITableViewCell *> *tableCellArray;
 @property (nonatomic, strong) UIImageView *avatarImageView;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation HSAccountDetailTableViewController
+@implementation HSMyDetailTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

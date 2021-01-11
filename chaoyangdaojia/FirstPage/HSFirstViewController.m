@@ -1,19 +1,19 @@
 //
-//  HSFirstPageViewController.m
+//  HSFirstViewController.m
 //  chaoyangdaojia
 //
 //  Created by hestyle on 2020/12/24.
 //  Copyright © 2020 hestyle. All rights reserved.
 //
 
-#import "HSFirstPageViewController.h"
+#import "HSFirstViewController.h"
 #import <Masonry/Masonry.h>
 
-@interface HSFirstPageViewController ()
+@interface HSFirstViewController ()
 
 @end
 
-@implementation HSFirstPageViewController
+@implementation HSFirstViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
