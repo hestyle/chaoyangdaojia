@@ -1,19 +1,19 @@
 //
-//  HSAccountDetailTableViewController.m
+//  HSMyDetailTableViewController.m
 //  chaoyangdaojia
 //
 //  Created by hestyle on 2020/12/27.
 //  Copyright © 2020 hestyle. All rights reserved.
 //
 
-#import "HSAccountDetailTableViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSMyDetailTableViewController.h"
 #import "HSFriendBirthdayRemindTableViewController.h"
+#import "HSNetwork.h"
+#import "HSAccount.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
-@interface HSAccountDetailTableViewController ()
+@interface HSMyDetailTableViewController ()
 
 @property (nonatomic, strong) NSArray<UITableViewCell *> *tableCellArray;
 @property (nonatomic, strong) UIImageView *avatarImageView;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation HSAccountDetailTableViewController
+@implementation HSMyDetailTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -149,16 +149,16 @@
     __weak __typeof__(self) weakSelf = self;
     [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"nickname",@"value":[textField text]};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"nickname"] = [weakSelf.nickNameLabel text];
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"nickname"] = [textField text];
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.nickNameLabel setText:textField.text];
@@ -184,16 +184,16 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"修改性别" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     __weak __typeof__(self) weakSelf = self;
     [alert addAction:[UIAlertAction actionWithTitle:@"男" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"sex",@"value":@"1"};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"sex"] = @"1";
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"sex"] = @"1";
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.genderLabel setText:@"男"];
@@ -213,16 +213,16 @@
         }];
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"女" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"sex",@"value":@"2"};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"sex"] = @"2";
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"sex"] = @"2";
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.genderLabel setText:@"女"];
@@ -242,16 +242,16 @@
         }];
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"保密" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"sex",@"value":@"0"};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"sex"] = @"0";
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"sex"] = @"0";
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.genderLabel setText:@"保密"];
@@ -305,16 +305,16 @@
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *dateString = [dateFormatter stringFromDate:[datePicker date]];
-        HSNetworkManager *manager = [HSNetworkManager manager];
+        HSNetworkManager *manager = [HSNetworkManager shareManager];
         NSDictionary *parameters = @{@"type":@"birthday",@"value":dateString};
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:parameters success:^(NSDictionary *responseDict) {
             // 获取成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *userInfoDict = [[userDefault valueForKey:@"USER_INFO"] mutableCopy];
-                userInfoDict[@"birthday"] = dateString;
                 // 更新缓存
-                [userDefault setObject:userInfoDict.copy forKey:@"USER_INFO"];
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                NSMutableDictionary *userInfoDict = [userAccountManger.userInfoDict mutableCopy];
+                userInfoDict[@"birthday"] = dateString;
+                [userAccountManger updateUserInfo:userInfoDict.copy];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.birthdayLabel setText:dateString];
@@ -365,19 +365,16 @@
     NSData *imageData = UIImagePNGRepresentation(image);
     NSDictionary *fileDataDict = @{@"fileName":@"avatar.png",@"mimeType":@"image/png",@"fileData":imageData};
     __weak __typeof__(self) weakSelf = self;
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     [manager uploadFileWithUrl:[hostName stringByAppendingString:@"/"] parameters:[parameters copy] fileDataDict:fileDataDict success:^(NSDictionary *responseDict) {
         NSDictionary *avatarParameterDict = @{@"type":@"avatar",@"value":fileName};
         // 再修改头像
         [manager postDataWithUrl:kModifyUserInfoUrl parameters:avatarParameterDict success:^(NSDictionary *responseDict) {
             // 修改成功
             if ([responseDict[@"errcode"] isEqual:@(0)]) {
-                NSString *path_sandox = NSHomeDirectory();
-                NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
-                [imageData writeToFile:newPath atomically:YES];
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
                 // 更新头像缓存
+                HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+                [userAccountManger updateAvatar:imageData];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 更新ui
                     [weakSelf.avatarImageView setImage:image];
@@ -412,7 +409,7 @@
 
 - (void)getOOSInfo{
     __weak __typeof__(self) weakSelf = self;
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     [manager postDataWithUrl:kGetOOSInfoUrl parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {
         // 获取成功
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
@@ -428,8 +425,8 @@
 }
 
 - (void)initTableCellArray{
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userInfoDict = [userDefault objectForKey:@"USER_INFO"];
+    HSUserAccountManger *userAccountManager = [HSUserAccountManger shareManager];
+    NSDictionary *userInfoDict = userAccountManager.userInfoDict;
     UIImage *detailImage = [UIImage imageNamed:@"goto_detail"];
     // 头像
     UITableViewCell *avatarCell = [[UITableViewCell alloc] init];
@@ -451,8 +448,7 @@
     self.avatarImageView = [[UIImageView alloc] init];
     // 读取缓存中的图片
     NSString *path_sandox = NSHomeDirectory();
-    NSString *avatarPathSuffix = [userDefault objectForKey:@"AVATAR_PATH"];
-    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:avatarPathSuffix];
+    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:userAccountManager.avatarPath];
     UIImage *image = [UIImage imageWithContentsOfFile:avatarPath];
     if (image != nil) {
         [self.avatarImageView setImage:image];

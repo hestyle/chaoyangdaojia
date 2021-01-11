@@ -7,11 +7,11 @@
 //
 
 #import "HSMainTableBarController.h"
-#import "FirstPage/HSFirstPageViewController.h"
-#import "Sort/HSSortViewController.h"
-#import "Shop/HSShopViewController.h"
-#import "Cart/HSCartViewController.h"
-#import "MyAccount/HSMyAccountViewController.h"
+#import "FirstPage/HSFirstViewController.h"
+#import "SortPage/HSSortViewController.h"
+#import "ShopPage/HSShopViewController.h"
+#import "CartPage/HSCartViewController.h"
+#import "MyPage/HSMyViewController.h"
 
 @interface HSMainTableBarController ()
 
@@ -24,11 +24,11 @@
     // title选中时的颜色
     NSDictionary *dict = @{NSForegroundColorAttributeName:[UIColor blackColor]};
     // 设置5个tabBar
-    HSFirstPageViewController *firstPageViewController = [HSFirstPageViewController new];
-    [firstPageViewController.tabBarItem setTitle:@"首页"];
-    [firstPageViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
-    [firstPageViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_firstpage"]];
-    [firstPageViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_firstpage_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    HSFirstViewController *firstViewController = [HSFirstViewController new];
+    [firstViewController.tabBarItem setTitle:@"首页"];
+    [firstViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
+    [firstViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_firstpage"]];
+    [firstViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_firstpage_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
     HSSortViewController *sortViewController = [HSSortViewController new];
     [sortViewController.tabBarItem setTitle:@"分类"];
@@ -48,13 +48,13 @@
     [cartViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_cart"]];
     [cartViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_cart_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
-    HSMyAccountViewController *myAccountViewController = [HSMyAccountViewController new];
-    [myAccountViewController.tabBarItem setTitle:@"我的"];
-    [myAccountViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
-    [myAccountViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_myaccount"]];
-    [myAccountViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_myaccount_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    HSMyViewController *myViewController = [HSMyViewController new];
+    [myViewController.tabBarItem setTitle:@"我的"];
+    [myViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
+    [myViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_myaccount"]];
+    [myViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_myaccount_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
-    self.viewControllers = @[firstPageViewController, sortViewController, shopViewController, cartViewController, myAccountViewController];
+    self.viewControllers = @[firstViewController, sortViewController, shopViewController, cartViewController, myViewController];
 }
 
 @end

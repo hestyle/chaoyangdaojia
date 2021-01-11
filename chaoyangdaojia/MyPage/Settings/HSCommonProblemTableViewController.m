@@ -8,8 +8,7 @@
 
 #import "HSCommonProblemTableViewController.h"
 #import "HSCommonProblemDetailViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -233,7 +232,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)getCommonProblemByPage:(NSUInteger)page {
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     NSString *url = [kGetCommonProblemByPage stringByAppendingFormat:@"?page=%ld", page];
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:url parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {

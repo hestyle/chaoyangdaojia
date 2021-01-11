@@ -8,8 +8,7 @@
 
 #import "HSFriendBirthdayRemindTableViewController.h"
 #import "HSFriendBirthdayEditViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -317,7 +316,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)getFriendBirthdaysByPage:(NSUInteger)page {
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     NSString *url = [kGetFriendBirthdaysByPageUrl stringByAppendingFormat:@"?page=%ld", page];
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:url parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {
@@ -375,7 +374,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)deleteFriendBirthdayRemind:(NSUInteger)id indexPath:(NSIndexPath *)indexPath {
-    HSNetworkManager *manager = [HSNetworkManager manager];
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
     NSString *url = [kDeleteFriendBirthdayRemind stringByAppendingFormat:@"?id=%ld", id];
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:url parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {

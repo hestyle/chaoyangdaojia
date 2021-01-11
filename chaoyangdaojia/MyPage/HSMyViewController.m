@@ -1,21 +1,21 @@
 //
-//  HSMyAccountViewController.m
+//  HSMyViewController.m
 //  chaoyangdaojia
 //
 //  Created by hestyle on 2020/12/24.
 //  Copyright © 2020 hestyle. All rights reserved.
 //
 
-#import "HSMyAccountViewController.h"
+#import "HSMyViewController.h"
 #import "HSLoginViewController.h"
-#import "HSAccountDetailTableViewController.h"
-#import "HSNetworkManager.h"
-#import "HSNetworkUrl.h"
+#import "HSMyDetailTableViewController.h"
 #import "HSSettingsTableViewController.h"
+#import "HSNetwork.h"
+#import "HSAccount.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
-@interface HSMyAccountViewController ()
+@interface HSMyViewController ()
 
 @property (nonatomic, strong) UIScrollView *contentScrollView;
 @property (nonatomic, strong) UIView *refreshView;
@@ -70,30 +70,132 @@
 static const NSInteger mRefreshViewHeight = 60;
 /* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
 static const NSInteger mTableViewBaseContentOffsetY = -88;
+/* 当前页面只有登录了才能显示，没登录就跳转到登录，需要防止从登录页面（未登录）状态下返回此页面 */
+static BOOL isHadGotoLoginViewController = NO;
 
-@implementation HSMyAccountViewController
+@implementation HSMyViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
     // 绘制view
     [self initView];
-    
-//    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-//    NSDictionary *headers = [userDefault dictionaryForKey:@"NETWORK_HEADERS"];
-//    // 检查userDefault中是否存在X-AppToken，存在则认为已登录
-//    if (headers != nil || [[headers allKeys] containsObject:@"X-AppToken"]) {
-//        // 请求账号信息
-//        [self getUserInfo];
-//    }
 }
 
-- (void)initView{
+- (void)viewWillAppear:(BOOL)animated {
+    // 显示两侧的tabBar按钮
+    [self.tabBarController setTitle:@"我的"];
+    [self.navigationController setNavigationBarHidden:NO];
+    [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
+    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
+    
+    [self getUserInfo];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    // 移除tabBarController两侧的按钮
+    [self.tabBarController.navigationItem setLeftBarButtonItem:nil];
+    [self.tabBarController.navigationItem setRightBarButtonItem:nil];
+}
+
+#pragma mark - UIScrollView Delegate
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (scrollView.contentOffset.y <= (mTableViewBaseContentOffsetY - mRefreshViewHeight)) {
+        if (self.refreshView.tag == 0) {
+            self.refreshLabel.text = @"松开刷新";
+        }
+        self.refreshView.tag = 1;
+    } else {
+        //防止用户在下拉到contentOffset.y <= -50后不松手，然后又往回滑动，需要将值设为默认状态
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    if (self.refreshView.tag == 1) {
+        [UIView animateWithDuration:.3 animations:^{
+            self.refreshLabel.text = @"加载中";
+            scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
+        }];
+        // 重新访问账号信息
+        [self refreshUserInfo];
+        //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:.3 animations:^{
+                self.refreshView.tag = 0;
+                self.refreshLabel.text = @"下拉刷新";
+                scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            }];
+        });
+    }
+}
+
+#pragma mark - Event
+- (void)gotoMyDetail {
+    HSMyDetailTableViewController *controller = [[HSMyDetailTableViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+#pragma mark - Private
+- (void)refreshUserInfo {
+    HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
+    [userAccoutManager refreshUserInfoFromNetWork];
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [weakSelf getUserInfo];
+    });
+}
+
+- (void)getUserInfo {
+    // 访问getinfo接口
+    HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
+    if (!userAccoutManager.isLogin) {
+        // 未登录
+        if (!isHadGotoLoginViewController) {
+            // 之前未到登录页面，则直接跳转到登录页面
+            HSLoginViewController *loginViewController = [HSLoginViewController new];
+            [self.navigationController pushViewController:loginViewController animated:YES];
+            isHadGotoLoginViewController = YES;
+        } else {
+            // 之前已到登录页面，跳转到首页
+            isHadGotoLoginViewController = NO;
+            [self.tabBarController setSelectedIndex:0];
+        }
+        return;
+    }
+    // 设置用户名、积分
+    NSDictionary *userInfoDict = userAccoutManager.userInfoDict;
+    if (userInfoDict != nil) {
+        [self.usernameLabel setText:userInfoDict[@"nickname"]];
+        [self.scoreLabel setText:[NSString stringWithFormat:@"%@", userInfoDict[@"lscore"]]];
+        // 是否实名认证
+        if ([userInfoDict[@"isrenzheng"] isEqual:@(0)]) {
+            [self.authenticationLabel setText:@"未实名认证 >"];
+        } else {
+            [self.authenticationLabel setText:@"已实名认证 >"];
+        }
+    }
+    // 设置用户头像
+    if (userAccoutManager.avatarPath != nil) {
+        NSString *path_sandox = NSHomeDirectory();
+        NSString *avatarPath = [path_sandox stringByAppendingPathComponent:userAccoutManager.avatarPath];
+        UIImage *avatarImage = [UIImage imageWithContentsOfFile:avatarPath];
+        [self.avatarImageView setImage:avatarImage];
+    } else {
+        // 设置默认头像
+        [self.avatarImageView setImage:[UIImage imageNamed:@"noavatar"]];
+    }
+}
+
+- (void)initView {
     self.contentScrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.contentScrollView setDelegate:self];
-    [self.contentScrollView setBackgroundColor:[UIColor grayColor]];
-    [self.contentScrollView setContentSize:CGSizeMake(0, [UIScreen mainScreen].bounds.size.height)];
+    [self.contentScrollView setShowsVerticalScrollIndicator:NO];
+    [self.contentScrollView setBackgroundColor:[UIColor colorWithWhite:0.85 alpha:1.0]];
+    [self.contentScrollView setContentSize:CGSizeMake(0, 80 + 122.5 + 500 + 15 + 100)];
     [self.view addSubview:self.contentScrollView];
     
     self.refreshView = [UIView new];
@@ -149,167 +251,6 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self initMyFunctionView];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    // 显示两侧的tabBar按钮
-    [self.navigationController setNavigationBarHidden:NO];
-    [self.tabBarController setTitle:@"我的"];
-    [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
-    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
-    
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSDictionary *headers = [userDefault dictionaryForKey:@"NETWORK_HEADERS"];
-    // 检查userDefault中是否存在X-AppToken，不存在则认为未登录
-    if (headers == nil || ![[headers allKeys] containsObject:@"X-AppToken"]) {
-        // 跳转到登录
-        HSLoginViewController *loginViewController = [HSLoginViewController new];
-        [self.navigationController pushViewController:loginViewController animated:YES];
-        return;
-    }
-    // 从缓存中读取账号信息
-    NSDictionary *userInfoDict = [userDefault objectForKey:@"USER_INFO"];
-    [self.usernameLabel setText:userInfoDict[@"nickname"]];
-    [self.scoreLabel setText:[NSString stringWithFormat:@"%@", userInfoDict[@"lscore"]]];
-    // 是否实名认证
-    if ([userInfoDict[@"isrenzheng"] isEqual:@(0)]) {
-        [self.authenticationLabel setText:@"未实名认证 >"];
-    } else {
-        [self.authenticationLabel setText:@"已实名认证 >"];
-    }
-    // 设置用户头像
-    NSString *path_sandox = NSHomeDirectory();
-    NSString *avatarPathSuffix = [userDefault objectForKey:@"AVATAR_PATH"];
-    NSString *avatarPath = [path_sandox stringByAppendingPathComponent:avatarPathSuffix];
-    UIImage *image = [UIImage imageWithContentsOfFile:avatarPath];
-    if (image != nil) {
-        [self.avatarImageView setImage:image];
-    } else if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
-        // 异步加载网络图片
-        __weak __typeof__(self) weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
-            NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
-            UIImage *avatarImage = [UIImage imageWithData:avatarData];
-            // 缓存图片
-            NSString *path_sandox = NSHomeDirectory();
-            NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
-            [avatarData writeToFile:newPath atomically:YES];
-            NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-            [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // 主线程更新ui
-                [weakSelf.avatarImageView setImage:avatarImage];
-            });
-        });
-    } else {
-        // 设置默认头像
-        [self.avatarImageView setImage:[UIImage imageNamed:@"noavatar"]];
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    // 移除tabBarController两侧的按钮
-    [self.tabBarController.navigationItem setLeftBarButtonItem:nil];
-    [self.tabBarController.navigationItem setRightBarButtonItem:nil];
-}
-
-#pragma mark - UIScrollView Delegate
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (scrollView.contentOffset.y <= (mTableViewBaseContentOffsetY - mRefreshViewHeight)) {
-        if (self.refreshView.tag == 0) {
-            self.refreshLabel.text = @"松开刷新";
-        }
-        self.refreshView.tag = 1;
-    } else {
-        //防止用户在下拉到contentOffset.y <= -50后不松手，然后又往回滑动，需要将值设为默认状态
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-    }
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    if (self.refreshView.tag == 1) {
-        [UIView animateWithDuration:.3 animations:^{
-            self.refreshLabel.text = @"加载中";
-            scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
-        }];
-        //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:.3 animations:^{
-                self.refreshView.tag = 0;
-                self.refreshLabel.text = @"下拉刷新";
-                scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-            }];
-        });
-        // 重新访问账号信息
-        [self getUserInfo];
-    }
-}
-
-#pragma mark - Event
-- (void)gotoAccountDetail{
-    HSAccountDetailTableViewController *controller = [[HSAccountDetailTableViewController alloc] init];
-    [self.navigationController pushViewController:controller animated:YES];
-}
-
-#pragma mark - Private
-- (void)getUserInfo{
-    // 访问getinfo接口
-    HSNetworkManager *manager = [HSNetworkManager manager];
-    __weak __typeof__(self) weakSelf = self;
-    [manager postDataWithUrl:kGetUserInfoUrl parameters:[NSDictionary new] success:^(NSDictionary *responseDict) {
-        // 获取成功
-        if ([responseDict[@"errcode"] isEqual:@(0)]) {
-            NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-            NSDictionary *userInfoDict = responseDict[@"uinfo"];
-            NSMutableDictionary *realUserInfoDict = [NSMutableDictionary new];
-            // 挑选value ！= nil的key/value
-            for (NSString *keyString in [userInfoDict allKeys]) {
-                if (![userInfoDict[keyString] isEqual:[NSNull null]]) {
-                    realUserInfoDict[keyString] = userInfoDict[keyString];
-                }
-            }
-            [userDefault setObject:realUserInfoDict forKey:@"USER_INFO"];
-            // 请求用户头像，如果存在url，否则加载默认的头像
-            UIImage *avatarImage = [UIImage imageNamed:@"noavatar"];
-            if (![userInfoDict[@"avatar"] isEqual:[NSNull null]]) {
-                NSURL *avatarUrl = [NSURL URLWithString:userInfoDict[@"avatar"]];
-                NSData *avatarData = [NSData dataWithContentsOfURL:avatarUrl];
-                avatarImage = [UIImage imageWithData:avatarData];
-                // 缓存图片
-                NSString *path_sandox = NSHomeDirectory();
-                NSString *newPath = [path_sandox stringByAppendingPathComponent:@"/Documents/avatar.png"];
-                [avatarData writeToFile:newPath atomically:YES];
-                NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-                [userDefault setObject:@"/Documents/avatar.png" forKey:@"AVATAR_PATH"];
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // 设置用户名、积分
-                [weakSelf.usernameLabel setText:userInfoDict[@"nickname"]];
-                [weakSelf.scoreLabel setText:[NSString stringWithFormat:@"%@", userInfoDict[@"lscore"]]];
-                // 是否实名认证
-                if ([userInfoDict[@"isrenzheng"] isEqual:@(0)]) {
-                    [weakSelf.authenticationLabel setText:@"未实名认证 >"];
-                } else {
-                    [weakSelf.authenticationLabel setText:@"已实名认证 >"];
-                }
-                // 设置用户头像
-                [weakSelf.avatarImageView setImage:avatarImage];
-            });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.view makeToast:responseDict[@"接口返回数据格式错误！"]];
-            });
-            NSLog(@"接口 %@ 返回数据格式错误! responseDict = %@", kGetUserInfoUrl, responseDict);
-        }
-        
-    } failure:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.view makeToast:@"接口请求错误！"];
-        });
-        NSLog(@"%@", error);
-    }];
-}
-
 - (void)initNavigationBar{
     self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsViewController)];
     [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
@@ -332,7 +273,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.height.mas_equalTo(80);
     }];
     // 添加点击事件
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoAccountDetail)];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoMyDetail)];
     [tapGesture setNumberOfTapsRequired:1];
     [self.accountInfoView setUserInteractionEnabled:YES];
     [self.accountInfoView addGestureRecognizer:tapGesture];
@@ -392,7 +333,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.orderInfoView setBackgroundColor:[UIColor whiteColor]];
     [self.contentScrollView addSubview:self.orderInfoView];
     [self.orderInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.accountInfoView.mas_bottom).with.offset(10);
+        make.top.mas_equalTo(self.accountInfoView.mas_bottom).with.offset(5);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo(mainWidth);
         make.height.mas_equalTo(122.5);
@@ -520,7 +461,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.myCollectionView setBackgroundColor:[UIColor whiteColor]];
     [self.contentScrollView addSubview:self.myCollectionView];
     [self.myCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.orderInfoView.mas_bottom).with.offset(10);
+        make.top.mas_equalTo(self.orderInfoView.mas_bottom).with.offset(5);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo(mainWidth);
         make.height.mas_equalTo(50);
@@ -676,7 +617,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.electronicInvoiceView setBackgroundColor:[UIColor whiteColor]];
     [self.contentScrollView addSubview:self.electronicInvoiceView];
     [self.electronicInvoiceView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.myDeliveryAddressView.mas_bottom).with.offset(10);
+        make.top.mas_equalTo(self.myDeliveryAddressView.mas_bottom).with.offset(5);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo(mainWidth);
         make.height.mas_equalTo(50);
