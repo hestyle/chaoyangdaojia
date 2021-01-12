@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		D003017D25983E360068DB6C /* HSMyDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D003017C25983E360068DB6C /* HSMyDetailTableViewController.m */; };
+		D00F7E0725AD3D7D003D6BC6 /* HSMemberExplainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F7E0625AD3D7D003D6BC6 /* HSMemberExplainViewController.m */; };
+		D00F7E0A25AD423F003D6BC6 /* HSExchangeBalanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F7E0925AD423F003D6BC6 /* HSExchangeBalanceViewController.m */; };
+		D00F7E0D25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F7E0C25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m */; };
+		D04360D825AC4DFD00C04580 /* HSMemberPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */; };
 		D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288CE259338F100C8A2D1 /* AppDelegate.m */; };
 		D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05288D9259338F600C8A2D1 /* Assets.xcassets */; };
 		D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05288DB259338F600C8A2D1 /* LaunchScreen.storyboard */; };
@@ -42,7 +46,15 @@
 		3EBD767773293FBA077A2885 /* Pods-chaoyangdaojia.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chaoyangdaojia.release.xcconfig"; path = "Target Support Files/Pods-chaoyangdaojia/Pods-chaoyangdaojia.release.xcconfig"; sourceTree = "<group>"; };
 		D003017B25983E360068DB6C /* HSMyDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMyDetailTableViewController.h; sourceTree = "<group>"; };
 		D003017C25983E360068DB6C /* HSMyDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMyDetailTableViewController.m; sourceTree = "<group>"; };
+		D00F7E0525AD3D7D003D6BC6 /* HSMemberExplainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberExplainViewController.h; sourceTree = "<group>"; };
+		D00F7E0625AD3D7D003D6BC6 /* HSMemberExplainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberExplainViewController.m; sourceTree = "<group>"; };
+		D00F7E0825AD423F003D6BC6 /* HSExchangeBalanceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSExchangeBalanceViewController.h; sourceTree = "<group>"; };
+		D00F7E0925AD423F003D6BC6 /* HSExchangeBalanceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSExchangeBalanceViewController.m; sourceTree = "<group>"; };
+		D00F7E0B25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberPointDetailTableViewController.h; sourceTree = "<group>"; };
+		D00F7E0C25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberPointDetailTableViewController.m; sourceTree = "<group>"; };
 		D04360D425AC305100C04580 /* HSNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetwork.h; sourceTree = "<group>"; };
+		D04360D625AC4DFD00C04580 /* HSMemberPointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberPointViewController.h; sourceTree = "<group>"; };
+		D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberPointViewController.m; sourceTree = "<group>"; };
 		D05288CA259338F100C8A2D1 /* chaoyangdaojia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chaoyangdaojia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05288CD259338F100C8A2D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D05288CE259338F100C8A2D1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -121,6 +133,21 @@
 				3EBD767773293FBA077A2885 /* Pods-chaoyangdaojia.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		D04360D525AC4D5600C04580 /* MemberPoint */ = {
+			isa = PBXGroup;
+			children = (
+				D04360D625AC4DFD00C04580 /* HSMemberPointViewController.h */,
+				D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */,
+				D00F7E0525AD3D7D003D6BC6 /* HSMemberExplainViewController.h */,
+				D00F7E0625AD3D7D003D6BC6 /* HSMemberExplainViewController.m */,
+				D00F7E0825AD423F003D6BC6 /* HSExchangeBalanceViewController.h */,
+				D00F7E0925AD423F003D6BC6 /* HSExchangeBalanceViewController.m */,
+				D00F7E0B25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.h */,
+				D00F7E0C25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m */,
+			);
+			path = MemberPoint;
 			sourceTree = "<group>";
 		};
 		D05288C1259338F100C8A2D1 = {
@@ -223,6 +250,7 @@
 		D07F4AE02594BCE000CA0670 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				D04360D525AC4D5600C04580 /* MemberPoint */,
 				D0DC6FA025A056F100B501C8 /* Settings */,
 				D05712C8259A013B005B4A7A /* FriendBirthday */,
 				D07F4AE12594C02200CA0670 /* HSMyViewController.h */,
@@ -386,15 +414,19 @@
 				D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */,
 				D07F4AEC2594C06D00CA0670 /* HSSortViewController.m in Sources */,
 				D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */,
+				D00F7E0A25AD423F003D6BC6 /* HSExchangeBalanceViewController.m in Sources */,
 				D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */,
 				D07F4AE92594C05E00CA0670 /* HSShopViewController.m in Sources */,
+				D00F7E0725AD3D7D003D6BC6 /* HSMemberExplainViewController.m in Sources */,
 				D0E5984325A2A51200FEFE4B /* HSFeedbackViewController.m in Sources */,
 				D07F4AF02594C08900CA0670 /* HSFirstViewController.m in Sources */,
 				D05712CB259A022C005B4A7A /* HSFriendBirthdayEditViewController.m in Sources */,
+				D00F7E0D25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m in Sources */,
 				D05288E0259338F600C8A2D1 /* main.m in Sources */,
 				D06DA605259D669000C64B7C /* HSFriendBirthday.m in Sources */,
 				D0E5984925A3042400FEFE4B /* HSUserPolicyViewController.m in Sources */,
 				D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */,
+				D04360D825AC4DFD00C04580 /* HSMemberPointViewController.m in Sources */,
 				D0903DFD2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m in Sources */,
 				D07F4AE32594C02200CA0670 /* HSMyViewController.m in Sources */,
 				D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */,

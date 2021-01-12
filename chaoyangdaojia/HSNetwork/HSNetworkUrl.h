@@ -36,6 +36,12 @@ extern NSString * const kFeedbackProblem;
 extern NSString * const kGetAboutUsInfo;
 // 获取用户协议
 extern NSString * const kGetUserPolicy;
+// 获取会员说明
+extern NSString * const kGetMemberExplain;
+// 获取积分兑换list
+extern NSString * const kGetExchangeBalanceList;
+// 积分兑换
+extern NSString * const kExchangeMoneyUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 

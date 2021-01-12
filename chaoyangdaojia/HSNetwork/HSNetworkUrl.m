@@ -36,6 +36,12 @@ NSString * const kFeedbackProblem = @"http://app.sunnysct.cn/api/home/userinfo/f
 NSString * const kGetAboutUsInfo = @"http://app.sunnysct.cn/api/home/userlogin/aboutus";
 // 获取用户协议
 NSString * const kGetUserPolicy = @"http://app.sunnysct.cn/api/home/userlogin/xieyi";
+// 获取会员说明
+NSString * const kGetMemberExplain = @"http://app.sunnysct.cn/api/home/userinfo/membergz";
+// 获取积分兑换list
+NSString * const kGetExchangeBalanceList = @"http://app.sunnysct.cn/api/home/score/dhlist";
+// 积分兑换
+NSString * const kExchangeMoneyUrl = @"http://app.sunnysct.cn/api/home/score/duihuan";
 
 @implementation HSNetworkUrl
 

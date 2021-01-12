@@ -10,6 +10,7 @@
 #import "HSLoginViewController.h"
 #import "HSMyDetailTableViewController.h"
 #import "HSSettingsTableViewController.h"
+#import "HSMemberPointViewController.h"
 #import "HSNetwork.h"
 #import "HSAccount.h"
 #import <Toast/Toast.h>
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) UIView *accountInfoView;
 @property (nonatomic, strong) UIImageView *avatarImageView;
 @property (nonatomic, strong) UILabel *usernameLabel;
+@property (nonatomic, strong) UIView *scoreView;
 @property (nonatomic, strong) UILabel *scoreTitleLabel;
 @property (nonatomic, strong) UILabel *scoreLabel;
 @property (nonatomic, strong) UILabel *authenticationLabel;
@@ -136,6 +138,11 @@ static BOOL isHadGotoLoginViewController = NO;
 #pragma mark - Event
 - (void)gotoMyDetail {
     HSMyDetailTableViewController *controller = [[HSMyDetailTableViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)gotoMemberPoint {
+    HSMemberPointViewController *controller = [HSMemberPointViewController new];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -296,23 +303,36 @@ static BOOL isHadGotoLoginViewController = NO;
         make.size.mas_equalTo(CGSizeMake(200, 25));
     }];
     
+    self.scoreView = [UIView new];
+    [self.accountInfoView addSubview:self.scoreView];
+    [self.scoreView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.avatarImageView);
+        make.left.mas_equalTo(self.usernameLabel);
+    }];
+    
     self.scoreTitleLabel = [UILabel new];
     [self.scoreTitleLabel setText:@"积分："];
-    [self.accountInfoView addSubview:self.scoreTitleLabel];
+    [self.scoreView addSubview:self.scoreTitleLabel];
     [self.scoreTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.avatarImageView.mas_bottom);
-        make.left.mas_equalTo(self.usernameLabel);
-        make.size.mas_equalTo(CGSizeMake(50, 20));
+        make.bottom.mas_equalTo(self.scoreView);
+        make.left.mas_equalTo(self.scoreView);
     }];
     
     self.scoreLabel = [UILabel new];
     [self.scoreLabel setText:@"0"];
-    [self.accountInfoView addSubview:self.scoreLabel];
+    [self.scoreView addSubview:self.scoreLabel];
     [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.scoreTitleLabel);
+        make.bottom.mas_equalTo(self.scoreView);
         make.left.mas_equalTo(self.scoreTitleLabel.mas_right);
-        make.size.mas_equalTo(CGSizeMake(100, 20));
+        make.height.mas_equalTo(self.scoreView);
+        make.right.mas_equalTo(self.scoreView);
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoMemberPointTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoMemberPoint)];
+    [gotoMemberPointTapGesture setNumberOfTapsRequired:1];
+    [self.scoreView setUserInteractionEnabled:YES];
+    [self.scoreView addGestureRecognizer:gotoMemberPointTapGesture];
+
     
     self.authenticationLabel = [UILabel new];
     [self.authenticationLabel setText:@"未实名认证 >"];
