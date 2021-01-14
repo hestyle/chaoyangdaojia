@@ -9,7 +9,7 @@
 #import "HSMainTableBarController.h"
 #import "FirstPage/HSFirstViewController.h"
 #import "SortPage/HSSortViewController.h"
-#import "ShopPage/HSShopViewController.h"
+#import "ShopPage/HSShopTableViewController.h"
 #import "CartPage/HSCartViewController.h"
 #import "MyPage/HSMyViewController.h"
 
@@ -36,11 +36,11 @@
     [sortViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_sort"]];
     [sortViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_sort_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
-    HSShopViewController *shopViewController = [HSShopViewController new];
-    [shopViewController.tabBarItem setTitle:@"店铺"];
-    [shopViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
-    [shopViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_shop"]];
-    [shopViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_shop_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    HSShopTableViewController *shopTableViewController = [HSShopTableViewController new];
+    [shopTableViewController.tabBarItem setTitle:@"店铺"];
+    [shopTableViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
+    [shopTableViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_shop"]];
+    [shopTableViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_shop_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
     HSCartViewController *cartViewController = [HSCartViewController new];
     [cartViewController.tabBarItem setTitle:@"购物车"];
@@ -54,7 +54,7 @@
     [myViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_myaccount"]];
     [myViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_myaccount_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
-    self.viewControllers = @[firstViewController, sortViewController, shopViewController, cartViewController, myViewController];
+    self.viewControllers = @[firstViewController, sortViewController, shopTableViewController, cartViewController, myViewController];
 }
 
 @end

@@ -42,6 +42,14 @@ extern NSString * const kGetMemberExplain;
 extern NSString * const kGetExchangeBalanceList;
 // 积分兑换
 extern NSString * const kExchangeMoneyUrl;
+// 获取商家店铺by page
+extern NSString * const kGetShopsByPageUrl;
+// 获取商家店铺详细信息
+extern NSString * const kGetShopDetailByIdUrl;
+// 获取店铺评论信息（需要店铺id、page）
+extern NSString * const kGetShopCommentUrl;
+// 获取店铺商品（需要店铺id、page）
+extern NSString * const kGetShopProductListUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 
