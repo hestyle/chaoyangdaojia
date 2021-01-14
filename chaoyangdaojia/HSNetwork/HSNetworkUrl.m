@@ -42,6 +42,14 @@ NSString * const kGetMemberExplain = @"http://app.sunnysct.cn/api/home/userinfo/
 NSString * const kGetExchangeBalanceList = @"http://app.sunnysct.cn/api/home/score/dhlist";
 // 积分兑换
 NSString * const kExchangeMoneyUrl = @"http://app.sunnysct.cn/api/home/score/duihuan";
+// 获取商家店铺by page
+NSString * const kGetShopsByPageUrl = @"http://app.sunnysct.cn/api/home/dian/getlist";
+// 获取商家店铺详细信息
+NSString * const kGetShopDetailByIdUrl = @"http://app.sunnysct.cn/api/home/dian/show";
+// 获取店铺评论信息（需要店铺id、page）
+NSString * const kGetShopCommentUrl = @"http://app.sunnysct.cn/api/home/shop/pinlunlist";
+// 获取店铺商品（需要店铺id、page）
+NSString * const kGetShopProductListUrl = @"http://app.sunnysct.cn/api/home/shop/lists";
 
 @implementation HSNetworkUrl
 
