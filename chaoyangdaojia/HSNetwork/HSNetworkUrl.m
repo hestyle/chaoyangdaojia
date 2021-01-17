@@ -50,6 +50,10 @@ NSString * const kGetShopDetailByIdUrl = @"http://app.sunnysct.cn/api/home/dian/
 NSString * const kGetShopCommentUrl = @"http://app.sunnysct.cn/api/home/shop/pinlunlist";
 // 获取店铺商品（需要店铺id、page）
 NSString * const kGetShopProductListUrl = @"http://app.sunnysct.cn/api/home/shop/lists";
+// 获取首页数据
+NSString * const kGetIndexDataUrl = @"http://app.sunnysct.cn/api/home/index/index";
+// 获取首页推荐商品数据
+NSString * const kGetIndexProductDataUrl = @"http://app.sunnysct.cn/api/home/index/index_list";
 
 @implementation HSNetworkUrl
 

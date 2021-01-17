@@ -7,7 +7,7 @@
 //
 
 #import "HSMainTableBarController.h"
-#import "FirstPage/HSFirstViewController.h"
+#import "FirstPage/HSFirstCollectionViewController.h"
 #import "SortPage/HSSortViewController.h"
 #import "ShopPage/HSShopTableViewController.h"
 #import "CartPage/HSCartViewController.h"
@@ -24,7 +24,7 @@
     // title选中时的颜色
     NSDictionary *dict = @{NSForegroundColorAttributeName:[UIColor blackColor]};
     // 设置5个tabBar
-    HSFirstViewController *firstViewController = [HSFirstViewController new];
+    HSFirstCollectionViewController *firstViewController = [HSFirstCollectionViewController new];
     [firstViewController.tabBarItem setTitle:@"首页"];
     [firstViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
     [firstViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_firstpage"]];

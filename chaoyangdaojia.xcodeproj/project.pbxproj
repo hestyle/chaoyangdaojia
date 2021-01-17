@@ -22,7 +22,8 @@
 		D07F4AE32594C02200CA0670 /* HSMyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE22594C02200CA0670 /* HSMyViewController.m */; };
 		D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AE52594C04E00CA0670 /* HSCartViewController.m */; };
 		D07F4AEC2594C06D00CA0670 /* HSSortViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */; };
-		D07F4AF02594C08900CA0670 /* HSFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07F4AEF2594C08900CA0670 /* HSFirstViewController.m */; };
+		D0894CD325B11C9000424664 /* HSFirstCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0894CD225B11C9000424664 /* HSFirstCollectionViewController.m */; };
+		D0894CD525B1CDB200424664 /* first.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0894CD425B1CDB200424664 /* first.xcassets */; };
 		D0903DFD2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0903DFC2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m */; };
 		D0986B8A25A1D37200D47929 /* HSPayPasswordSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B8825A1D37200D47929 /* HSPayPasswordSettingViewController.m */; };
 		D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B8C25A1F06500D47929 /* HSCommonProblemTableViewController.m */; };
@@ -75,8 +76,9 @@
 		D07F4AE52594C04E00CA0670 /* HSCartViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCartViewController.m; sourceTree = "<group>"; };
 		D07F4AEA2594C06D00CA0670 /* HSSortViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSSortViewController.h; sourceTree = "<group>"; };
 		D07F4AEB2594C06D00CA0670 /* HSSortViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSSortViewController.m; sourceTree = "<group>"; };
-		D07F4AEE2594C08900CA0670 /* HSFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFirstViewController.h; sourceTree = "<group>"; };
-		D07F4AEF2594C08900CA0670 /* HSFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFirstViewController.m; sourceTree = "<group>"; };
+		D0894CD125B11C9000424664 /* HSFirstCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFirstCollectionViewController.h; sourceTree = "<group>"; };
+		D0894CD225B11C9000424664 /* HSFirstCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFirstCollectionViewController.m; sourceTree = "<group>"; };
+		D0894CD425B1CDB200424664 /* first.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = first.xcassets; sourceTree = "<group>"; };
 		D0903DFB2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSFriendBirthdayRemindTableViewController.h; sourceTree = "<group>"; };
 		D0903DFC2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSFriendBirthdayRemindTableViewController.m; sourceTree = "<group>"; };
 		D0986B8825A1D37200D47929 /* HSPayPasswordSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSPayPasswordSettingViewController.m; sourceTree = "<group>"; };
@@ -217,8 +219,9 @@
 		D07F4ADC2594BBCF00CA0670 /* FirstPage */ = {
 			isa = PBXGroup;
 			children = (
-				D07F4AEE2594C08900CA0670 /* HSFirstViewController.h */,
-				D07F4AEF2594C08900CA0670 /* HSFirstViewController.m */,
+				D0894CD125B11C9000424664 /* HSFirstCollectionViewController.h */,
+				D0894CD225B11C9000424664 /* HSFirstCollectionViewController.m */,
+				D0894CD425B1CDB200424664 /* first.xcassets */,
 			);
 			path = FirstPage;
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 			files = (
 				D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */,
 				D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */,
+				D0894CD525B1CDB200424664 /* first.xcassets in Resources */,
 				D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,8 +427,8 @@
 				D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */,
 				D00F7E0725AD3D7D003D6BC6 /* HSMemberExplainViewController.m in Sources */,
 				D0E5984325A2A51200FEFE4B /* HSFeedbackViewController.m in Sources */,
-				D07F4AF02594C08900CA0670 /* HSFirstViewController.m in Sources */,
 				D0D427D925AF094E003DD646 /* HSShopDetailCollectionViewController.m in Sources */,
+				D0894CD325B11C9000424664 /* HSFirstCollectionViewController.m in Sources */,
 				D05712CB259A022C005B4A7A /* HSFriendBirthdayEditViewController.m in Sources */,
 				D0D427D325AE83CB003DD646 /* HSShopTableViewController.m in Sources */,
 				D00F7E0D25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m in Sources */,

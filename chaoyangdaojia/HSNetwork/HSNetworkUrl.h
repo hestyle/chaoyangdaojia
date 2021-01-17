@@ -50,6 +50,10 @@ extern NSString * const kGetShopDetailByIdUrl;
 extern NSString * const kGetShopCommentUrl;
 // 获取店铺商品（需要店铺id、page）
 extern NSString * const kGetShopProductListUrl;
+// 获取首页数据
+extern NSString * const kGetIndexDataUrl;
+// 获取首页推荐商品数据
+extern NSString * const kGetIndexProductDataUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 
