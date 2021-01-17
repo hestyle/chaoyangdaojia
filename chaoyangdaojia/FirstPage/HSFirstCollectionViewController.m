@@ -7,6 +7,7 @@
 //
 
 #import "HSFirstCollectionViewController.h"
+#import "HSSortCollectionViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -1102,6 +1103,7 @@ static const CGFloat mProductCellHeight = 260.f;
         }
     }
     [self.categoryArray addObjectsFromArray:categoryMutableArray];
+    [self sendDataToSortViewController];
 }
 
 - (void)getShopProductByPage:(NSInteger)page {
@@ -1156,4 +1158,8 @@ static const CGFloat mProductCellHeight = 260.f;
     [self.loadMoreView setHidden:NO];
 }
 
+- (void)sendDataToSortViewController {
+    HSSortCollectionViewController *controller = self.tabBarController.childViewControllers[1];
+    [controller setCategoryArray:self.categoryArray.mutableCopy];
+}
 @end

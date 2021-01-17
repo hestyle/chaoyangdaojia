@@ -8,7 +8,7 @@
 
 #import "HSMainTableBarController.h"
 #import "FirstPage/HSFirstCollectionViewController.h"
-#import "SortPage/HSSortViewController.h"
+#import "SortPage/HSSortCollectionViewController.h"
 #import "ShopPage/HSShopTableViewController.h"
 #import "CartPage/HSCartViewController.h"
 #import "MyPage/HSMyViewController.h"
@@ -30,7 +30,7 @@
     [firstViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_firstpage"]];
     [firstViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_firstpage_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
-    HSSortViewController *sortViewController = [HSSortViewController new];
+    HSSortCollectionViewController *sortViewController = [HSSortCollectionViewController new];
     [sortViewController.tabBarItem setTitle:@"分类"];
     [sortViewController.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
     [sortViewController.tabBarItem setImage:[UIImage imageNamed:@"menu_sort"]];
