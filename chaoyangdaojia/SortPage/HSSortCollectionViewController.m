@@ -50,6 +50,7 @@ static const CGFloat mCategoryCellHeight = 90.f;
     [self.tabBarController setTitle:@"分类"];
     
     [self.tabBarController.navigationItem setRightBarButtonItem:self.rightSearchButtonItem];
+    [self.collectionView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -150,7 +151,6 @@ static const CGFloat mCategoryCellHeight = 90.f;
 #pragma mark - Private
 - (void)initView {
     self.rightSearchButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"search_white_iocn"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoSearchAction)];
-    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightSearchButtonItem];
 }
 
 @end
