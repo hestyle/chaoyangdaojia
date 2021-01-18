@@ -46,6 +46,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     if (self.friendBirthdayDict != nil) {
         // 初始化输入框
         if ([[self.friendBirthdayDict allKeys] containsObject:@"name"]) {
@@ -65,6 +66,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     // 清空friendBirthdayDict
     self.friendBirthdayDict = nil;
 }

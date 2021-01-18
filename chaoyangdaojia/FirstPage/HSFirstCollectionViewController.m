@@ -111,6 +111,7 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.tabBarController setTitle:@"首页"];
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationController.view addSubview:self.titleView];
@@ -120,6 +121,7 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self.titleView removeFromSuperview];
     // 停止轮转
     [self stopCarouselAutoChange];

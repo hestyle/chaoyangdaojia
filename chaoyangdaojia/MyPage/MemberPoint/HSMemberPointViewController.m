@@ -41,12 +41,14 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self setTitle:@"会员积分"];
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationItem setRightBarButtonItem:self.rightMemberExplainButtonItem];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self.navigationItem setRightBarButtonItem:nil];
 }
 

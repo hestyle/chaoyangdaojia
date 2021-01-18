@@ -53,6 +53,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     // 显示“新增”按钮
     [self setTitle:@"亲友生日提醒"];
     [self.navigationController setNavigationBarHidden:NO];
@@ -63,6 +64,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     // 隐藏“新增”按钮
     [self.tabBarController.navigationItem setRightBarButtonItem:nil];
 }

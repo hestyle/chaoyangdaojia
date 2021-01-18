@@ -52,6 +52,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self setTitle:@"全部拼团"];
     [self.navigationController setNavigationBarHidden:NO];
 }

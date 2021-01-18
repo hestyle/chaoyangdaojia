@@ -84,6 +84,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self setTitle:@"店铺详情"];
     [self.navigationController setNavigationBarHidden:NO];
     // 获取shopData

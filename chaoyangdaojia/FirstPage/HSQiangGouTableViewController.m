@@ -48,6 +48,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self setTitle:@"限时抢购"];
     [self.navigationController setNavigationBarHidden:NO];
 
@@ -55,6 +56,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self.navigationItem setRightBarButtonItems:@[]];
 }
 
