@@ -9,6 +9,7 @@
 #import "HSFirstCollectionViewController.h"
 #import "HSSortCollectionViewController.h"
 #import "HSQiangGouTableViewController.h"
+#import "HSPinTuanTableViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -725,7 +726,8 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)gotoPinTuanDetailAction {
-    [self.view makeToast:@"点击了查看全部拼团！"];
+    HSPinTuanTableViewController *controller = [HSPinTuanTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - Private

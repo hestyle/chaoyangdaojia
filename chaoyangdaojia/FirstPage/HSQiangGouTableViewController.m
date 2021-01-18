@@ -334,6 +334,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
     
     self.rightCartButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"cart_white_icon"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoCartAction)];
 }
+
 - (void)getQiangGouProductData {
     HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;

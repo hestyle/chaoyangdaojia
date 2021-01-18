@@ -56,6 +56,8 @@ extern NSString * const kGetIndexDataUrl;
 extern NSString * const kGetIndexProductDataUrl;
 // 获取限时抢购商品数据
 extern NSString * const kGetQiangGouProductDataUrl;
+// 获取拼团商品数据
+extern NSString * const kGetPinTuanProductDataUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 
