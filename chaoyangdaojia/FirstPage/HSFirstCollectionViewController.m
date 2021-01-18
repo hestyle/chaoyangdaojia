@@ -39,7 +39,6 @@
 @property (nonatomic, strong) UIView *productSectionHeaderView;
 
 @property (nonatomic, strong) NSMutableArray *bannerArray;
-@property (nonatomic, strong) NSArray<UIImage *> *bannerImageArray;
 @property (nonatomic, strong) NSMutableArray *categoryArray;
 @property (nonatomic, strong) NSMutableArray *productArray;
 @property (nonatomic, strong) NSMutableArray *qiangGouArray;
@@ -991,17 +990,7 @@ static const CGFloat mProductCellHeight = 260.f;
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
             [weakSelf.bannerArray removeAllObjects];
             [weakSelf.bannerArray addObjectsFromArray:responseDict[@"banner"]];
-            NSMutableArray<UIImage *> *imageArray = [NSMutableArray new];
-            for (int i = 0; i < [weakSelf.bannerArray count]; ++i) {
-                NSMutableDictionary *dict = weakSelf.bannerArray[i];
-                if ([[dict allKeys] containsObject:@"image"] && ![dict[@"image"] isEqual:[NSNull null]]) {
-                    NSURL *imageUrl = [NSURL URLWithString:dict[@"image"]];
-                    NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    imageArray[i] = image;
-                }
-            }
-            weakSelf.bannerImageArray = imageArray.copy;
+
             [weakSelf initCategoryArray:responseDict[@"category"]];
             
             [weakSelf.qiangGouArray removeAllObjects];
@@ -1050,10 +1039,68 @@ static const CGFloat mProductCellHeight = 260.f;
         NSInteger currentPage = self.carouselPageControl.currentPage;
         NSInteger leftPage = (currentPage + [self.bannerArray count] - 1) % [self.bannerArray count];
         NSInteger rightPage = (currentPage + 1) % [self.bannerArray count];
-        [self.carouselLeftImageView setImage:self.bannerImageArray[leftPage]];
-        [self.carouselCurrentImageView setImage:self.bannerImageArray[currentPage]];
-        [self.carouselRightImageView setImage:self.bannerImageArray[rightPage]];
+        
+        NSDictionary *currentBannerDict = self.bannerArray[currentPage];
+        if ([[currentBannerDict allKeys] containsObject:@"bannerImage"]) {
+            [self.carouselCurrentImageView setImage:currentBannerDict[@"bannerImage"]];
+        } else {
+            __weak __typeof__(self) weakSelf = self;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSURL *bannerImageUrl = [NSURL URLWithString:currentBannerDict[@"image"]];
+                NSData *bannerImageData = [NSData dataWithContentsOfURL:bannerImageUrl];
+                UIImage *bannerImage = [UIImage imageWithData:bannerImageData];
+                // 缓存至bannerArray中
+                NSMutableDictionary *bannerDataMutableDict = currentBannerDict.mutableCopy;
+                bannerDataMutableDict[@"bannerImage"] = bannerImage;
+                weakSelf.bannerArray[currentPage] = bannerDataMutableDict.copy;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.carouselCurrentImageView setImage:bannerImage];
+                });
+            });
+        }
+        
+        NSDictionary *leftBannerDict = self.bannerArray[leftPage];
+        if ([[leftBannerDict allKeys] containsObject:@"bannerImage"]) {
+            [self.carouselLeftImageView setImage:leftBannerDict[@"bannerImage"]];
+        } else {
+            __weak __typeof__(self) weakSelf = self;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSURL *bannerImageUrl = [NSURL URLWithString:leftBannerDict[@"image"]];
+                NSData *bannerImageData = [NSData dataWithContentsOfURL:bannerImageUrl];
+                UIImage *bannerImage = [UIImage imageWithData:bannerImageData];
+                // 缓存至bannerArray中
+                NSMutableDictionary *bannerDataMutableDict = leftBannerDict.mutableCopy;
+                bannerDataMutableDict[@"bannerImage"] = bannerImage;
+                weakSelf.bannerArray[leftPage] = bannerDataMutableDict.copy;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.carouselLeftImageView setImage:bannerImage];
+                });
+            });
+        }
+        
+        NSDictionary *rightBannerDict = self.bannerArray[rightPage];
+        if ([[rightBannerDict allKeys] containsObject:@"bannerImage"]) {
+            [self.carouselRightImageView setImage:rightBannerDict[@"bannerImage"]];
+        } else {
+            __weak __typeof__(self) weakSelf = self;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSURL *bannerImageUrl = [NSURL URLWithString:rightBannerDict[@"image"]];
+                NSData *bannerImageData = [NSData dataWithContentsOfURL:bannerImageUrl];
+                UIImage *bannerImage = [UIImage imageWithData:bannerImageData];
+                // 缓存至bannerArray中
+                NSMutableDictionary *bannerDataMutableDict = rightBannerDict.mutableCopy;
+                bannerDataMutableDict[@"bannerImage"] = bannerImage;
+                weakSelf.bannerArray[rightPage] = bannerDataMutableDict.copy;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.carouselRightImageView setImage:bannerImage];
+                });
+            });
+        }
     }
+}
+
+- (void)setCarouselImage:(NSInteger)page {
+    
 }
 
 - (void)stopCarouselAutoChange {
