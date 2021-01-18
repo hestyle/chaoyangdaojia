@@ -87,6 +87,7 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     // 显示两侧的tabBar按钮
     [self.tabBarController setTitle:@"我的"];
     [self.navigationController setNavigationBarHidden:NO];
@@ -97,6 +98,7 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     // 移除tabBarController两侧的按钮
     [self.tabBarController.navigationItem setLeftBarButtonItem:nil];
     [self.tabBarController.navigationItem setRightBarButtonItem:nil];
@@ -144,6 +146,15 @@ static BOOL isHadGotoLoginViewController = NO;
 - (void)gotoMemberPoint {
     HSMemberPointViewController *controller = [HSMemberPointViewController new];
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)gotoSettingsAction {
+    HSSettingsTableViewController *controller = [HSSettingsTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)gotoMessageAction {
+    [self.view makeToast:@"点击了消息图标！"];
 }
 
 #pragma mark - Private
@@ -259,13 +270,9 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)initNavigationBar{
-    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsViewController)];
-    [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
-    
-    UIImageView *rightMessageImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [rightMessageImageView setImage:[UIImage imageNamed:@"app_message"]];
-    self.rightMessageButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightMessageImageView];
-    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
+    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsAction)];
+
+    self.rightMessageButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_message"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoMessageAction)];
 }
 
 - (void)initAccountView {
@@ -737,8 +744,4 @@ static BOOL isHadGotoLoginViewController = NO;
     }];
 }
 
-- (void)gotoSettingsViewController{
-    HSSettingsTableViewController *controller = [HSSettingsTableViewController new];
-    [self.navigationController pushViewController:controller animated:YES];
-}
 @end
