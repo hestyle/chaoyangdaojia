@@ -8,6 +8,7 @@
 
 #import "HSFirstCollectionViewController.h"
 #import "HSSortCollectionViewController.h"
+#import "HSQiangGouTableViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -108,6 +109,7 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self.tabBarController setTitle:@"首页"];
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationController.view addSubview:self.titleView];
 
@@ -160,7 +162,6 @@ static const CGFloat mProductCellHeight = 260.f;
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 4;
 }
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (section == 0) {
@@ -719,7 +720,8 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)gotoQiangGouDetailAction {
-    [self.view makeToast:@"点击了查看全部特价！"];
+    HSQiangGouTableViewController *controller = [HSQiangGouTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoPinTuanDetailAction {
