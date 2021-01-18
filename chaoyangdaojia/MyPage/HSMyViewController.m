@@ -214,13 +214,14 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.contentScrollView setShowsVerticalScrollIndicator:NO];
     [self.contentScrollView setBackgroundColor:[UIColor colorWithWhite:0.85 alpha:1.0]];
     [self.contentScrollView setContentSize:CGSizeMake(0, 80 + 122.5 + 500 + 15 + 100)];
+    [self.contentScrollView setContentOffset:CGPointMake(0, mTableViewBaseContentOffsetY)];
     [self.view addSubview:self.contentScrollView];
     
     self.refreshView = [UIView new];
     [self.refreshView setTag:0];
     [self.contentScrollView addSubview:self.refreshView];
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentScrollView.mas_top).with.offset(-mRefreshViewHeight);
+        make.bottom.mas_equalTo(self.contentScrollView.mas_top);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
         make.height.mas_equalTo(mRefreshViewHeight);
@@ -247,7 +248,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.refreshView addSubview:self.lastRefreshTimeLabel];
     [self.lastRefreshTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.refreshLabel.mas_bottom).with.offset(2.5);
-        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX).with.offset(10);
+        make.centerX.mas_equalTo(self.refreshView.mas_centerX).with.offset(10);
         make.size.mas_equalTo(CGSizeMake(180, 20));
     }];
 
