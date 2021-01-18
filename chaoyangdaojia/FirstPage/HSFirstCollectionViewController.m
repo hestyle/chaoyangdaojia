@@ -8,6 +8,9 @@
 
 #import "HSFirstCollectionViewController.h"
 #import "HSSortCollectionViewController.h"
+#import "HSQiangGouTableViewController.h"
+#import "HSPinTuanTableViewController.h"
+#import "HSBannerDetailViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -108,6 +111,8 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tabBarController setTitle:@"首页"];
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationController.view addSubview:self.titleView];
 
@@ -116,6 +121,7 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self.titleView removeFromSuperview];
     // 停止轮转
     [self stopCarouselAutoChange];
@@ -160,7 +166,6 @@ static const CGFloat mProductCellHeight = 260.f;
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 4;
 }
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (section == 0) {
@@ -711,7 +716,11 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)gotoCarouselImageDetailAction {
-    [self.view makeToast:@"点击了轮播图片！"];
+    NSInteger currentPage = self.carouselPageControl.currentPage;
+    NSInteger bannerId = [((NSDictionary *)self.bannerArray[currentPage])[@"id"] integerValue];
+    HSBannerDetailViewController *controller = [HSBannerDetailViewController new];
+    [controller setBannerId:bannerId];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)pageControlChangeAction {
@@ -719,11 +728,13 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)gotoQiangGouDetailAction {
-    [self.view makeToast:@"点击了查看全部特价！"];
+    HSQiangGouTableViewController *controller = [HSQiangGouTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoPinTuanDetailAction {
-    [self.view makeToast:@"点击了查看全部拼团！"];
+    HSPinTuanTableViewController *controller = [HSPinTuanTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - Private

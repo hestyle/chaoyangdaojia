@@ -87,6 +87,7 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     // 显示两侧的tabBar按钮
     [self.tabBarController setTitle:@"我的"];
     [self.navigationController setNavigationBarHidden:NO];
@@ -97,6 +98,7 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     // 移除tabBarController两侧的按钮
     [self.tabBarController.navigationItem setLeftBarButtonItem:nil];
     [self.tabBarController.navigationItem setRightBarButtonItem:nil];
@@ -144,6 +146,15 @@ static BOOL isHadGotoLoginViewController = NO;
 - (void)gotoMemberPoint {
     HSMemberPointViewController *controller = [HSMemberPointViewController new];
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)gotoSettingsAction {
+    HSSettingsTableViewController *controller = [HSSettingsTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)gotoMessageAction {
+    [self.view makeToast:@"点击了消息图标！"];
 }
 
 #pragma mark - Private
@@ -203,13 +214,14 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.contentScrollView setShowsVerticalScrollIndicator:NO];
     [self.contentScrollView setBackgroundColor:[UIColor colorWithWhite:0.85 alpha:1.0]];
     [self.contentScrollView setContentSize:CGSizeMake(0, 80 + 122.5 + 500 + 15 + 100)];
+    [self.contentScrollView setContentOffset:CGPointMake(0, mTableViewBaseContentOffsetY)];
     [self.view addSubview:self.contentScrollView];
     
     self.refreshView = [UIView new];
     [self.refreshView setTag:0];
     [self.contentScrollView addSubview:self.refreshView];
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentScrollView.mas_top).with.offset(-mRefreshViewHeight);
+        make.bottom.mas_equalTo(self.contentScrollView.mas_top);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
         make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
         make.height.mas_equalTo(mRefreshViewHeight);
@@ -236,7 +248,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.refreshView addSubview:self.lastRefreshTimeLabel];
     [self.lastRefreshTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.refreshLabel.mas_bottom).with.offset(2.5);
-        make.centerX.mas_equalTo(self.contentScrollView.mas_centerX).with.offset(10);
+        make.centerX.mas_equalTo(self.refreshView.mas_centerX).with.offset(10);
         make.size.mas_equalTo(CGSizeMake(180, 20));
     }];
 
@@ -259,13 +271,9 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)initNavigationBar{
-    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsViewController)];
-    [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
-    
-    UIImageView *rightMessageImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [rightMessageImageView setImage:[UIImage imageNamed:@"app_message"]];
-    self.rightMessageButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightMessageImageView];
-    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
+    self.leftSettingButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_setting"] style:UIBarButtonItemStyleDone target:self action:@selector(gotoSettingsAction)];
+
+    self.rightMessageButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"app_message"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoMessageAction)];
 }
 
 - (void)initAccountView {
@@ -737,8 +745,4 @@ static BOOL isHadGotoLoginViewController = NO;
     }];
 }
 
-- (void)gotoSettingsViewController{
-    HSSettingsTableViewController *controller = [HSSettingsTableViewController new];
-    [self.navigationController pushViewController:controller animated:YES];
-}
 @end

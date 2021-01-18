@@ -54,6 +54,12 @@ NSString * const kGetShopProductListUrl = @"http://app.sunnysct.cn/api/home/shop
 NSString * const kGetIndexDataUrl = @"http://app.sunnysct.cn/api/home/index/index";
 // 获取首页推荐商品数据
 NSString * const kGetIndexProductDataUrl = @"http://app.sunnysct.cn/api/home/index/index_list";
+// 获取限时抢购商品数据
+NSString * const kGetQiangGouProductDataUrl = @"http://app.sunnysct.cn/api/home/index/qianggou";
+// 获取拼团商品数据
+NSString * const kGetPinTuanProductDataUrl = @"http://app.sunnysct.cn/api/home/index/pintuan";
+// 获取banner数据
+NSString * const kGetBannerDetailDataUrl = @"http://app.sunnysct.cn/api/home/index/banner_show";
 
 @implementation HSNetworkUrl
 

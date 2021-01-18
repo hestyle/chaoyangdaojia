@@ -48,6 +48,7 @@ static UIColor * noSelectTextColor;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self setTitle:@"兑换余额"];
     [self.navigationController setNavigationBarHidden:NO];
 }

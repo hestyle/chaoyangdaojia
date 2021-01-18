@@ -52,6 +52,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.nextLoadPage = 1;
     [self getCommonProblemByPage:1];
 }

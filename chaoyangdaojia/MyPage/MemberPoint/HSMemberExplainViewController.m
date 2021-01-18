@@ -29,12 +29,14 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self setTitle:@"会员说明"];
     [self.navigationController setNavigationBarHidden:NO];
     
     [self.activityIndicatorView startAnimating];
     [self getMemberExplain];
 }
+
 #pragma mark - WKNavigationDelegate
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self.activityIndicatorView stopAnimating];
