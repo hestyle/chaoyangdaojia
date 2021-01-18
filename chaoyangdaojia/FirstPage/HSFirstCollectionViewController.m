@@ -10,6 +10,7 @@
 #import "HSSortCollectionViewController.h"
 #import "HSQiangGouTableViewController.h"
 #import "HSPinTuanTableViewController.h"
+#import "HSBannerDetailViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -713,7 +714,11 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)gotoCarouselImageDetailAction {
-    [self.view makeToast:@"点击了轮播图片！"];
+    NSInteger currentPage = self.carouselPageControl.currentPage;
+    NSInteger bannerId = [((NSDictionary *)self.bannerArray[currentPage])[@"id"] integerValue];
+    HSBannerDetailViewController *controller = [HSBannerDetailViewController new];
+    [controller setBannerId:bannerId];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)pageControlChangeAction {

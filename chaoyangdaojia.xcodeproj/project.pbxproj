@@ -30,6 +30,7 @@
 		D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B9225A1F8E900D47929 /* HSCommonProblemDetailViewController.m */; };
 		D0BCBF5425B56A6B00A2DA7D /* HSQiangGouTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BCBF5325B56A6B00A2DA7D /* HSQiangGouTableViewController.m */; };
 		D0BCBF5A25B5A70700A2DA7D /* HSPinTuanTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BCBF5925B5A70700A2DA7D /* HSPinTuanTableViewController.m */; };
+		D0BCBF5D25B5B7DA00A2DA7D /* HSBannerDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BCBF5C25B5B7DA00A2DA7D /* HSBannerDetailViewController.m */; };
 		D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843822595D4B500197F8C /* HSNetworkManager.m */; };
 		D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843852595DF6100197F8C /* HSNetworkUrl.m */; };
 		D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */; };
@@ -93,6 +94,8 @@
 		D0BCBF5325B56A6B00A2DA7D /* HSQiangGouTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSQiangGouTableViewController.m; sourceTree = "<group>"; };
 		D0BCBF5825B5A70700A2DA7D /* HSPinTuanTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSPinTuanTableViewController.h; sourceTree = "<group>"; };
 		D0BCBF5925B5A70700A2DA7D /* HSPinTuanTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSPinTuanTableViewController.m; sourceTree = "<group>"; };
+		D0BCBF5B25B5B7DA00A2DA7D /* HSBannerDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSBannerDetailViewController.h; sourceTree = "<group>"; };
+		D0BCBF5C25B5B7DA00A2DA7D /* HSBannerDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSBannerDetailViewController.m; sourceTree = "<group>"; };
 		D0C843812595D4B500197F8C /* HSNetworkManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetworkManager.h; sourceTree = "<group>"; };
 		D0C843822595D4B500197F8C /* HSNetworkManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSNetworkManager.m; sourceTree = "<group>"; };
 		D0C843842595DF6100197F8C /* HSNetworkUrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetworkUrl.h; sourceTree = "<group>"; };
@@ -232,6 +235,8 @@
 				D0BCBF5325B56A6B00A2DA7D /* HSQiangGouTableViewController.m */,
 				D0BCBF5825B5A70700A2DA7D /* HSPinTuanTableViewController.h */,
 				D0BCBF5925B5A70700A2DA7D /* HSPinTuanTableViewController.m */,
+				D0BCBF5B25B5B7DA00A2DA7D /* HSBannerDetailViewController.h */,
+				D0BCBF5C25B5B7DA00A2DA7D /* HSBannerDetailViewController.m */,
 			);
 			path = FirstPage;
 			sourceTree = "<group>";
@@ -435,6 +440,7 @@
 				D0BCBF5A25B5A70700A2DA7D /* HSPinTuanTableViewController.m in Sources */,
 				D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */,
 				D00F7E0A25AD423F003D6BC6 /* HSExchangeBalanceViewController.m in Sources */,
+				D0BCBF5D25B5B7DA00A2DA7D /* HSBannerDetailViewController.m in Sources */,
 				D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */,
 				D0BCBF5425B56A6B00A2DA7D /* HSQiangGouTableViewController.m in Sources */,
 				D00F7E0725AD3D7D003D6BC6 /* HSMemberExplainViewController.m in Sources */,

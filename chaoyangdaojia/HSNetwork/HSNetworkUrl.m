@@ -58,6 +58,8 @@ NSString * const kGetIndexProductDataUrl = @"http://app.sunnysct.cn/api/home/ind
 NSString * const kGetQiangGouProductDataUrl = @"http://app.sunnysct.cn/api/home/index/qianggou";
 // 获取拼团商品数据
 NSString * const kGetPinTuanProductDataUrl = @"http://app.sunnysct.cn/api/home/index/pintuan";
+// 获取banner数据
+NSString * const kGetBannerDetailDataUrl = @"http://app.sunnysct.cn/api/home/index/banner_show";
 
 @implementation HSNetworkUrl
 

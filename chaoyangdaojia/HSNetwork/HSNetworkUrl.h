@@ -58,6 +58,8 @@ extern NSString * const kGetIndexProductDataUrl;
 extern NSString * const kGetQiangGouProductDataUrl;
 // 获取拼团商品数据
 extern NSString * const kGetPinTuanProductDataUrl;
+// 获取banner数据
+extern NSString * const kGetBannerDetailDataUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 
