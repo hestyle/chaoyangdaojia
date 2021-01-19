@@ -29,6 +29,7 @@
 @property (nonatomic, strong) UILabel *loadMoreLabel;
 
 @property (nonatomic, strong) UIView *titleView;
+@property (nonatomic, strong) UIImageView *gotoTopImageView;
 
 @property (nonatomic, strong) UIView *categorySectionHeaderView;
 @property (nonatomic, strong) UIView *carouselView;
@@ -656,6 +657,13 @@ static const CGFloat mProductCellHeight = 260.f;
     if (scrollView != self.collectionView) {
         return;
     }
+    if (self.gotoTopImageView.hidden && scrollView.contentOffset.y >= [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY) {
+        // 滚动超过一屏，则显示gotoTopImageView
+        [self.gotoTopImageView setHidden:NO];
+    } else if (!self.gotoTopImageView.hidden && scrollView.contentOffset.y < [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY) {
+        // 否则隐藏
+        [self.gotoTopImageView setHidden:YES];
+    }
     if (scrollView.contentOffset.y <= -mRefreshViewHeight + mTableViewBaseContentOffsetY) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
@@ -722,6 +730,11 @@ static const CGFloat mProductCellHeight = 260.f;
 #pragma mark - Event
 - (void)gotoSearchAction {
     [self.view makeToast:@"点击了搜索栏！"];
+}
+
+- (void)gotoTopAction {
+    [self.gotoTopImageView setHidden:YES];
+    [self.collectionView setContentOffset:CGPointMake(0, mTableViewBaseContentOffsetY) animated:YES];
 }
 
 - (void)gotoCarouselImageDetailAction {
@@ -818,6 +831,8 @@ static const CGFloat mProductCellHeight = 260.f;
     
     [self initTitleView];
     
+    [self initGotoTopView];
+    
     [self initCategorySectionHeaderView];
     
     [self initQiangGouSectionHeaderView];
@@ -867,6 +882,23 @@ static const CGFloat mProductCellHeight = 260.f;
         make.left.mas_equalTo(searchImageView.mas_right).mas_offset(5);
         make.centerY.mas_equalTo(searchView);
     }];
+}
+
+- (void)initGotoTopView {
+    self.gotoTopImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"goto_top"]];
+    [self.gotoTopImageView.layer setCornerRadius:22.5f];
+    [self.view addSubview:self.gotoTopImageView];
+    [self.gotoTopImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(45, 45));
+        make.right.mas_equalTo(self.view).mas_offset(-30);
+        make.bottom.mas_equalTo(self.view).mas_offset(-83-30);
+    }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoTopTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoTopAction)];
+    [gotoTopTapGesture setNumberOfTapsRequired:1];
+    [self.gotoTopImageView setUserInteractionEnabled:YES];
+    [self.gotoTopImageView addGestureRecognizer:gotoTopTapGesture];
+    [self.gotoTopImageView setHidden:YES];
 }
 
 - (void)initCategorySectionHeaderView {
