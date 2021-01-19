@@ -11,6 +11,7 @@
 #import "HSQiangGouTableViewController.h"
 #import "HSPinTuanTableViewController.h"
 #import "HSBannerDetailViewController.h"
+#import "HSCategoryDetailViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -611,6 +612,14 @@ static const CGFloat mProductCellHeight = 260.f;
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 20;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
+        HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate

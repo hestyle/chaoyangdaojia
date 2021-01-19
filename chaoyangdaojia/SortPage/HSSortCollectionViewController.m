@@ -7,6 +7,7 @@
 //
 
 #import "HSSortCollectionViewController.h"
+#import "HSCategoryDetailViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -60,7 +61,6 @@ static const CGFloat mCategoryCellHeight = 90.f;
 }
 
 #pragma mark <UICollectionViewDataSource>
-
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
@@ -141,6 +141,12 @@ static const CGFloat mCategoryCellHeight = 90.f;
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 20;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
+    HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - Event

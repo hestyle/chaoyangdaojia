@@ -42,6 +42,7 @@
 		D0E5984625A2BF7800FEFE4B /* HSAboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984525A2BF7800FEFE4B /* HSAboutUsViewController.m */; };
 		D0E5984925A3042400FEFE4B /* HSUserPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984825A3042400FEFE4B /* HSUserPolicyViewController.m */; };
 		D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5985025A33DF100FEFE4B /* HSUserAccountManger.m */; };
+		D0FF2AE525B68B480097CF17 /* HSCategoryDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FF2AE425B68B480097CF17 /* HSCategoryDetailViewController.m */; };
 		D590E466C16D7216F3FFCE40 /* libPods-chaoyangdaojia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */; };
 /* End PBXBuildFile section */
 
@@ -118,6 +119,8 @@
 		D0E5984B25A33C3200FEFE4B /* HSAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAccount.h; sourceTree = "<group>"; };
 		D0E5984F25A33DF100FEFE4B /* HSUserAccountManger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSUserAccountManger.h; sourceTree = "<group>"; };
 		D0E5985025A33DF100FEFE4B /* HSUserAccountManger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSUserAccountManger.m; sourceTree = "<group>"; };
+		D0FF2AE325B68B480097CF17 /* HSCategoryDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCategoryDetailViewController.h; sourceTree = "<group>"; };
+		D0FF2AE425B68B480097CF17 /* HSCategoryDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCategoryDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +249,8 @@
 			children = (
 				D092614D25B4347900B3C1A7 /* HSSortCollectionViewController.h */,
 				D092614E25B4347900B3C1A7 /* HSSortCollectionViewController.m */,
+				D0FF2AE325B68B480097CF17 /* HSCategoryDetailViewController.h */,
+				D0FF2AE425B68B480097CF17 /* HSCategoryDetailViewController.m */,
 			);
 			path = SortPage;
 			sourceTree = "<group>";
@@ -439,6 +444,7 @@
 				D092614F25B4347900B3C1A7 /* HSSortCollectionViewController.m in Sources */,
 				D0BCBF5A25B5A70700A2DA7D /* HSPinTuanTableViewController.m in Sources */,
 				D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */,
+				D0FF2AE525B68B480097CF17 /* HSCategoryDetailViewController.m in Sources */,
 				D00F7E0A25AD423F003D6BC6 /* HSExchangeBalanceViewController.m in Sources */,
 				D0BCBF5D25B5B7DA00A2DA7D /* HSBannerDetailViewController.m in Sources */,
 				D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */,
