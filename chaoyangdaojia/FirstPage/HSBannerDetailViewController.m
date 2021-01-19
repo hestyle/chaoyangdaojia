@@ -7,13 +7,13 @@
 //
 
 #import "HSBannerDetailViewController.h"
-#import <WebKit/WebKit.h>
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
 @interface HSBannerDetailViewController ()
 
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, strong) WKWebView *contentWebView;
 
 @end
@@ -26,21 +26,36 @@
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
     [self initView];
-    [self getBannerDataById:self.bannerId];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO];
+    [self.activityIndicatorView startAnimating];
+    [self getBannerDataById:self.bannerId];
+}
+
+#pragma mark - WKNavigationDelegate
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    [self.activityIndicatorView stopAnimating];
 }
 
 #pragma mark - Private
 - (void)initView {
     self.contentWebView = [WKWebView new];
+    [self.contentWebView setNavigationDelegate:self];
     [self.view addSubview:self.contentWebView];
     [self.contentWebView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(self.view);
         make.center.mas_equalTo(self.view);
+    }];
+    
+    self.activityIndicatorView = [UIActivityIndicatorView new];
+    [self.activityIndicatorView setHidesWhenStopped:YES];
+    [self.view addSubview:self.activityIndicatorView];
+    [self.activityIndicatorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
 }
 
