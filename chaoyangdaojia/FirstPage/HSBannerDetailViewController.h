@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HSBannerDetailViewController : UIViewController
+@interface HSBannerDetailViewController : UIViewController <WKNavigationDelegate>
 
 @property (nonatomic) NSInteger bannerId;
 

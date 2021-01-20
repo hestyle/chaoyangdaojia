@@ -11,6 +11,10 @@
 		D00F7E0725AD3D7D003D6BC6 /* HSMemberExplainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F7E0625AD3D7D003D6BC6 /* HSMemberExplainViewController.m */; };
 		D00F7E0A25AD423F003D6BC6 /* HSExchangeBalanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F7E0925AD423F003D6BC6 /* HSExchangeBalanceViewController.m */; };
 		D00F7E0D25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F7E0C25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m */; };
+		D01B8F8925B7C1D300C5A317 /* HSMemberWalletViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F8825B7C1D300C5A317 /* HSMemberWalletViewController.m */; };
+		D01B8F8C25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F8B25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.m */; };
+		D01B8F8F25B7D3DE00C5A317 /* HSRechargeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F8E25B7D3DE00C5A317 /* HSRechargeViewController.m */; };
+		D01B8F9225B80DEF00C5A317 /* HSWithDrawalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F9125B80DEF00C5A317 /* HSWithDrawalViewController.m */; };
 		D04360D825AC4DFD00C04580 /* HSMemberPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */; };
 		D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288CE259338F100C8A2D1 /* AppDelegate.m */; };
 		D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05288D9259338F600C8A2D1 /* Assets.xcassets */; };
@@ -42,6 +46,7 @@
 		D0E5984625A2BF7800FEFE4B /* HSAboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984525A2BF7800FEFE4B /* HSAboutUsViewController.m */; };
 		D0E5984925A3042400FEFE4B /* HSUserPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5984825A3042400FEFE4B /* HSUserPolicyViewController.m */; };
 		D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E5985025A33DF100FEFE4B /* HSUserAccountManger.m */; };
+		D0FF2AE525B68B480097CF17 /* HSCategoryDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FF2AE425B68B480097CF17 /* HSCategoryDetailViewController.m */; };
 		D590E466C16D7216F3FFCE40 /* libPods-chaoyangdaojia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A6E0BE3E9F189ADA4EBBB8F /* libPods-chaoyangdaojia.a */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +62,14 @@
 		D00F7E0925AD423F003D6BC6 /* HSExchangeBalanceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSExchangeBalanceViewController.m; sourceTree = "<group>"; };
 		D00F7E0B25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberPointDetailTableViewController.h; sourceTree = "<group>"; };
 		D00F7E0C25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberPointDetailTableViewController.m; sourceTree = "<group>"; };
+		D01B8F8725B7C1D300C5A317 /* HSMemberWalletViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberWalletViewController.h; sourceTree = "<group>"; };
+		D01B8F8825B7C1D300C5A317 /* HSMemberWalletViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberWalletViewController.m; sourceTree = "<group>"; };
+		D01B8F8A25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberWalletDetailTableViewController.h; sourceTree = "<group>"; };
+		D01B8F8B25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberWalletDetailTableViewController.m; sourceTree = "<group>"; };
+		D01B8F8D25B7D3DE00C5A317 /* HSRechargeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSRechargeViewController.h; sourceTree = "<group>"; };
+		D01B8F8E25B7D3DE00C5A317 /* HSRechargeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSRechargeViewController.m; sourceTree = "<group>"; };
+		D01B8F9025B80DEF00C5A317 /* HSWithDrawalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSWithDrawalViewController.h; sourceTree = "<group>"; };
+		D01B8F9125B80DEF00C5A317 /* HSWithDrawalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSWithDrawalViewController.m; sourceTree = "<group>"; };
 		D04360D425AC305100C04580 /* HSNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetwork.h; sourceTree = "<group>"; };
 		D04360D625AC4DFD00C04580 /* HSMemberPointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberPointViewController.h; sourceTree = "<group>"; };
 		D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberPointViewController.m; sourceTree = "<group>"; };
@@ -118,6 +131,8 @@
 		D0E5984B25A33C3200FEFE4B /* HSAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAccount.h; sourceTree = "<group>"; };
 		D0E5984F25A33DF100FEFE4B /* HSUserAccountManger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSUserAccountManger.h; sourceTree = "<group>"; };
 		D0E5985025A33DF100FEFE4B /* HSUserAccountManger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSUserAccountManger.m; sourceTree = "<group>"; };
+		D0FF2AE325B68B480097CF17 /* HSCategoryDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCategoryDetailViewController.h; sourceTree = "<group>"; };
+		D0FF2AE425B68B480097CF17 /* HSCategoryDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCategoryDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +162,21 @@
 				3EBD767773293FBA077A2885 /* Pods-chaoyangdaojia.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		D01B8F8625B7C1B300C5A317 /* MemberWallet */ = {
+			isa = PBXGroup;
+			children = (
+				D01B8F8725B7C1D300C5A317 /* HSMemberWalletViewController.h */,
+				D01B8F8825B7C1D300C5A317 /* HSMemberWalletViewController.m */,
+				D01B8F8A25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.h */,
+				D01B8F8B25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.m */,
+				D01B8F8D25B7D3DE00C5A317 /* HSRechargeViewController.h */,
+				D01B8F8E25B7D3DE00C5A317 /* HSRechargeViewController.m */,
+				D01B8F9025B80DEF00C5A317 /* HSWithDrawalViewController.h */,
+				D01B8F9125B80DEF00C5A317 /* HSWithDrawalViewController.m */,
+			);
+			path = MemberWallet;
 			sourceTree = "<group>";
 		};
 		D04360D525AC4D5600C04580 /* MemberPoint */ = {
@@ -228,6 +258,7 @@
 		D07F4ADC2594BBCF00CA0670 /* FirstPage */ = {
 			isa = PBXGroup;
 			children = (
+				D01B8F8625B7C1B300C5A317 /* MemberWallet */,
 				D0894CD125B11C9000424664 /* HSFirstCollectionViewController.h */,
 				D0894CD225B11C9000424664 /* HSFirstCollectionViewController.m */,
 				D0894CD425B1CDB200424664 /* first.xcassets */,
@@ -246,6 +277,8 @@
 			children = (
 				D092614D25B4347900B3C1A7 /* HSSortCollectionViewController.h */,
 				D092614E25B4347900B3C1A7 /* HSSortCollectionViewController.m */,
+				D0FF2AE325B68B480097CF17 /* HSCategoryDetailViewController.h */,
+				D0FF2AE425B68B480097CF17 /* HSCategoryDetailViewController.m */,
 			);
 			path = SortPage;
 			sourceTree = "<group>";
@@ -433,14 +466,17 @@
 				D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */,
 				D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */,
 				D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */,
+				D01B8F8C25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.m in Sources */,
 				D003017D25983E360068DB6C /* HSMyDetailTableViewController.m in Sources */,
 				D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */,
 				D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */,
 				D092614F25B4347900B3C1A7 /* HSSortCollectionViewController.m in Sources */,
 				D0BCBF5A25B5A70700A2DA7D /* HSPinTuanTableViewController.m in Sources */,
 				D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */,
+				D0FF2AE525B68B480097CF17 /* HSCategoryDetailViewController.m in Sources */,
 				D00F7E0A25AD423F003D6BC6 /* HSExchangeBalanceViewController.m in Sources */,
 				D0BCBF5D25B5B7DA00A2DA7D /* HSBannerDetailViewController.m in Sources */,
+				D01B8F9225B80DEF00C5A317 /* HSWithDrawalViewController.m in Sources */,
 				D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */,
 				D0BCBF5425B56A6B00A2DA7D /* HSQiangGouTableViewController.m in Sources */,
 				D00F7E0725AD3D7D003D6BC6 /* HSMemberExplainViewController.m in Sources */,
@@ -456,6 +492,8 @@
 				D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */,
 				D04360D825AC4DFD00C04580 /* HSMemberPointViewController.m in Sources */,
 				D0903DFD2599BC750010DE58 /* HSFriendBirthdayRemindTableViewController.m in Sources */,
+				D01B8F8F25B7D3DE00C5A317 /* HSRechargeViewController.m in Sources */,
+				D01B8F8925B7C1D300C5A317 /* HSMemberWalletViewController.m in Sources */,
 				D07F4AE32594C02200CA0670 /* HSMyViewController.m in Sources */,
 				D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */,
 			);

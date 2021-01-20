@@ -11,6 +11,9 @@
 #import "HSQiangGouTableViewController.h"
 #import "HSPinTuanTableViewController.h"
 #import "HSBannerDetailViewController.h"
+#import "HSCategoryDetailViewController.h"
+#import "HSMemberWalletViewController.h"
+#import "HSAccount.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -28,6 +31,7 @@
 @property (nonatomic, strong) UILabel *loadMoreLabel;
 
 @property (nonatomic, strong) UIView *titleView;
+@property (nonatomic, strong) UIImageView *gotoTopImageView;
 
 @property (nonatomic, strong) UIView *categorySectionHeaderView;
 @property (nonatomic, strong) UIView *carouselView;
@@ -36,6 +40,11 @@
 @property (nonatomic, strong) UIImageView *carouselCurrentImageView;
 @property (nonatomic, strong) UIImageView *carouselRightImageView;
 @property (nonatomic, strong) UIPageControl *carouselPageControl;
+@property (nonatomic, strong) UIView *memberInfoView;
+@property (nonatomic, strong) UIImageView *memberImageView;
+@property (nonatomic, strong) UILabel *memberNameLabel;
+@property (nonatomic, strong) UILabel *memberTypeLabel;
+@property (nonatomic, strong) UILabel *memberRechargeLabel;
 
 @property (nonatomic, strong) UIView *qiangGouSectionHeaderView;
 @property (nonatomic, strong) UIView *pinTuanSectionHeaderView;
@@ -69,6 +78,8 @@ static const CGFloat mCategorySectionHeaderHeight = 160.f;
 static const CGFloat mQiangGouSectionHeaderHeight = 60.f;
 static const CGFloat mPinTuanSectionHeaderHeight = 60.f;
 static const CGFloat mProductSectionHeaderHeight = 60.f;
+
+static const CGFloat mMemberInfoViewHeight = 70.f;
 
 static const CGFloat mCategoryCellWidth = 60.f;
 static const CGFloat mCategoryCellHeight = 90.f;
@@ -118,6 +129,8 @@ static const CGFloat mProductCellHeight = 260.f;
 
     // 开始轮转
     [self startCarouselAutoChange];
+    // 刷新第一个section(防止未登录出现memberInfoView)
+    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -130,7 +143,19 @@ static const CGFloat mProductCellHeight = 260.f;
 #pragma mark - UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     if (section == 0) {
-        return CGSizeMake([UIScreen mainScreen].bounds.size.width, mCategorySectionHeaderHeight);
+        HSUserAccountManger *manager = [HSUserAccountManger shareManager];
+        if (manager.isLogin) {
+            CGSize headerSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, mCategorySectionHeaderHeight + mMemberInfoViewHeight + 10);
+            [self.categorySectionHeaderView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(headerSize);
+            }];
+            [self.memberInfoView setHidden:NO];
+            [self memberInfoViewSetData];
+            return headerSize;
+        } else {
+            [self.memberInfoView setHidden:YES];
+            return CGSizeMake([UIScreen mainScreen].bounds.size.width, mCategorySectionHeaderHeight);
+        }
     } else if (section == 1) {
         return CGSizeMake([UIScreen mainScreen].bounds.size.width, mQiangGouSectionHeaderHeight);
     } else if (section == 2) {
@@ -613,6 +638,14 @@ static const CGFloat mProductCellHeight = 260.f;
     return 20;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
+        HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+}
+
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView == self.carouselScrollView) {
@@ -646,6 +679,13 @@ static const CGFloat mProductCellHeight = 260.f;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (scrollView != self.collectionView) {
         return;
+    }
+    if (self.gotoTopImageView.hidden && scrollView.contentOffset.y >= [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY) {
+        // 滚动超过一屏，则显示gotoTopImageView
+        [self.gotoTopImageView setHidden:NO];
+    } else if (!self.gotoTopImageView.hidden && scrollView.contentOffset.y < [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY) {
+        // 否则隐藏
+        [self.gotoTopImageView setHidden:YES];
     }
     if (scrollView.contentOffset.y <= -mRefreshViewHeight + mTableViewBaseContentOffsetY) {
         if (self.refreshView.tag == 0) {
@@ -715,6 +755,11 @@ static const CGFloat mProductCellHeight = 260.f;
     [self.view makeToast:@"点击了搜索栏！"];
 }
 
+- (void)gotoTopAction {
+    [self.gotoTopImageView setHidden:YES];
+    [self.collectionView setContentOffset:CGPointMake(0, mTableViewBaseContentOffsetY) animated:YES];
+}
+
 - (void)gotoCarouselImageDetailAction {
     NSInteger currentPage = self.carouselPageControl.currentPage;
     NSInteger bannerId = [((NSDictionary *)self.bannerArray[currentPage])[@"id"] integerValue];
@@ -734,6 +779,11 @@ static const CGFloat mProductCellHeight = 260.f;
 
 - (void)gotoPinTuanDetailAction {
     HSPinTuanTableViewController *controller = [HSPinTuanTableViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)gotoMemberWalletAction {
+    HSMemberWalletViewController *controller = [HSMemberWalletViewController new];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -809,6 +859,8 @@ static const CGFloat mProductCellHeight = 260.f;
     
     [self initTitleView];
     
+    [self initGotoTopView];
+    
     [self initCategorySectionHeaderView];
     
     [self initQiangGouSectionHeaderView];
@@ -858,6 +910,23 @@ static const CGFloat mProductCellHeight = 260.f;
         make.left.mas_equalTo(searchImageView.mas_right).mas_offset(5);
         make.centerY.mas_equalTo(searchView);
     }];
+}
+
+- (void)initGotoTopView {
+    self.gotoTopImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"goto_top"]];
+    [self.gotoTopImageView.layer setCornerRadius:22.5f];
+    [self.view addSubview:self.gotoTopImageView];
+    [self.gotoTopImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(45, 45));
+        make.right.mas_equalTo(self.view).mas_offset(-30);
+        make.bottom.mas_equalTo(self.view).mas_offset(-83-30);
+    }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoTopTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoTopAction)];
+    [gotoTopTapGesture setNumberOfTapsRequired:1];
+    [self.gotoTopImageView setUserInteractionEnabled:YES];
+    [self.gotoTopImageView addGestureRecognizer:gotoTopTapGesture];
+    [self.gotoTopImageView setHidden:YES];
 }
 
 - (void)initCategorySectionHeaderView {
@@ -927,6 +996,63 @@ static const CGFloat mProductCellHeight = 260.f;
         make.height.mas_equalTo(15);
         make.bottom.mas_equalTo(self.carouselView).mas_offset(-15);
     }];
+    // 会员充值view
+    self.memberInfoView = [UIView new];
+    [self.memberInfoView setBackgroundColor:[UIColor colorWithRed:237.0/255 green:237.0/255 blue:237.0/255 alpha:1.0]];
+    [self.categorySectionHeaderView addSubview:self.memberInfoView];
+    [self.memberInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.carouselView);
+        make.right.mas_equalTo(self.carouselView);
+        make.top.mas_equalTo(self.carouselView.mas_bottom).mas_offset(10);
+        make.height.mas_equalTo(mMemberInfoViewHeight);
+    }];
+    self.memberImageView = [UIImageView new];
+    [self.memberInfoView addSubview:self.memberImageView];
+    [self.memberImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(45, 45));
+        make.centerY.mas_equalTo(self.memberInfoView);
+        make.left.mas_equalTo(self.memberInfoView).mas_offset(10);
+    }];
+    self.memberNameLabel = [UILabel new];
+    [self.memberNameLabel setText:@"138****3293"];
+    [self.memberInfoView addSubview:self.memberNameLabel];
+    [self.memberNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.memberImageView.mas_right).mas_offset(10);
+        make.top.mas_equalTo(self.memberImageView);
+    }];
+    UIImageView *memberIconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"vip_icon"]];
+    [self.memberInfoView addSubview:memberIconImageView];
+    [memberIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(15, 15));
+        make.left.mas_equalTo(self.memberNameLabel.mas_right).mas_offset(10);
+        make.centerY.mas_equalTo(self.memberNameLabel);
+    }];
+    self.memberTypeLabel = [UILabel new];
+    [self.memberTypeLabel setText:@"普通会员"];
+    [self.memberTypeLabel setTextColor:[UIColor colorWithRed:159.0/255 green:159.0/255 blue:159.0/255 alpha:1.0]];
+    [self.memberTypeLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize]]];
+    [self.memberInfoView addSubview:self.memberTypeLabel];
+    [self.memberTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.memberNameLabel);
+        make.top.mas_equalTo(self.memberNameLabel.mas_bottom).mas_offset(10);
+    }];
+    self.memberRechargeLabel = [UILabel new];
+    [self.memberRechargeLabel setBackgroundColor:[UIColor redColor]];
+    [self.memberRechargeLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 2]];
+    [self.memberRechargeLabel setText:@"充值"];
+    [self.memberRechargeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.memberRechargeLabel setTextColor:[UIColor whiteColor]];
+    [self.memberInfoView addSubview:self.memberRechargeLabel];
+    [self.memberRechargeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.memberInfoView).mas_offset(-10);
+        make.size.mas_equalTo(CGSizeMake(35, 20));
+        make.centerY.mas_equalTo(self.memberInfoView);
+    }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoMemberWalletTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoMemberWalletAction)];
+    [gotoMemberWalletTapGesture setNumberOfTapsRequired:1];
+    [self.memberRechargeLabel setUserInteractionEnabled:YES];
+    [self.memberRechargeLabel addGestureRecognizer:gotoMemberWalletTapGesture];
 }
 
 - (void)initQiangGouSectionHeaderView {
@@ -1220,4 +1346,22 @@ static const CGFloat mProductCellHeight = 260.f;
     HSSortCollectionViewController *controller = self.tabBarController.childViewControllers[1];
     [controller setCategoryArray:self.categoryArray.mutableCopy];
 }
+
+- (void)memberInfoViewSetData {
+    HSUserAccountManger *manager = [HSUserAccountManger shareManager];
+    NSDictionary *userInfoDict = manager.userInfoDict;
+    [self.memberNameLabel setText:userInfoDict[@"nickname"]];
+    [self.memberTypeLabel setText:userInfoDict[@"levelid_str"]];
+    // 设置用户头像
+    if (manager.avatarPath != nil) {
+        NSString *path_sandox = NSHomeDirectory();
+        NSString *avatarPath = [path_sandox stringByAppendingPathComponent:manager.avatarPath];
+        UIImage *avatarImage = [UIImage imageWithContentsOfFile:avatarPath];
+        [self.memberImageView setImage:avatarImage];
+    } else {
+        // 设置默认头像
+        [self.memberImageView setImage:[UIImage imageNamed:@"noavatar"]];
+    }
+}
+
 @end
