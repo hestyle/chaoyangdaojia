@@ -158,7 +158,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [commentDateLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize] + 2]];
     [commentDateLabel setTextColor:[UIColor grayColor]];
     NSString *keyString = commentDataDict[@"key"];
-    if (keyString == nil || [keyString isEqualToString:@"no"]) {
+    if ([keyString isEqual:[NSNull null]] || [keyString isEqualToString:@"no"]) {
         keyString = @"默认规格";
     }
     [commentDateLabel setText:[NSString stringWithFormat:@"%@  %@", commentDataDict[@"addtime"], keyString]];
@@ -174,10 +174,42 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [cell.contentView addSubview:commentContentLabel];
     [commentContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(dateInfoView.mas_bottom);
-        make.bottom.mas_equalTo(cell.contentView).mas_offset(-10);
+        if ([commentDataDict[@"huifu"] isEqual:[NSNull null]]) {
+            make.bottom.mas_equalTo(cell.contentView).mas_offset(-10);
+        }
         make.width.mas_equalTo(userInfoView);
         make.centerX.mas_equalTo(userInfoView);
     }];
+    if (![commentDataDict[@"huifu"] isEqual:[NSNull null]]) {
+        UIView *replyView = [UIView new];
+        [replyView setBackgroundColor:[UIColor colorWithRed:245.0/255 green:245.0/255 blue:245.0/255 alpha:1.0]];
+        [cell.contentView addSubview:replyView];
+        
+        UILabel *replyContentLabel = [UILabel new];
+        [replyContentLabel setNumberOfLines:0];
+        NSString *titleString = @"官方回复：";
+        NSString *replyString = commentDataDict[@"huifu"];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@%@", titleString, replyString]];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, [titleString length])];
+        [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:[UIFont smallSystemFontSize] + 2 weight:UIFontWeightSemibold] range:NSMakeRange(0, [titleString length])];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange([titleString length], [replyString length])];
+        [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:[UIFont smallSystemFontSize] + 2] range:NSMakeRange([titleString length], [replyString length])];
+        [replyContentLabel setAttributedText:attributedString];
+        [replyView addSubview:replyContentLabel];
+        [replyContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(replyView).mas_offset(10);
+            make.bottom.mas_equalTo(replyView).mas_offset(-10);
+            make.width.mas_equalTo(replyView).mas_offset(-20);
+            make.centerX.mas_equalTo(replyView);
+        }];
+        [cell.contentView addSubview:replyView];
+        [replyView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(commentContentLabel.mas_bottom).mas_offset(10);
+            make.width.mas_equalTo(userInfoView);
+            make.centerX.mas_equalTo(userInfoView);
+            make.bottom.mas_equalTo(cell.contentView).mas_offset(-10);
+        }];
+    }
     if ([[commentDataDict allKeys] containsObject:@"userAvatarImage"]) {
         [imageView setImage:commentDataDict[@"userAvatarImage"]];
     } else {

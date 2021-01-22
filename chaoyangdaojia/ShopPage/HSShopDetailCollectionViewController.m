@@ -316,6 +316,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
             [commentStarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.size.mas_equalTo(CGSizeMake(15, 15));
                 make.left.mas_equalTo(commentStarView).mas_equalTo(i * 20);
+                make.centerY.mas_equalTo(commentStarView);
                 if (i == 4) {
                     make.height.mas_equalTo(commentStarView);
                     make.right.mas_equalTo(commentStarView);
@@ -343,7 +344,11 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         UILabel *commentDateLabel = [UILabel new];
         [commentDateLabel setFont:[UIFont systemFontOfSize:[UIFont smallSystemFontSize] + 2]];
         [commentDateLabel setTextColor:[UIColor grayColor]];
-        [commentDateLabel setText:[NSString stringWithFormat:@"%@  %@", shopCommentDataDict[@"addtime"], shopCommentDataDict[@"key"]]];
+        NSString *keyString = shopCommentDataDict[@"key"];
+        if ([keyString isEqual:[NSNull null]] || [keyString isEqualToString:@"no"]) {
+            keyString = @"默认规格";
+        }
+        [commentDateLabel setText:[NSString stringWithFormat:@"%@  %@", shopCommentDataDict[@"addtime"], keyString]];
         [dateInfoView addSubview:commentDateLabel];
         [commentDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(dateInfoView);
@@ -356,10 +361,42 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         [cell.contentView addSubview:commentContentLabel];
         [commentContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(dateInfoView.mas_bottom);
-            make.bottom.mas_equalTo(cell.contentView);
+            if ([shopCommentDataDict[@"huifu"] isEqual:[NSNull null]]) {
+                make.bottom.mas_equalTo(cell.contentView).mas_offset(-10);
+            }
             make.width.mas_equalTo(cell.contentView);
             make.centerX.mas_equalTo(cell.contentView);
         }];
+        if (![shopCommentDataDict[@"huifu"] isEqual:[NSNull null]]) {
+            UIView *replyView = [UIView new];
+            [replyView setBackgroundColor:[UIColor colorWithRed:245.0/255 green:245.0/255 blue:245.0/255 alpha:1.0]];
+            [cell.contentView addSubview:replyView];
+            
+            UILabel *replyContentLabel = [UILabel new];
+            [replyContentLabel setNumberOfLines:0];
+            NSString *titleString = @"官方回复：";
+            NSString *replyString = shopCommentDataDict[@"huifu"];
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@%@", titleString, replyString]];
+            [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, [titleString length])];
+            [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:[UIFont smallSystemFontSize] + 2 weight:UIFontWeightSemibold] range:NSMakeRange(0, [titleString length])];
+            [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange([titleString length], [replyString length])];
+            [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:[UIFont smallSystemFontSize] + 2] range:NSMakeRange([titleString length], [replyString length])];
+            [replyContentLabel setAttributedText:attributedString];
+            [replyView addSubview:replyContentLabel];
+            [replyContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(replyView).mas_offset(10);
+                make.bottom.mas_equalTo(replyView).mas_offset(-10);
+                make.width.mas_equalTo(replyView).mas_offset(-20);
+                make.centerX.mas_equalTo(replyView);
+            }];
+            [cell.contentView addSubview:replyView];
+            [replyView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(commentContentLabel.mas_bottom).mas_offset(10);
+                make.width.mas_equalTo(userInfoView);
+                make.centerX.mas_equalTo(userInfoView);
+                make.bottom.mas_equalTo(cell.contentView).mas_offset(-10);
+            }];
+        }
         if ([[shopCommentDataDict allKeys] containsObject:@"userAvatarImage"]) {
             [imageView setImage:shopCommentDataDict[@"userAvatarImage"]];
         } else {
