@@ -40,6 +40,7 @@
 		D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843852595DF6100197F8C /* HSNetworkUrl.m */; };
 		D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */; };
 		D0CBDA1925BA5C8800EED0D2 /* sort.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0CBDA1825BA5C8800EED0D2 /* sort.xcassets */; };
+		D0CBDA1C25BAB4E800EED0D2 /* HSCommentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0CBDA1B25BAB4E800EED0D2 /* HSCommentTableViewController.m */; };
 		D0D427D325AE83CB003DD646 /* HSShopTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D427D225AE83CB003DD646 /* HSShopTableViewController.m */; };
 		D0D427D925AF094E003DD646 /* HSShopDetailCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D427D825AF094E003DD646 /* HSShopDetailCollectionViewController.m */; };
 		D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */; };
@@ -119,6 +120,8 @@
 		D0C843852595DF6100197F8C /* HSNetworkUrl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSNetworkUrl.m; sourceTree = "<group>"; };
 		D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MyAccount.xcassets; sourceTree = "<group>"; };
 		D0CBDA1825BA5C8800EED0D2 /* sort.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = sort.xcassets; sourceTree = "<group>"; };
+		D0CBDA1A25BAB4E800EED0D2 /* HSCommentTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCommentTableViewController.h; sourceTree = "<group>"; };
+		D0CBDA1B25BAB4E800EED0D2 /* HSCommentTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCommentTableViewController.m; sourceTree = "<group>"; };
 		D0D427D125AE83CB003DD646 /* HSShopTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSShopTableViewController.h; sourceTree = "<group>"; };
 		D0D427D225AE83CB003DD646 /* HSShopTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSShopTableViewController.m; sourceTree = "<group>"; };
 		D0D427D725AF094E003DD646 /* HSShopDetailCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSShopDetailCollectionViewController.h; sourceTree = "<group>"; };
@@ -298,6 +301,8 @@
 				D01B8F9325B8329F00C5A317 /* HSProductDetailViewController.h */,
 				D01B8F9425B8329F00C5A317 /* HSProductDetailViewController.m */,
 				D0CBDA1825BA5C8800EED0D2 /* sort.xcassets */,
+				D0CBDA1A25BAB4E800EED0D2 /* HSCommentTableViewController.h */,
+				D0CBDA1B25BAB4E800EED0D2 /* HSCommentTableViewController.m */,
 			);
 			path = ShopPage;
 			sourceTree = "<group>";
@@ -479,6 +484,7 @@
 				D003017D25983E360068DB6C /* HSMyDetailTableViewController.m in Sources */,
 				D07F4AE62594C04E00CA0670 /* HSCartViewController.m in Sources */,
 				D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */,
+				D0CBDA1C25BAB4E800EED0D2 /* HSCommentTableViewController.m in Sources */,
 				D092614F25B4347900B3C1A7 /* HSSortCollectionViewController.m in Sources */,
 				D0BCBF5A25B5A70700A2DA7D /* HSPinTuanTableViewController.m in Sources */,
 				D01B8F9525B8329F00C5A317 /* HSProductDetailViewController.m in Sources */,

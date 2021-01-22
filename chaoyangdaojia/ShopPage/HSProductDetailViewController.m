@@ -7,6 +7,7 @@
 //
 
 #import "HSProductDetailViewController.h"
+#import "HSCommentTableViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -756,6 +757,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:sectionIndex] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
+- (void)gotoAllCommentAction {
+    HSCommentTableViewController *controller = [[HSCommentTableViewController alloc] initWithProductId:self.productId];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 #pragma mark - Private
 - (void)initView {
     [self initRefreshView];
@@ -819,7 +825,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     self.sectionCount = 3;
     [titleArray addObject:@"商品"];
     if ([self.commentArray count] != 0) {
-        [titleArray addObject:@"评论"];
+        [titleArray addObject:@"评价"];
         self.sectionCount += 1;
     }
     [titleArray addObject:@"详情"];
@@ -928,7 +934,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     self.commentSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, mCommentInfoSectionHeaderHeight)];
     [self.commentSectionHeaderView setBackgroundColor:[UIColor whiteColor]];
     self.commentTitleLabel = [UILabel new];
-    [self.commentTitleLabel setText:@"用户评论"];
+    [self.commentTitleLabel setText:@"用户评价"];
     [self.commentSectionHeaderView addSubview:self.commentTitleLabel];
     [self.commentTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.commentSectionHeaderView).mas_offset(20);
@@ -942,12 +948,19 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     UILabel *checkAllCommentTitleLabel = [UILabel new];
-    [checkAllCommentTitleLabel setText:@"查看全部评论"];
+    [checkAllCommentTitleLabel setText:@"查看全部评价"];
+    [checkAllCommentTitleLabel setTextColor:[UIColor grayColor]];
+    [checkAllCommentTitleLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
     [self.commentSectionHeaderView addSubview:checkAllCommentTitleLabel];
     [checkAllCommentTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.commentSectionHeaderView);
         make.right.mas_equalTo(checkAllCommentImageView.mas_left).offset(-5);
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoAllCommentTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoAllCommentAction)];
+    [gotoAllCommentTapGesture setNumberOfTapsRequired:1];
+    [self.commentSectionHeaderView setUserInteractionEnabled:YES];
+    [self.commentSectionHeaderView addGestureRecognizer:gotoAllCommentTapGesture];
 }
 
 - (void)initProductDecriptionSectionHeaderView {
@@ -1262,7 +1275,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 - (void)updateComment {
     if (self.productDataDict[@"pinnum"] != nil && [self.productDataDict[@"pinnum"] integerValue] > 0) {
-        [self.commentTitleLabel setText:[NSString stringWithFormat:@"用户评论(%@)", self.productDataDict[@"pinnum"]]];
+        [self.commentTitleLabel setText:[NSString stringWithFormat:@"用户评价(%@)", self.productDataDict[@"pinnum"]]];
     }
 }
 
