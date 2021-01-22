@@ -13,6 +13,7 @@
 #import "HSBannerDetailViewController.h"
 #import "HSCategoryDetailViewController.h"
 #import "HSMemberWalletViewController.h"
+#import "HSProductDetailViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
@@ -642,6 +643,18 @@ static const CGFloat mProductCellHeight = 260.f;
     if (indexPath.section == 0) {
         NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
         HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.section == 1) {
+        NSDictionary *productDataDict = self.qiangGouArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.section == 2) {
+        NSDictionary *productDataDict = self.pinTuanArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.section == 3) {
+        NSDictionary *productDataDict = self.productArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"id"] integerValue]];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }

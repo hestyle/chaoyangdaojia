@@ -62,6 +62,8 @@ NSString * const kGetPinTuanProductDataUrl = @"http://app.sunnysct.cn/api/home/i
 NSString * const kGetBannerDetailDataUrl = @"http://app.sunnysct.cn/api/home/index/banner_show";
 // 获取CategoryDetail数据
 NSString * const kGetCategoryDetailDataUrl = @"http://app.sunnysct.cn/api/home/shop/lists";
+// 获取ProductDetail数据
+NSString * const kGetProductDetailDataUrl = @"http://app.sunnysct.cn/api/home/shop/show";
 
 @implementation HSNetworkUrl
 

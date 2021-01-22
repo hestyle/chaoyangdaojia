@@ -7,6 +7,7 @@
 //
 
 #import "HSCategoryDetailViewController.h"
+#import "HSProductDetailViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -239,6 +240,10 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
         self.leftListSelectIndexPath = indexPath.copy;
         NSInteger categoryId = [((NSDictionary *)self.categorySubArray[self.leftListSelectIndexPath.row])[@"id"] integerValue];
         [self getCategoryDetailByCategoryId:categoryId page:1];
+    } else if (tableView == self.rightContentTableView) {
+        NSDictionary *productDataDict = self.categoryDetailArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"id"] integerValue]];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 

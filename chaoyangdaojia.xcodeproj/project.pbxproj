@@ -15,6 +15,7 @@
 		D01B8F8C25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F8B25B7CFE900C5A317 /* HSMemberWalletDetailTableViewController.m */; };
 		D01B8F8F25B7D3DE00C5A317 /* HSRechargeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F8E25B7D3DE00C5A317 /* HSRechargeViewController.m */; };
 		D01B8F9225B80DEF00C5A317 /* HSWithDrawalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F9125B80DEF00C5A317 /* HSWithDrawalViewController.m */; };
+		D01B8F9525B8329F00C5A317 /* HSProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F9425B8329F00C5A317 /* HSProductDetailViewController.m */; };
 		D04360D825AC4DFD00C04580 /* HSMemberPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */; };
 		D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288CE259338F100C8A2D1 /* AppDelegate.m */; };
 		D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05288D9259338F600C8A2D1 /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 		D0C843832595D4B500197F8C /* HSNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843822595D4B500197F8C /* HSNetworkManager.m */; };
 		D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C843852595DF6100197F8C /* HSNetworkUrl.m */; };
 		D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */; };
+		D0CBDA1925BA5C8800EED0D2 /* sort.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0CBDA1825BA5C8800EED0D2 /* sort.xcassets */; };
 		D0D427D325AE83CB003DD646 /* HSShopTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D427D225AE83CB003DD646 /* HSShopTableViewController.m */; };
 		D0D427D925AF094E003DD646 /* HSShopDetailCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D427D825AF094E003DD646 /* HSShopDetailCollectionViewController.m */; };
 		D0DBB59E2595876C00B31A33 /* HSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0DBB59D2595876C00B31A33 /* HSLoginViewController.m */; };
@@ -70,6 +72,8 @@
 		D01B8F8E25B7D3DE00C5A317 /* HSRechargeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSRechargeViewController.m; sourceTree = "<group>"; };
 		D01B8F9025B80DEF00C5A317 /* HSWithDrawalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSWithDrawalViewController.h; sourceTree = "<group>"; };
 		D01B8F9125B80DEF00C5A317 /* HSWithDrawalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSWithDrawalViewController.m; sourceTree = "<group>"; };
+		D01B8F9325B8329F00C5A317 /* HSProductDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSProductDetailViewController.h; sourceTree = "<group>"; };
+		D01B8F9425B8329F00C5A317 /* HSProductDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSProductDetailViewController.m; sourceTree = "<group>"; };
 		D04360D425AC305100C04580 /* HSNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetwork.h; sourceTree = "<group>"; };
 		D04360D625AC4DFD00C04580 /* HSMemberPointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberPointViewController.h; sourceTree = "<group>"; };
 		D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberPointViewController.m; sourceTree = "<group>"; };
@@ -114,6 +118,7 @@
 		D0C843842595DF6100197F8C /* HSNetworkUrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetworkUrl.h; sourceTree = "<group>"; };
 		D0C843852595DF6100197F8C /* HSNetworkUrl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSNetworkUrl.m; sourceTree = "<group>"; };
 		D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MyAccount.xcassets; sourceTree = "<group>"; };
+		D0CBDA1825BA5C8800EED0D2 /* sort.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = sort.xcassets; sourceTree = "<group>"; };
 		D0D427D125AE83CB003DD646 /* HSShopTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSShopTableViewController.h; sourceTree = "<group>"; };
 		D0D427D225AE83CB003DD646 /* HSShopTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSShopTableViewController.m; sourceTree = "<group>"; };
 		D0D427D725AF094E003DD646 /* HSShopDetailCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSShopDetailCollectionViewController.h; sourceTree = "<group>"; };
@@ -290,6 +295,9 @@
 				D0D427D225AE83CB003DD646 /* HSShopTableViewController.m */,
 				D0D427D725AF094E003DD646 /* HSShopDetailCollectionViewController.h */,
 				D0D427D825AF094E003DD646 /* HSShopDetailCollectionViewController.m */,
+				D01B8F9325B8329F00C5A317 /* HSProductDetailViewController.h */,
+				D01B8F9425B8329F00C5A317 /* HSProductDetailViewController.m */,
+				D0CBDA1825BA5C8800EED0D2 /* sort.xcassets */,
 			);
 			path = ShopPage;
 			sourceTree = "<group>";
@@ -425,6 +433,7 @@
 				D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */,
 				D0894CD525B1CDB200424664 /* first.xcassets in Resources */,
 				D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */,
+				D0CBDA1925BA5C8800EED0D2 /* sort.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,6 +481,7 @@
 				D0C843862595DF6100197F8C /* HSNetworkUrl.m in Sources */,
 				D092614F25B4347900B3C1A7 /* HSSortCollectionViewController.m in Sources */,
 				D0BCBF5A25B5A70700A2DA7D /* HSPinTuanTableViewController.m in Sources */,
+				D01B8F9525B8329F00C5A317 /* HSProductDetailViewController.m in Sources */,
 				D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */,
 				D0FF2AE525B68B480097CF17 /* HSCategoryDetailViewController.m in Sources */,
 				D00F7E0A25AD423F003D6BC6 /* HSExchangeBalanceViewController.m in Sources */,

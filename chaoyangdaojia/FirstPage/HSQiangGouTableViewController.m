@@ -7,6 +7,7 @@
 //
 
 #import "HSQiangGouTableViewController.h"
+#import "HSProductDetailViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -240,6 +241,12 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
         });
     }
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *productDataDict = self.productArray[indexPath.row];
+    HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - UIScrollViewDelegate

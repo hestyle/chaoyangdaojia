@@ -7,6 +7,7 @@
 //
 
 #import "HSShopDetailCollectionViewController.h"
+#import "HSProductDetailViewController.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -419,6 +420,14 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 20;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.selectIndex == 0) {
+        NSDictionary *productDataDict = self.shopProductArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"id"] integerValue]];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
 #pragma mark - Event
