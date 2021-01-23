@@ -8,7 +8,9 @@
 
 #import "HSProductDetailViewController.h"
 #import "HSCommentTableViewController.h"
+#import "HSProductSpecificationView.h"
 #import "HSNetwork.h"
+#import "HSTools.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -53,6 +55,8 @@
 @property (nonatomic, strong) UIImageView *refreshImageView;
 @property (nonatomic, strong) UILabel *refreshLabel;
 @property (nonatomic, strong) UILabel *lastRefreshTimeLabel;
+
+@property (nonatomic, strong) HSProductSpecificationView *productSpecificationView;
 
 @end
 
@@ -794,6 +798,64 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+- (void)selectSpecificationAction {
+    UIView *contentView = [UIView new];
+    [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width - 40);
+    }];
+    if ([self.productDataDict[@"hid"] isEqual:[NSNull null]]) {
+        [self.productSpecificationView getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:0];
+    } else {
+        [self.productSpecificationView getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:[self.productDataDict[@"hid"] integerValue]];
+    }
+    [contentView addSubview:self.productSpecificationView];
+    [self.productSpecificationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(contentView).mas_offset(10);
+        make.width.mas_equalTo(contentView);
+        make.centerX.mas_equalTo(contentView);
+    }];
+    
+    UIView *actionView = [UIView new];
+    [contentView addSubview:actionView];
+    [actionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(contentView);
+        make.centerX.mas_equalTo(contentView);
+        make.top.mas_equalTo(self.productSpecificationView.mas_bottom).mas_offset(10);
+        make.height.mas_equalTo(40);
+        
+        make.bottom.mas_equalTo(contentView).mas_offset(-10);
+    }];
+    
+    UILabel *addToCartLabel = [UILabel new];
+    [addToCartLabel setTextColor:[UIColor whiteColor]];
+    [addToCartLabel setBackgroundColor:[UIColor orangeColor]];
+    [addToCartLabel setText:@"加入购物车"];
+    [addToCartLabel setTextAlignment:NSTextAlignmentCenter];
+    [actionView addSubview:addToCartLabel];
+    [addToCartLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(actionView);
+        make.right.mas_equalTo(actionView.mas_centerX);
+        make.height.mas_equalTo(actionView);
+        make.centerY.mas_equalTo(actionView);
+    }];
+    
+    UILabel *buyLabel = [UILabel new];
+    [buyLabel setTextColor:[UIColor whiteColor]];
+    [buyLabel setBackgroundColor:[UIColor redColor]];
+    [buyLabel setText:@"立即购买"];
+    [buyLabel setTextAlignment:NSTextAlignmentCenter];
+    [actionView addSubview:buyLabel];
+    [buyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(addToCartLabel.mas_right);
+        make.right.mas_equalTo(actionView);
+        make.height.mas_equalTo(actionView);
+        make.centerY.mas_equalTo(actionView);
+    }];
+
+    HSAlertView *alertView = [[HSAlertView alloc] initWithCommonView:contentView];
+    [alertView show];
+}
+
 #pragma mark - Private
 - (void)initView {
     [self initRefreshView];
@@ -805,6 +867,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self initProductDecriptionCellView];
     [self initSuyuanInfoSectionHeaderView];
     [self initTableFooterView];
+    
+    self.productSpecificationView = [[HSProductSpecificationView alloc] init];
 }
 
 - (void)initRefreshView {
@@ -950,6 +1014,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     self.specificationLabel = [UILabel new];
+    [self.specificationLabel setTextColor:[UIColor grayColor]];
+    [self.specificationLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
     if (self.productDataDict[@"isguige"] != nil && [self.productDataDict[@"isguige"] integerValue] == 2) {
         [self.specificationLabel setText:@"请选择"];
     } else {
@@ -960,6 +1026,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.centerY.mas_equalTo(self.specificationInfoSectionHeaderView);
         make.right.mas_equalTo(selectSpecificationImageView.mas_left).offset(-5);
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *selectSpecificationTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectSpecificationAction)];
+    [selectSpecificationTapGesture setNumberOfTapsRequired:1];
+    [self.specificationInfoSectionHeaderView setUserInteractionEnabled:YES];
+    [self.specificationInfoSectionHeaderView addGestureRecognizer:selectSpecificationTapGesture];
 }
 
 - (void)initCommentSectionHeaderView {

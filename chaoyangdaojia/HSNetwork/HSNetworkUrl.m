@@ -66,6 +66,8 @@ NSString * const kGetCategoryDetailDataUrl = @"http://app.sunnysct.cn/api/home/s
 NSString * const kGetProductDetailDataUrl = @"http://app.sunnysct.cn/api/home/shop/show";
 // 获取comment list数据
 NSString * const kGetProductCommentDataUrl = @"http://app.sunnysct.cn/api/home/shop/pinlunlist";
+// 获取product 规格、库存数据
+NSString * const kGetProductSpecificationUrl = @"http://app.sunnysct.cn/api/home/shop/getinfo";
 
 @implementation HSNetworkUrl
 

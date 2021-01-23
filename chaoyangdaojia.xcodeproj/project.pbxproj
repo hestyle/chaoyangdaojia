@@ -17,6 +17,9 @@
 		D01B8F9225B80DEF00C5A317 /* HSWithDrawalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F9125B80DEF00C5A317 /* HSWithDrawalViewController.m */; };
 		D01B8F9525B8329F00C5A317 /* HSProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B8F9425B8329F00C5A317 /* HSProductDetailViewController.m */; };
 		D04360D825AC4DFD00C04580 /* HSMemberPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */; };
+		D0521AF725BBC1EC00E80BC4 /* HSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0521AF625BBC1EC00E80BC4 /* HSAlertView.m */; };
+		D0521AFA25BBD12900E80BC4 /* Tools.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0521AF925BBD12900E80BC4 /* Tools.xcassets */; };
+		D0521AFE25BC45C000E80BC4 /* HSProductSpecificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0521AFD25BC45C000E80BC4 /* HSProductSpecificationView.m */; };
 		D05288CF259338F100C8A2D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D05288CE259338F100C8A2D1 /* AppDelegate.m */; };
 		D05288DA259338F600C8A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05288D9259338F600C8A2D1 /* Assets.xcassets */; };
 		D05288DD259338F600C8A2D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05288DB259338F600C8A2D1 /* LaunchScreen.storyboard */; };
@@ -78,6 +81,12 @@
 		D04360D425AC305100C04580 /* HSNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSNetwork.h; sourceTree = "<group>"; };
 		D04360D625AC4DFD00C04580 /* HSMemberPointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSMemberPointViewController.h; sourceTree = "<group>"; };
 		D04360D725AC4DFD00C04580 /* HSMemberPointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSMemberPointViewController.m; sourceTree = "<group>"; };
+		D0521AF525BBC1EC00E80BC4 /* HSAlertView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSAlertView.h; sourceTree = "<group>"; };
+		D0521AF625BBC1EC00E80BC4 /* HSAlertView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSAlertView.m; sourceTree = "<group>"; };
+		D0521AF825BBC94B00E80BC4 /* HSTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSTools.h; sourceTree = "<group>"; };
+		D0521AF925BBD12900E80BC4 /* Tools.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Tools.xcassets; sourceTree = "<group>"; };
+		D0521AFC25BC45C000E80BC4 /* HSProductSpecificationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSProductSpecificationView.h; sourceTree = "<group>"; };
+		D0521AFD25BC45C000E80BC4 /* HSProductSpecificationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSProductSpecificationView.m; sourceTree = "<group>"; };
 		D05288CA259338F100C8A2D1 /* chaoyangdaojia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chaoyangdaojia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05288CD259338F100C8A2D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D05288CE259338F100C8A2D1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -202,6 +211,26 @@
 			path = MemberPoint;
 			sourceTree = "<group>";
 		};
+		D0521AF425BBBF1D00E80BC4 /* HSTools */ = {
+			isa = PBXGroup;
+			children = (
+				D0521AF525BBC1EC00E80BC4 /* HSAlertView.h */,
+				D0521AF625BBC1EC00E80BC4 /* HSAlertView.m */,
+				D0521AF825BBC94B00E80BC4 /* HSTools.h */,
+				D0521AF925BBD12900E80BC4 /* Tools.xcassets */,
+			);
+			path = HSTools;
+			sourceTree = "<group>";
+		};
+		D0521AFB25BC457900E80BC4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D0521AFC25BC45C000E80BC4 /* HSProductSpecificationView.h */,
+				D0521AFD25BC45C000E80BC4 /* HSProductSpecificationView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		D05288C1259338F100C8A2D1 = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +252,7 @@
 		D05288CC259338F100C8A2D1 /* chaoyangdaojia */ = {
 			isa = PBXGroup;
 			children = (
+				D0521AF425BBBF1D00E80BC4 /* HSTools */,
 				D0E5984A25A33B5F00FEFE4B /* HSAccount */,
 				D06DA602259D666600C64B7C /* Model */,
 				D0DBB59F2595CF4000B31A33 /* HSNetwork */,
@@ -294,6 +324,7 @@
 		D07F4ADE2594BC9400CA0670 /* ShopPage */ = {
 			isa = PBXGroup;
 			children = (
+				D0521AFB25BC457900E80BC4 /* View */,
 				D0D427D125AE83CB003DD646 /* HSShopTableViewController.h */,
 				D0D427D225AE83CB003DD646 /* HSShopTableViewController.m */,
 				D0D427D725AF094E003DD646 /* HSShopDetailCollectionViewController.h */,
@@ -439,6 +470,7 @@
 				D0894CD525B1CDB200424664 /* first.xcassets in Resources */,
 				D0C8BEDF2596DEB5008B8D64 /* MyAccount.xcassets in Resources */,
 				D0CBDA1925BA5C8800EED0D2 /* sort.xcassets in Resources */,
+				D0521AFA25BBD12900E80BC4 /* Tools.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,6 +534,7 @@
 				D05712CB259A022C005B4A7A /* HSFriendBirthdayEditViewController.m in Sources */,
 				D0D427D325AE83CB003DD646 /* HSShopTableViewController.m in Sources */,
 				D00F7E0D25ADB34F003D6BC6 /* HSMemberPointDetailTableViewController.m in Sources */,
+				D0521AF725BBC1EC00E80BC4 /* HSAlertView.m in Sources */,
 				D05288E0259338F600C8A2D1 /* main.m in Sources */,
 				D06DA605259D669000C64B7C /* HSFriendBirthday.m in Sources */,
 				D0E5984925A3042400FEFE4B /* HSUserPolicyViewController.m in Sources */,
@@ -512,6 +545,7 @@
 				D01B8F8925B7C1D300C5A317 /* HSMemberWalletViewController.m in Sources */,
 				D07F4AE32594C02200CA0670 /* HSMyViewController.m in Sources */,
 				D0E5985125A33DF100FEFE4B /* HSUserAccountManger.m in Sources */,
+				D0521AFE25BC45C000E80BC4 /* HSProductSpecificationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

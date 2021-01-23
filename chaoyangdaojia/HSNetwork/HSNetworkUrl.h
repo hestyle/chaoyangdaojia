@@ -66,6 +66,8 @@ extern NSString * const kGetCategoryDetailDataUrl;
 extern NSString * const kGetProductDetailDataUrl;
 // 获取comment list数据
 extern NSString * const kGetProductCommentDataUrl;
+// 获取product 规格、库存数据
+extern NSString * const kGetProductSpecificationUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 
