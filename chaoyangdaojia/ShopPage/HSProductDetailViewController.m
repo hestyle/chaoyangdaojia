@@ -78,7 +78,6 @@ static const CGFloat mCommentInfoCellHeight = 100.f;
 
 static const CGFloat mSectionFooterHeight = 8.f;
 static const CGFloat mTableViewFooterHeight = 80.f;
-static const CGFloat mLastCellHeight = mTableViewFooterHeight - 20.f;
 
 static const NSInteger mRefreshViewHeight = 60;
 /* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
@@ -148,7 +147,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     } else if (section == 2 || (section == 3 && [self.commentArray count] != 0)) {
         return 1;
     } else if ([self.suyuanDataDict count] != 0) {
-        return 2;
+        return 1;
     }
     return 0;
 }
@@ -163,11 +162,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     } else if (indexPath.section == 2 || (indexPath.section == 3 && [self.commentArray count] != 0)) {
         return self.productDescriptionCellHeight;
     } else if ([self.suyuanDataDict count] != 0) {
-        if (indexPath.row == 0) {
-            return UITableViewAutomaticDimension;
-        } else if (indexPath.row == 1) {
-            return mLastCellHeight;
-        }
+        return UITableViewAutomaticDimension;
     }
     return 0.f;
 }
@@ -182,11 +177,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     } else if (indexPath.section == 2 || (indexPath.section == 3 && [self.commentArray count] != 0)) {
         return self.productDescriptionCellHeight;
     } else if ([self.suyuanDataDict count] != 0) {
-        if (indexPath.row == 0) {
-            return 500;
-        } else if (indexPath.row == 1) {
-            return mLastCellHeight;
-        }
+        return 500;
     }
     return 0.f;
 }
@@ -663,7 +654,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
             make.width.mas_equalTo(cell.contentView).mas_offset(-40);
             make.centerX.mas_equalTo(cell.contentView);
             make.top.mas_equalTo(baseInfoView.mas_bottom).mas_equalTo(10);
-            make.bottom.mas_equalTo(cell.contentView).mas_offset(-5);
+            make.bottom.mas_equalTo(cell.contentView).mas_offset(-10);
         }];
     }
     return cell;
@@ -718,13 +709,22 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    static BOOL isSetContentInset = NO;
     if (scrollView == self.tableView) {
         // 更新底部吸附footerview
-        if (self.tableView.contentOffset.y >= self.tableView.contentSize.height - mLastCellHeight + mTableViewFooterHeight - [UIScreen mainScreen].bounds.size.height - mTableViewBaseContentOffsetY) {
+        if (self.tableView.contentOffset.y >= self.tableView.contentSize.height + mTableViewFooterHeight - [UIScreen mainScreen].bounds.size.height - mTableViewBaseContentOffsetY) {
+            if (!isSetContentInset) {
+                [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, mTableViewFooterHeight, 0)];
+                isSetContentInset = YES;
+            }
             [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentSize.height - mLastCellHeight);
+                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentSize.height);
             }];
         } else {
+            if (isSetContentInset) {
+                [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+                isSetContentInset = NO;
+            }
             [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY - mTableViewFooterHeight);
             }];
@@ -769,7 +769,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self.contentWebView evaluateJavaScript:@"document.documentElement.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         CGFloat height = [result doubleValue];
-        self.productDescriptionCellHeight = height + 10;
+        self.productDescriptionCellHeight = height;
         [self.contentWebView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.productDecriptionCellView).mas_offset(5);
             make.left.mas_equalTo(self.productDecriptionCellView);
