@@ -13,6 +13,7 @@
 #import "HSBannerDetailViewController.h"
 #import "HSCategoryDetailViewController.h"
 #import "HSMemberWalletViewController.h"
+#import "HSProductDetailViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
@@ -643,6 +644,18 @@ static const CGFloat mProductCellHeight = 260.f;
         NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
         HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
         [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.section == 1) {
+        NSDictionary *productDataDict = self.qiangGouArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.section == 2) {
+        NSDictionary *productDataDict = self.pinTuanArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else if (indexPath.section == 3) {
+        NSDictionary *productDataDict = self.productArray[indexPath.row];
+        HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"id"] integerValue]];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
@@ -1126,21 +1139,29 @@ static const CGFloat mProductCellHeight = 260.f;
         // 获取成功
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
             [weakSelf.bannerArray removeAllObjects];
-            [weakSelf.bannerArray addObjectsFromArray:responseDict[@"banner"]];
+            if (![responseDict[@"banner"] isEqual:[NSNull null]]) {
+                [weakSelf.bannerArray addObjectsFromArray:responseDict[@"banner"]];
+            }
 
             [weakSelf initCategoryArray:responseDict[@"category"]];
             
             [weakSelf.qiangGouArray removeAllObjects];
-            [weakSelf.qiangGouArray addObjectsFromArray:responseDict[@"qianggou"]];
+            if (![responseDict[@"qianggou"] isEqual:[NSNull null]]) {
+                [weakSelf.qiangGouArray addObjectsFromArray:responseDict[@"qianggou"]];
+            }
             // 抢购这个section只显示一列，所以需要计算一行屏幕能显示cell数量，20是边距
             mQiangGouCellCount = ([UIScreen mainScreen].bounds.size.width - 20) / (mQiangGouCellWidth + 20);
             
             [weakSelf.pinTuanArray removeAllObjects];
-            [weakSelf.pinTuanArray addObjectsFromArray:responseDict[@"pintuan"]];
+            if (![responseDict[@"pintuan"] isEqual:[NSNull null]]) {
+                [weakSelf.pinTuanArray addObjectsFromArray:responseDict[@"pintuan"]];
+            }
             
             weakSelf.nextProductPage = 2;
             [weakSelf.productArray removeAllObjects];
-            [weakSelf.productArray addObjectsFromArray:responseDict[@"shoplist"]];
+            if (![responseDict[@"shoplist"] isEqual:[NSNull null]]) {
+                [weakSelf.productArray addObjectsFromArray:responseDict[@"shoplist"]];
+            }
             
             weakSelf.recipeArray = responseDict[@"recipe"];
             

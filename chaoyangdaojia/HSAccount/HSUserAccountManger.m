@@ -11,6 +11,8 @@
 
 @interface HSUserAccountManger ()
 
+@property (nonatomic, strong) NSMutableSet *collectionSet;
+
 @end
 
 /* 全局单例 */
@@ -18,6 +20,7 @@ static HSUserAccountManger *userAccountManger = nil;
 static NSString * const mUserInfoKey = @"USER_INFO";
 static NSString * const mAvatarFilePath = @"/Documents/avatar.png";
 static NSString * const mAvatarKey = @"AVATAR_PATH";
+static NSString * const mCollectionKey = @"COLLECTION";
 
 @implementation HSUserAccountManger
 
@@ -25,6 +28,14 @@ static NSString * const mAvatarKey = @"AVATAR_PATH";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         userAccountManger = [[HSUserAccountManger alloc] init];
+        // 读取收藏
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSArray *collectionArray = [userDefaults objectForKey:mCollectionKey];
+        if (collectionArray == nil) {
+            userAccountManger.collectionSet = [NSMutableSet new];
+        } else {
+            userAccountManger.collectionSet = [[NSMutableSet alloc] initWithArray:collectionArray];
+        }
         // 读取app-token，验证是否登录了
         HSNetworkManager *networkManager = [HSNetworkManager shareManager];
         NSString *xAppTokenString = [networkManager getXAppToken];
@@ -146,6 +157,12 @@ static NSString * const mAvatarKey = @"AVATAR_PATH";
     }
 }
 
+- (void)saveCollectionCache {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSArray *collectionArray = [self.collectionSet allObjects];
+    [userDefaults setValue:collectionArray forKey:mCollectionKey];
+}
+
 - (BOOL)isLogin {
     return isLogin;
 }
@@ -165,5 +182,25 @@ static NSString * const mAvatarKey = @"AVATAR_PATH";
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     [userDefault setObject:mAvatarFilePath forKey:mAvatarKey];
     avatarPath = mAvatarFilePath;
+}
+
+- (BOOL)isCollected:(NSInteger)productId {
+    if ([self.collectionSet containsObject:@(productId)]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+- (void)addCollectionById:(NSInteger)productId {
+    if (![self.collectionSet containsObject:@(productId)]) {
+        [self.collectionSet addObject:@(productId)];
+        [self saveCollectionCache];
+    }
+}
+- (void)cancelCollectionById:(NSInteger)productId {
+    if ([self.collectionSet containsObject:@(productId)]) {
+        [self.collectionSet removeObject:@(productId)];
+        [self saveCollectionCache];
+    }
 }
 @end

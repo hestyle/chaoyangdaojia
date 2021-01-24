@@ -62,6 +62,16 @@ extern NSString * const kGetPinTuanProductDataUrl;
 extern NSString * const kGetBannerDetailDataUrl;
 // 获取CategoryDetail数据
 extern NSString * const kGetCategoryDetailDataUrl;
+// 获取ProductDetail数据
+extern NSString * const kGetProductDetailDataUrl;
+// 获取comment list数据
+extern NSString * const kGetProductCommentDataUrl;
+// 获取product 规格、库存数据
+extern NSString * const kGetProductSpecificationUrl;
+// 更新product收藏状态
+extern NSString * const kUpdateProductCollectionStatusUrl;
+// 获取收藏的Product
+extern NSString * const kGetProductCollectionListUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -62,6 +62,16 @@ NSString * const kGetPinTuanProductDataUrl = @"http://app.sunnysct.cn/api/home/i
 NSString * const kGetBannerDetailDataUrl = @"http://app.sunnysct.cn/api/home/index/banner_show";
 // 获取CategoryDetail数据
 NSString * const kGetCategoryDetailDataUrl = @"http://app.sunnysct.cn/api/home/shop/lists";
+// 获取ProductDetail数据
+NSString * const kGetProductDetailDataUrl = @"http://app.sunnysct.cn/api/home/shop/show";
+// 获取comment list数据
+NSString * const kGetProductCommentDataUrl = @"http://app.sunnysct.cn/api/home/shop/pinlunlist";
+// 获取product 规格、库存数据
+NSString * const kGetProductSpecificationUrl = @"http://app.sunnysct.cn/api/home/shop/getinfo";
+// 更新product收藏状态
+NSString * const kUpdateProductCollectionStatusUrl = @"http://app.sunnysct.cn/api/home/shoucang/addcan";
+// 获取收藏的Product
+NSString * const kGetProductCollectionListUrl = @"http://app.sunnysct.cn/api/home/shoucang/getlist";
 
 @implementation HSNetworkUrl
 
