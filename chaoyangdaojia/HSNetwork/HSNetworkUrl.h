@@ -68,6 +68,8 @@ extern NSString * const kGetProductDetailDataUrl;
 extern NSString * const kGetProductCommentDataUrl;
 // 获取product 规格、库存数据
 extern NSString * const kGetProductSpecificationUrl;
+// 更新product收藏状态
+extern NSString * const kUpdateProductCollectionStatusUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 

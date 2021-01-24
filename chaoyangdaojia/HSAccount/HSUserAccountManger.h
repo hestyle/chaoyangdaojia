@@ -51,6 +51,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isLogin;
 - (NSDictionary *)userInfoDict;
 - (NSString *)avatarPath;
+
+- (BOOL)isCollected:(NSInteger)productId;
+- (void)addCollectionById:(NSInteger)productId;
+- (void)cancelCollectionById:(NSInteger)productId;
+
 @end
 
 NS_ASSUME_NONNULL_END

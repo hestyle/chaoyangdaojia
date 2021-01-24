@@ -9,6 +9,7 @@
 #import "HSProductDetailViewController.h"
 #import "HSCommentTableViewController.h"
 #import "HSProductSpecificationView.h"
+#import "HSAccount.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
 #import <Masonry/Masonry.h>
@@ -16,6 +17,7 @@
 
 @interface HSProductDetailViewController ()
 
+@property (nonatomic) BOOL isCollected;
 @property (nonatomic) NSInteger productId;
 @property (nonatomic) NSInteger selectIndex;
 @property (nonatomic) NSInteger sectionCount;
@@ -50,6 +52,7 @@
 @property (nonatomic, strong) UIView *suyuanInfoSectionHeaderView;
 
 @property (nonatomic, strong) UIView *tableViewFooterView;
+@property (nonatomic, strong) UIImageView *collectionImageView;
 
 @property (nonatomic, strong) UIView *refreshView;
 @property (nonatomic, strong) UIImageView *refreshImageView;
@@ -856,6 +859,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [alertView show];
 }
 
+- (void)collectionChangeAction {
+    // 访问网络请求修改收藏状态
+    [self updateCollectionStatusById:self.productId];
+}
+
 #pragma mark - Private
 - (void)initView {
     [self initRefreshView];
@@ -1168,9 +1176,18 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.top.mas_equalTo(buyLabel);
         make.centerX.mas_equalTo(supplierView).mas_offset(distance);
     }];
-    UIImageView *collectionImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"collection_icon"]];
-    [collectionView addSubview:collectionImageView];
-    [collectionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    HSUserAccountManger *manager = [HSUserAccountManger shareManager];
+    UIImage *collectionImage = nil;
+    if ([manager isCollected:self.productId]) {
+        self.isCollected = YES;
+        collectionImage = [UIImage imageNamed:@"collected_icon"];
+    } else {
+        self.isCollected = NO;
+        collectionImage = [UIImage imageNamed:@"collection_icon"];
+    }
+    self.collectionImageView = [[UIImageView alloc] initWithImage:collectionImage];
+    [collectionView addSubview:self.collectionImageView];
+    [self.collectionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(25, 25));
         make.centerX.mas_equalTo(collectionView);
         make.top.mas_equalTo(collectionView);
@@ -1181,10 +1198,15 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [collectionView addSubview:collectionLabel];
     [collectionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(collectionView);
-        make.top.mas_equalTo(collectionImageView.mas_bottom);
+        make.top.mas_equalTo(self.collectionImageView.mas_bottom);
         make.bottom.mas_equalTo(collectionView);
         make.width.mas_equalTo(collectionView);
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *collectionChangeTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(collectionChangeAction)];
+    [collectionChangeTapGesture setNumberOfTapsRequired:1];
+    [collectionView setUserInteractionEnabled:YES];
+    [collectionView addGestureRecognizer:collectionChangeTapGesture];
     
     UIView *cartView = [UIView new];
     [self.tableViewFooterView addSubview:cartView];
@@ -1385,6 +1407,43 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)updateContentWebView {
     NSString *contentString = [NSString stringWithFormat:@"<header><meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'><style>img{width:100%% !important;height:auto}</style></header>%@", self.productDataDict[@"content"]];
     [self.contentWebView loadHTMLString:contentString baseURL:nil];
+}
+
+- (void)updateCollectionStatusById:(NSInteger)productId {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    NSString *url = [kUpdateProductCollectionStatusUrl stringByAppendingFormat:@"?id=%ld", productId];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:url parameters:@{} success:^(NSDictionary *responseDict) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:[NSString stringWithFormat:@"%@", responseDict[@"msg"]] duration:3 position:CSToastPositionCenter];
+        });
+        HSUserAccountManger *manager = [HSUserAccountManger shareManager];
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            // 收藏成功
+            [manager addCollectionById:productId];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.isCollected = YES;
+                [weakSelf.collectionImageView setImage:[UIImage imageNamed:@"collected_icon"]];
+            });
+        } else if ([responseDict[@"errcode"] isEqual:@(2)]) {
+            // 成功取消收藏
+            [manager cancelCollectionById:productId];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.isCollected = NO;
+                [weakSelf.collectionImageView setImage:[UIImage imageNamed:@"collection_icon"]];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+            NSLog(@"接口 %@ 返回数据格式错误! responseDict = %@", url, responseDict);
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 @end
