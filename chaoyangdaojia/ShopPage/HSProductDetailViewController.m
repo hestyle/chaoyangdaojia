@@ -8,7 +8,8 @@
 
 #import "HSProductDetailViewController.h"
 #import "HSCommentTableViewController.h"
-#import "HSProductSpecificationView.h"
+#import "HSProductSpecificationViewController.h"
+#import "HSAlertViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
@@ -59,7 +60,7 @@
 @property (nonatomic, strong) UILabel *refreshLabel;
 @property (nonatomic, strong) UILabel *lastRefreshTimeLabel;
 
-@property (nonatomic, strong) HSProductSpecificationView *productSpecificationView;
+@property (nonatomic, strong) HSProductSpecificationViewController *productSpecificationController;
 
 @end
 
@@ -802,61 +803,12 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)selectSpecificationAction {
-    UIView *contentView = [UIView new];
-    [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width - 40);
-    }];
     if ([self.productDataDict[@"hid"] isEqual:[NSNull null]]) {
-        [self.productSpecificationView getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:0];
+        [self.productSpecificationController getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:0];
     } else {
-        [self.productSpecificationView getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:[self.productDataDict[@"hid"] integerValue]];
+        [self.productSpecificationController getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:[self.productDataDict[@"hid"] integerValue]];
     }
-    [contentView addSubview:self.productSpecificationView];
-    [self.productSpecificationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(contentView).mas_offset(10);
-        make.width.mas_equalTo(contentView);
-        make.centerX.mas_equalTo(contentView);
-    }];
-    
-    UIView *actionView = [UIView new];
-    [contentView addSubview:actionView];
-    [actionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(contentView);
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(self.productSpecificationView.mas_bottom).mas_offset(10);
-        make.height.mas_equalTo(40);
-        
-        make.bottom.mas_equalTo(contentView).mas_offset(-10);
-    }];
-    
-    UILabel *addToCartLabel = [UILabel new];
-    [addToCartLabel setTextColor:[UIColor whiteColor]];
-    [addToCartLabel setBackgroundColor:[UIColor orangeColor]];
-    [addToCartLabel setText:@"加入购物车"];
-    [addToCartLabel setTextAlignment:NSTextAlignmentCenter];
-    [actionView addSubview:addToCartLabel];
-    [addToCartLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(actionView);
-        make.right.mas_equalTo(actionView.mas_centerX);
-        make.height.mas_equalTo(actionView);
-        make.centerY.mas_equalTo(actionView);
-    }];
-    
-    UILabel *buyLabel = [UILabel new];
-    [buyLabel setTextColor:[UIColor whiteColor]];
-    [buyLabel setBackgroundColor:[UIColor redColor]];
-    [buyLabel setText:@"立即购买"];
-    [buyLabel setTextAlignment:NSTextAlignmentCenter];
-    [actionView addSubview:buyLabel];
-    [buyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(addToCartLabel.mas_right);
-        make.right.mas_equalTo(actionView);
-        make.height.mas_equalTo(actionView);
-        make.centerY.mas_equalTo(actionView);
-    }];
-
-    HSAlertView *alertView = [[HSAlertView alloc] initWithCommonView:contentView];
-    [alertView show];
+    [self presentViewController:self.productSpecificationController animated:YES completion:nil];
 }
 
 - (void)collectionChangeAction {
@@ -876,7 +828,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self initSuyuanInfoSectionHeaderView];
     [self initTableFooterView];
     
-    self.productSpecificationView = [[HSProductSpecificationView alloc] init];
+    self.productSpecificationController = [[HSProductSpecificationViewController alloc] init];
+    [self.productSpecificationController setModalPresentationStyle:UIModalPresentationCustom];
 }
 
 - (void)initRefreshView {
