@@ -36,6 +36,7 @@
 		D0986B8A25A1D37200D47929 /* HSPayPasswordSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B8825A1D37200D47929 /* HSPayPasswordSettingViewController.m */; };
 		D0986B8D25A1F06500D47929 /* HSCommonProblemTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B8C25A1F06500D47929 /* HSCommonProblemTableViewController.m */; };
 		D0986B9325A1F8E900D47929 /* HSCommonProblemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0986B9225A1F8E900D47929 /* HSCommonProblemDetailViewController.m */; };
+		D09BDF4D25BD1F5A00BDAE36 /* HSProductCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D09BDF4C25BD1F5A00BDAE36 /* HSProductCollectionViewController.m */; };
 		D0BCBF5425B56A6B00A2DA7D /* HSQiangGouTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BCBF5325B56A6B00A2DA7D /* HSQiangGouTableViewController.m */; };
 		D0BCBF5A25B5A70700A2DA7D /* HSPinTuanTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BCBF5925B5A70700A2DA7D /* HSPinTuanTableViewController.m */; };
 		D0BCBF5D25B5B7DA00A2DA7D /* HSBannerDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BCBF5C25B5B7DA00A2DA7D /* HSBannerDetailViewController.m */; };
@@ -117,6 +118,8 @@
 		D0986B8C25A1F06500D47929 /* HSCommonProblemTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCommonProblemTableViewController.m; sourceTree = "<group>"; };
 		D0986B9125A1F8E900D47929 /* HSCommonProblemDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSCommonProblemDetailViewController.h; sourceTree = "<group>"; };
 		D0986B9225A1F8E900D47929 /* HSCommonProblemDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSCommonProblemDetailViewController.m; sourceTree = "<group>"; };
+		D09BDF4B25BD1F5A00BDAE36 /* HSProductCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSProductCollectionViewController.h; sourceTree = "<group>"; };
+		D09BDF4C25BD1F5A00BDAE36 /* HSProductCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSProductCollectionViewController.m; sourceTree = "<group>"; };
 		D0BCBF5225B56A6B00A2DA7D /* HSQiangGouTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSQiangGouTableViewController.h; sourceTree = "<group>"; };
 		D0BCBF5325B56A6B00A2DA7D /* HSQiangGouTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HSQiangGouTableViewController.m; sourceTree = "<group>"; };
 		D0BCBF5825B5A70700A2DA7D /* HSPinTuanTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSPinTuanTableViewController.h; sourceTree = "<group>"; };
@@ -360,6 +363,8 @@
 				D0C8BEDE2596DEB5008B8D64 /* MyAccount.xcassets */,
 				D003017B25983E360068DB6C /* HSMyDetailTableViewController.h */,
 				D003017C25983E360068DB6C /* HSMyDetailTableViewController.m */,
+				D09BDF4B25BD1F5A00BDAE36 /* HSProductCollectionViewController.h */,
+				D09BDF4C25BD1F5A00BDAE36 /* HSProductCollectionViewController.m */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -537,6 +542,7 @@
 				D0521AF725BBC1EC00E80BC4 /* HSAlertView.m in Sources */,
 				D05288E0259338F600C8A2D1 /* main.m in Sources */,
 				D06DA605259D669000C64B7C /* HSFriendBirthday.m in Sources */,
+				D09BDF4D25BD1F5A00BDAE36 /* HSProductCollectionViewController.m in Sources */,
 				D0E5984925A3042400FEFE4B /* HSUserPolicyViewController.m in Sources */,
 				D0DC6FA325A0574900B501C8 /* HSSettingsTableViewController.m in Sources */,
 				D04360D825AC4DFD00C04580 /* HSMemberPointViewController.m in Sources */,

@@ -11,6 +11,7 @@
 #import "HSMyDetailTableViewController.h"
 #import "HSSettingsTableViewController.h"
 #import "HSMemberPointViewController.h"
+#import "HSProductCollectionViewController.h"
 #import "HSNetwork.h"
 #import "HSAccount.h"
 #import <Toast/Toast.h>
@@ -157,6 +158,10 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.view makeToast:@"点击了消息图标！"];
 }
 
+- (void)gotoCollectionAction {
+    HSProductCollectionViewController *controller = [[HSProductCollectionViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
 #pragma mark - Private
 - (void)refreshUserInfo {
     HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
@@ -509,6 +514,11 @@ static BOOL isHadGotoLoginViewController = NO;
         make.right.mas_equalTo(self.myCollectionView.mas_right).offset(-20);
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoCollectionTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCollectionAction)];
+    [gotoCollectionTapGesture setNumberOfTapsRequired:1];
+    [self.myCollectionView setUserInteractionEnabled:YES];
+    [self.myCollectionView addGestureRecognizer:gotoCollectionTapGesture];
     
     // 我的评价
     self.myEvaluationView = [UIView new];
