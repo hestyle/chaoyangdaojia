@@ -74,6 +74,12 @@ extern NSString * const kUpdateProductCollectionStatusUrl;
 extern NSString * const kGetProductCollectionListUrl;
 // 添加商品到购物车
 extern NSString * const kAddProductToCartUrl;
+// 获取购物车数据
+extern NSString * const kGetCartDataUrl;
+// 修改购物车中某商品的数量数据
+extern NSString * const kEditCartProductBuyNumUrl;
+// 删除购物车中的某些商品
+extern NSString * const kDelCartProductUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 
