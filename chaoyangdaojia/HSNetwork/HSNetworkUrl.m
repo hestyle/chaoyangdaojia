@@ -72,6 +72,8 @@ NSString * const kGetProductSpecificationUrl = @"http://app.sunnysct.cn/api/home
 NSString * const kUpdateProductCollectionStatusUrl = @"http://app.sunnysct.cn/api/home/shoucang/addcan";
 // 获取收藏的Product
 NSString * const kGetProductCollectionListUrl = @"http://app.sunnysct.cn/api/home/shoucang/getlist";
+// 添加商品到购物车
+NSString * const kAddProductToCartUrl = @"http://app.sunnysct.cn/api/home/cart/add";
 
 @implementation HSNetworkUrl
 

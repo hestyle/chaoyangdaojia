@@ -99,6 +99,8 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 }
 
 - (void)getProductSpecificationWithId:(NSInteger)productId hid:(NSInteger)hid {
+    self.productId = productId;
+    self.hid = hid;
     HSNetworkManager *manager = [HSNetworkManager shareManager];
     NSString *url = [kGetProductSpecificationUrl stringByAppendingFormat:@"?id=%ld&hid=%ld", productId, hid];
     __weak __typeof__(self) weakSelf = self;
@@ -170,10 +172,6 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     if ([specificationKey isEqualToString:@"no"]) {
         specificationKey = @"默认规格";
     }
-    // 记录选择的规格信息
-    self.selectIndexPath = indexPath.copy;
-    self.selectSpecificationKey = specificationKey.copy;
-    
     UILabel *specificationTitleLabel = [UILabel new];
     [specificationTitleLabel setTextAlignment:NSTextAlignmentCenter];
     [specificationTitleLabel setText:specificationKey];
@@ -212,6 +210,11 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     NSString *specificationKey = self.valArray[indexPath.section][indexPath.row];
     // 注意key要转成小写（查看规格接口返回的数据！！！）
     NSDictionary *dict = self.specificationDict[specificationKey.lowercaseString];
+    
+    // 记录选择的规格信息
+    self.selectIndexPath = indexPath.copy;
+    self.selectSpecificationKey = specificationKey.lowercaseString.copy;
+    
     [self.productTitleLabel setText:[NSString stringWithFormat:@"%@", dict[@"title"]]];
     self.stockCount = [dict[@"num"] integerValue];
     [self.stockLabel setText:[NSString stringWithFormat:@"库存：%ld", self.stockCount]];
@@ -362,6 +365,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     [self.addToCartButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.addToCartButton setBackgroundColor:[UIColor orangeColor]];
     [self.addToCartButton setTitle:@"加入购物车" forState:UIControlStateNormal];
+    [self.addToCartButton addTarget:self action:@selector(addToCartAction) forControlEvents:UIControlEventTouchUpInside];
     [actionView addSubview:self.addToCartButton];
     [self.addToCartButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(actionView);
@@ -438,6 +442,29 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         self.buyCount += 1;
         [self.buyCountLabel setText:[NSString stringWithFormat:@"%ld", self.buyCount]];
     }
+}
+
+- (void)addToCartAction {
+    NSDictionary *parameters = @{@"buynum":@(self.buyCount), @"gkey":self.selectSpecificationKey, @"sid":[NSString stringWithFormat:@"%ld", self.productId], @"hid":[NSString stringWithFormat:@"%ld", self.hid]};
+    
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager postDataWithUrl:kAddProductToCartUrl parameters:parameters success:^(NSDictionary *responseDict) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.contentView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+        });
+        // 添加成功
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf dismiss];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.contentView makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 @end

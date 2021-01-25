@@ -712,7 +712,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     }
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     static BOOL isSetContentInset = NO;
     if (scrollView == self.tableView) {
         // 更新底部吸附footerview
@@ -780,11 +780,16 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
             make.width.mas_equalTo(self.productDecriptionCellView);
             make.height.mas_equalTo(height);
         }];
-        if ([self.commentArray count] != 0) {
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
-        } else {
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
-        }
+        [self.tableView performBatchUpdates:^{
+            if ([self.commentArray count] != 0) {
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
+            } else {
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+            }
+        } completion:^(BOOL finished) {
+            // 手动调用scroll代理方法，模拟滑动，更新tableViewFooterView
+            [self scrollViewDidScroll:self.tableView];
+        }];
     }];
 }
 
@@ -1067,6 +1072,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)initTableFooterView {
     self.tableViewFooterView = [UIView new];
     [self.tableViewFooterView.layer setZPosition:MAXFLOAT];
+    [self.tableViewFooterView setUserInteractionEnabled:YES];
     [self.tableViewFooterView setBackgroundColor:[UIColor whiteColor]];
     [self.tableView addSubview:self.tableViewFooterView];
     [self.tableViewFooterView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -1086,17 +1092,18 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.right.mas_equalTo(self.tableViewFooterView).mas_offset(-20);
         make.top.mas_equalTo(self.tableViewFooterView).mas_offset(10);
     }];
-    UILabel *addToCartLabel = [UILabel new];
-    [addToCartLabel setBackgroundColor:[UIColor colorWithRed:245.0/255 green:163.0/255 blue:25.0/255 alpha:1.0]];
-    [addToCartLabel setTextColor:[UIColor whiteColor]];
-    [addToCartLabel setText:@"加入购物车"];
-    [addToCartLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.tableViewFooterView addSubview:addToCartLabel];
-    [addToCartLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIButton *addToCartButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [addToCartButton setBackgroundColor:[UIColor colorWithRed:245.0/255 green:163.0/255 blue:25.0/255 alpha:1.0]];
+    [addToCartButton setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
+    [addToCartButton setTitle:@"加入购物车" forState:UIControlStateNormal];
+    [self.tableViewFooterView addSubview:addToCartButton];
+    [addToCartButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(100, 40));
         make.right.mas_equalTo(buyLabel.mas_left).mas_offset(-10);
         make.centerY.mas_equalTo(buyLabel);
     }];
+    [addToCartButton addTarget:self action:@selector(selectSpecificationAction) forControlEvents:UIControlEventTouchUpInside];
+    
     CGFloat distance = ([UIScreen mainScreen].bounds.size.width - 220.0 - 80) / 2;
     
     UIView *supplierView = [UIView new];

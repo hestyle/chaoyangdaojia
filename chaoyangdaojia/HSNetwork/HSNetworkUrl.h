@@ -72,6 +72,8 @@ extern NSString * const kGetProductSpecificationUrl;
 extern NSString * const kUpdateProductCollectionStatusUrl;
 // 获取收藏的Product
 extern NSString * const kGetProductCollectionListUrl;
+// 添加商品到购物车
+extern NSString * const kAddProductToCartUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 
