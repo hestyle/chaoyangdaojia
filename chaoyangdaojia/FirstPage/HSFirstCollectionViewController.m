@@ -1257,10 +1257,6 @@ static const CGFloat mProductCellHeight = 260.f;
     }
 }
 
-- (void)setCarouselImage:(NSInteger)page {
-    
-}
-
 - (void)stopCarouselAutoChange {
     mCarouselChangeContinue = NO;
 }

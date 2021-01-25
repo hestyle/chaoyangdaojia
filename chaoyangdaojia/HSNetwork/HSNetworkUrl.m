@@ -72,6 +72,14 @@ NSString * const kGetProductSpecificationUrl = @"http://app.sunnysct.cn/api/home
 NSString * const kUpdateProductCollectionStatusUrl = @"http://app.sunnysct.cn/api/home/shoucang/addcan";
 // 获取收藏的Product
 NSString * const kGetProductCollectionListUrl = @"http://app.sunnysct.cn/api/home/shoucang/getlist";
+// 添加商品到购物车
+NSString * const kAddProductToCartUrl = @"http://app.sunnysct.cn/api/home/cart/add";
+// 获取购物车数据
+NSString * const kGetCartDataUrl = @"http://app.sunnysct.cn/api/home/cart/carlist";
+// 修改购物车中某商品的数量数据
+NSString * const kEditCartProductBuyNumUrl = @"http://app.sunnysct.cn/api/home/cart/edit_num";
+// 删除购物车中的某些商品
+NSString * const kDelCartProductUrl = @"http://app.sunnysct.cn/api/home/cart/del";
 
 @implementation HSNetworkUrl
 

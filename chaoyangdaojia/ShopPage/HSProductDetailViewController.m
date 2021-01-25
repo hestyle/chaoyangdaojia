@@ -8,7 +8,8 @@
 
 #import "HSProductDetailViewController.h"
 #import "HSCommentTableViewController.h"
-#import "HSProductSpecificationView.h"
+#import "HSProductSpecificationViewController.h"
+#import "HSAlertViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
@@ -59,7 +60,7 @@
 @property (nonatomic, strong) UILabel *refreshLabel;
 @property (nonatomic, strong) UILabel *lastRefreshTimeLabel;
 
-@property (nonatomic, strong) HSProductSpecificationView *productSpecificationView;
+@property (nonatomic, strong) HSProductSpecificationViewController *productSpecificationController;
 
 @end
 
@@ -711,7 +712,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     }
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     static BOOL isSetContentInset = NO;
     if (scrollView == self.tableView) {
         // 更新底部吸附footerview
@@ -779,11 +780,16 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
             make.width.mas_equalTo(self.productDecriptionCellView);
             make.height.mas_equalTo(height);
         }];
-        if ([self.commentArray count] != 0) {
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
-        } else {
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
-        }
+        [self.tableView performBatchUpdates:^{
+            if ([self.commentArray count] != 0) {
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
+            } else {
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+            }
+        } completion:^(BOOL finished) {
+            // 手动调用scroll代理方法，模拟滑动，更新tableViewFooterView
+            [self scrollViewDidScroll:self.tableView];
+        }];
     }];
 }
 
@@ -802,61 +808,12 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)selectSpecificationAction {
-    UIView *contentView = [UIView new];
-    [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width - 40);
-    }];
     if ([self.productDataDict[@"hid"] isEqual:[NSNull null]]) {
-        [self.productSpecificationView getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:0];
+        [self.productSpecificationController getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:0];
     } else {
-        [self.productSpecificationView getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:[self.productDataDict[@"hid"] integerValue]];
+        [self.productSpecificationController getProductSpecificationWithId:[self.productDataDict[@"id"] integerValue] hid:[self.productDataDict[@"hid"] integerValue]];
     }
-    [contentView addSubview:self.productSpecificationView];
-    [self.productSpecificationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(contentView).mas_offset(10);
-        make.width.mas_equalTo(contentView);
-        make.centerX.mas_equalTo(contentView);
-    }];
-    
-    UIView *actionView = [UIView new];
-    [contentView addSubview:actionView];
-    [actionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(contentView);
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(self.productSpecificationView.mas_bottom).mas_offset(10);
-        make.height.mas_equalTo(40);
-        
-        make.bottom.mas_equalTo(contentView).mas_offset(-10);
-    }];
-    
-    UILabel *addToCartLabel = [UILabel new];
-    [addToCartLabel setTextColor:[UIColor whiteColor]];
-    [addToCartLabel setBackgroundColor:[UIColor orangeColor]];
-    [addToCartLabel setText:@"加入购物车"];
-    [addToCartLabel setTextAlignment:NSTextAlignmentCenter];
-    [actionView addSubview:addToCartLabel];
-    [addToCartLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(actionView);
-        make.right.mas_equalTo(actionView.mas_centerX);
-        make.height.mas_equalTo(actionView);
-        make.centerY.mas_equalTo(actionView);
-    }];
-    
-    UILabel *buyLabel = [UILabel new];
-    [buyLabel setTextColor:[UIColor whiteColor]];
-    [buyLabel setBackgroundColor:[UIColor redColor]];
-    [buyLabel setText:@"立即购买"];
-    [buyLabel setTextAlignment:NSTextAlignmentCenter];
-    [actionView addSubview:buyLabel];
-    [buyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(addToCartLabel.mas_right);
-        make.right.mas_equalTo(actionView);
-        make.height.mas_equalTo(actionView);
-        make.centerY.mas_equalTo(actionView);
-    }];
-
-    HSAlertView *alertView = [[HSAlertView alloc] initWithCommonView:contentView];
-    [alertView show];
+    [self presentViewController:self.productSpecificationController animated:YES completion:nil];
 }
 
 - (void)collectionChangeAction {
@@ -876,7 +833,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self initSuyuanInfoSectionHeaderView];
     [self initTableFooterView];
     
-    self.productSpecificationView = [[HSProductSpecificationView alloc] init];
+    self.productSpecificationController = [[HSProductSpecificationViewController alloc] init];
+    [self.productSpecificationController setModalPresentationStyle:UIModalPresentationCustom];
 }
 
 - (void)initRefreshView {
@@ -1114,6 +1072,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)initTableFooterView {
     self.tableViewFooterView = [UIView new];
     [self.tableViewFooterView.layer setZPosition:MAXFLOAT];
+    [self.tableViewFooterView setUserInteractionEnabled:YES];
     [self.tableViewFooterView setBackgroundColor:[UIColor whiteColor]];
     [self.tableView addSubview:self.tableViewFooterView];
     [self.tableViewFooterView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -1133,17 +1092,18 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.right.mas_equalTo(self.tableViewFooterView).mas_offset(-20);
         make.top.mas_equalTo(self.tableViewFooterView).mas_offset(10);
     }];
-    UILabel *addToCartLabel = [UILabel new];
-    [addToCartLabel setBackgroundColor:[UIColor colorWithRed:245.0/255 green:163.0/255 blue:25.0/255 alpha:1.0]];
-    [addToCartLabel setTextColor:[UIColor whiteColor]];
-    [addToCartLabel setText:@"加入购物车"];
-    [addToCartLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.tableViewFooterView addSubview:addToCartLabel];
-    [addToCartLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIButton *addToCartButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [addToCartButton setBackgroundColor:[UIColor colorWithRed:245.0/255 green:163.0/255 blue:25.0/255 alpha:1.0]];
+    [addToCartButton setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
+    [addToCartButton setTitle:@"加入购物车" forState:UIControlStateNormal];
+    [self.tableViewFooterView addSubview:addToCartButton];
+    [addToCartButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(100, 40));
         make.right.mas_equalTo(buyLabel.mas_left).mas_offset(-10);
         make.centerY.mas_equalTo(buyLabel);
     }];
+    [addToCartButton addTarget:self action:@selector(selectSpecificationAction) forControlEvents:UIControlEventTouchUpInside];
+    
     CGFloat distance = ([UIScreen mainScreen].bounds.size.width - 220.0 - 80) / 2;
     
     UIView *supplierView = [UIView new];
