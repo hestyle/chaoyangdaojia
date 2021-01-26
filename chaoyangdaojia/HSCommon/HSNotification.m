@@ -10,6 +10,8 @@
 
 // 选择商品规格后的通知(传递商品规格信息:productId、specificationKey、buyCount)
 NSString * const kChooseProductSpecificationNotificationKey = @"ChooseProductSpecificationNotification";
+// 成功添加商品到购物车的通知(传递商品规格信息:productId、specificationKey、buyCount、cartCount)
+NSString * const kAddProductToCartNotificationKey = @"AddProductToCartNotification";
 
 @implementation HSNotification
 

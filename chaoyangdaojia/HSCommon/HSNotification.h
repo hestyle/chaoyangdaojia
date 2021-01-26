@@ -10,6 +10,8 @@
 
 // 选择商品规格后的通知(传递商品规格信息)
 extern NSString * const kChooseProductSpecificationNotificationKey;
+// 成功添加商品到购物车的通知(传递商品规格信息:productId、specificationKey、buyCount、cartCount)
+extern NSString * const kAddProductToCartNotificationKey;
 
 NS_ASSUME_NONNULL_BEGIN
 

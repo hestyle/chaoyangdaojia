@@ -80,6 +80,8 @@ NSString * const kGetCartDataUrl = @"http://app.sunnysct.cn/api/home/cart/carlis
 NSString * const kEditCartProductBuyNumUrl = @"http://app.sunnysct.cn/api/home/cart/edit_num";
 // 删除购物车中的某些商品
 NSString * const kDelCartProductUrl = @"http://app.sunnysct.cn/api/home/cart/del";
+// 获取当前购物车中的商品数
+NSString * const kGetCartProductCountUrl = @"http://app.sunnysct.cn/api/home/cart/getcartnum";
 
 @implementation HSNetworkUrl
 

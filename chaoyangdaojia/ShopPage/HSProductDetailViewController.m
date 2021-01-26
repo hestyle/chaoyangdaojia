@@ -55,6 +55,8 @@
 
 @property (nonatomic, strong) UIView *tableViewFooterView;
 @property (nonatomic, strong) UIImageView *collectionImageView;
+@property (nonatomic, strong) UIImageView *cartImageView;
+@property (nonatomic, strong) UILabel *cartCountLabel;
 
 @property (nonatomic, strong) UIView *refreshView;
 @property (nonatomic, strong) UIImageView *refreshImageView;
@@ -95,6 +97,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     
     // 注册接收完成商品规格选择的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseProductSpecificationAction:) name:kChooseProductSpecificationNotificationKey object:nil];
+    // 注册接收成功添加商品到购物车的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addProductToCartAction:) name:kAddProductToCartNotificationKey object:nil];
     
     return self;
 }
@@ -143,6 +147,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)dealloc {
     // 注销完成商品规格选择的通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kChooseProductSpecificationNotificationKey object:nil];
+    // 注销成功添加商品到购物车的通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddProductToCartNotificationKey object:nil];
 }
 
 #pragma mark - Table view data source
@@ -841,6 +847,22 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.specificationLabel setText:specificationKey];
 }
 
+- (void)addProductToCartAction:(NSNotification *)notification {
+    // 获取当前购物车中的商品数
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSInteger cartCount = 0;
+    if (specificationDataDict[@"cartCount"] != nil && ![specificationDataDict[@"cartCount"] isEqual:[NSNull null]]) {
+        cartCount = [specificationDataDict[@"cartCount"] integerValue];
+    }
+    [self.view makeToast:@"已成功加入购物车！" duration:2.f position:CSToastPositionCenter];
+    if (cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
+    }
+}
+
 #pragma mark - Private
 - (void)initView {
     [self initRefreshView];
@@ -1194,20 +1216,37 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.top.mas_equalTo(buyLabel);
         make.centerX.mas_equalTo(collectionView).mas_offset(distance);
     }];
-    UIImageView *cartImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cart_icon"]];
-    [cartView addSubview:cartImageView];
-    [cartImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.cartImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cart_icon"]];
+    [cartView addSubview:self.cartImageView];
+    [self.cartImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(25, 25));
         make.centerX.mas_equalTo(cartView);
         make.top.mas_equalTo(cartView);
     }];
+    
+    self.cartCountLabel = [UILabel new];
+    [self.cartCountLabel setHidden:YES];
+    [self.cartCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.cartCountLabel setTextColor:[UIColor whiteColor]];
+    [self.cartCountLabel.layer setCornerRadius:9.f];
+    [self.cartCountLabel.layer setBorderWidth:0.05f];
+    [self.cartCountLabel.layer setBackgroundColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel.layer setBorderColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
+    [self.cartImageView addSubview:self.cartCountLabel];
+    [self.cartCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(18, 18));
+        make.centerY.mas_equalTo(self.cartImageView.mas_top).mas_offset(3);
+        make.centerX.mas_equalTo(self.cartImageView.mas_right).mas_offset(-3);
+    }];
+    
     UILabel *cartLabel = [UILabel new];
     [cartLabel setText:@"购物车"];
     [cartLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
     [cartView addSubview:cartLabel];
     [cartLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(cartView);
-        make.top.mas_equalTo(cartImageView.mas_bottom);
+        make.top.mas_equalTo(self.cartImageView.mas_bottom);
         make.bottom.mas_equalTo(cartView);
         make.width.mas_equalTo(cartView);
     }];

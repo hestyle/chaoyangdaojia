@@ -454,13 +454,36 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kAddProductToCartUrl parameters:parameters success:^(NSDictionary *responseDict) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.contentView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
-        });
-        // 添加成功
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 添加成功
+            [weakSelf getCartProductCount];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.contentView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.contentView makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            // 添加成功
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf dismiss];
+            });
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kAddProductToCartNotificationKey object:weakSelf userInfo:@{@"productId":@(weakSelf.productId), @"specificationKey":weakSelf.selectSpecificationKey, @"buyCount":@(weakSelf.buyCount), @"cartCount":responseDict[@"cartnum"]}];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.contentView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
             });
         }
     } failure:^(NSError *error) {
