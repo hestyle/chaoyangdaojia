@@ -1435,6 +1435,8 @@ static const CGFloat mProductCellHeight = 260.f;
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
             // 发送通知
             [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
         } else {

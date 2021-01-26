@@ -106,6 +106,13 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         }
         [self getCartData];
     }
+    
+    HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+    if (userAccountManger.cartCount != 0) {
+        [self.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%ld", userAccountManger.cartCount]];
+    } else {
+        [self.tabBarItem setBadgeValue:@""];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -724,6 +731,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
             // 发送通知
             [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
         } else {

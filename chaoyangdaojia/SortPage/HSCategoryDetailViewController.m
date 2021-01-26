@@ -11,6 +11,7 @@
 #import "HSTools.h"
 #import "HSNetwork.h"
 #import "HSCommon.h"
+#import "HSAccount.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -96,6 +97,13 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
         [self.refreshView setHidden:YES];
         [self.loadMoreView setHidden:YES];
         [self.noProductView setHidden:NO];
+    }
+    HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+    if (userAccountManger.cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", userAccountManger.cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
     }
 }
 
@@ -609,6 +617,8 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
     __weak __typeof__(self) weakSelf = self;
     [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
             // 发送通知
             [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
         } else {

@@ -134,6 +134,14 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.navigationController setNavigationBarHidden:NO];
     
     [self startCarouselAutoChange];
+    
+    HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+    if (userAccountManger.cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", userAccountManger.cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

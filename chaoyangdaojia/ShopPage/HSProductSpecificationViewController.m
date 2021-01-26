@@ -10,6 +10,7 @@
 #import "HSNetwork.h"
 #import "HSTools.h"
 #import "HSCommon.h"
+#import "HSAccount.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -482,6 +483,8 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf dismiss];
             });
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
             // 发送通知
             [[NSNotificationCenter defaultCenter] postNotificationName:kAddProductToCartNotificationKey object:weakSelf userInfo:@{@"productId":@(weakSelf.productId), @"specificationKey":weakSelf.selectSpecificationKey, @"buyCount":@(weakSelf.buyCount), @"cartCount":responseDict[@"cartnum"]}];
         } else {
