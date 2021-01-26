@@ -10,6 +10,7 @@
 #import "HSProductDetailViewController.h"
 #import "HSTools.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -42,6 +43,7 @@
 @property (nonatomic, strong) UIView *emptyView;
 
 @property (nonatomic, strong) UIBarButtonItem *rightCartButtonItem;
+@property (nonatomic, strong) UILabel *cartCountLabel;
 
 @end
 
@@ -66,6 +68,10 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
     self = [super initWithCollectionViewLayout:flowLayout];
+    
+    // 注册接收购物车中商品数量变更的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCartCountAction:) name:kUpdateCartCountNotificationKey object:nil];
+    
     return self;
 }
 
@@ -98,6 +104,10 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         [self getShopProductByPage:1];
     }
     [self.navigationItem setRightBarButtonItem:self.rightCartButtonItem];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUpdateCartCountNotificationKey object:nil];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
@@ -538,6 +548,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
                     NSLog(@"动画完成播放！");
                     UIView *rightCartButtonItemView = (UIView *)[weakSelf.rightCartButtonItem valueForKey:@"_view"];
                     [HSAddToCartAnimation shakeAnimation:rightCartButtonItemView];
+                    [weakSelf getCartProductCount];
                 }];
             });
         }
@@ -547,6 +558,21 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         });
         NSLog(@"%@", error);
     }];
+}
+
+- (void)updateCartCountAction:(NSNotification *)notification {
+    // 获取当前购物车中的商品数
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSInteger cartCount = 0;
+    if (specificationDataDict[@"cartCount"] != nil && ![specificationDataDict[@"cartCount"] isEqual:[NSNull null]]) {
+        cartCount = [specificationDataDict[@"cartCount"] integerValue];
+    }
+    if (cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
+    }
 }
 
 #pragma mark - UIScrollView Delegate
@@ -710,7 +736,29 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         make.top.mas_equalTo(noMemberPointImageView.mas_bottom).mas_offset(5);
     }];
     
-    self.rightCartButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"cart_white_icon"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoCartAction)];
+    UIButton *rightCartButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [rightCartButton setBackgroundImage:[UIImage imageNamed:@"cart_white_icon"] forState:UIControlStateNormal];
+    [[rightCartButton.widthAnchor constraintEqualToConstant:30.f] setActive:YES];
+    [[rightCartButton.heightAnchor constraintEqualToConstant:30.f] setActive:YES];
+    [rightCartButton addTarget:self action:@selector(gotoCartAction) forControlEvents:UIControlEventTouchUpInside];
+    self.rightCartButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightCartButton];
+    
+    self.cartCountLabel = [UILabel new];
+    [self.cartCountLabel setHidden:YES];
+    [self.cartCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.cartCountLabel setTextColor:[UIColor whiteColor]];
+    [self.cartCountLabel.layer setCornerRadius:9.f];
+    [self.cartCountLabel.layer setBorderWidth:0.05f];
+    [self.cartCountLabel.layer setBackgroundColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel.layer setBorderColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
+    [rightCartButton addSubview:self.cartCountLabel];
+    [self.cartCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(18, 18));
+        make.centerY.mas_equalTo(rightCartButton.mas_top).mas_offset(3);
+        make.centerX.mas_equalTo(rightCartButton.mas_right).mas_offset(-3);
+    }];
+    
 }
 
 - (void)getShopDetail {
@@ -949,6 +997,26 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
             }
         }];
     }
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 @end
