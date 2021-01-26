@@ -184,12 +184,13 @@
             self.buyCount = self.stockCount;
         }
         [self.buyCountLabel setText:[NSString stringWithFormat:@"%ld", self.buyCount]];
+        __weak __typeof__(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *imageUrl = [NSURL URLWithString:dict[@"image"]];
             NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
             UIImage *image = [UIImage imageWithData:imageData];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.productImageView setImage:image];
+                [weakSelf.productImageView setImage:image];
             });
         });
     }

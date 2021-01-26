@@ -743,15 +743,16 @@ static const CGFloat mProductCellHeight = 260.f;
         return;
     }
     if (self.refreshView.tag == -1) {
+        __weak __typeof__(self) weakSelf = self;
         [UIView animateWithDuration:.3 animations:^{
-            self.refreshLabel.text = @"加载中";
+            weakSelf.refreshLabel.text = @"加载中";
             scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
         }];
         //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:.3 animations:^{
-                self.refreshView.tag = 0;
-                self.refreshLabel.text = @"下拉刷新";
+                weakSelf.refreshView.tag = 0;
+                weakSelf.refreshLabel.text = @"下拉刷新";
                 scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
                 NSLog(@"已触发下拉刷新！");
             }];
@@ -1258,7 +1259,7 @@ static const CGFloat mProductCellHeight = 260.f;
                 bannerDataMutableDict[@"bannerImage"] = bannerImage;
                 weakSelf.bannerArray[currentPage] = bannerDataMutableDict.copy;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.carouselCurrentImageView setImage:bannerImage];
+                    [weakSelf.carouselCurrentImageView setImage:bannerImage];
                 });
             });
         }
@@ -1277,7 +1278,7 @@ static const CGFloat mProductCellHeight = 260.f;
                 bannerDataMutableDict[@"bannerImage"] = bannerImage;
                 weakSelf.bannerArray[leftPage] = bannerDataMutableDict.copy;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.carouselLeftImageView setImage:bannerImage];
+                    [weakSelf.carouselLeftImageView setImage:bannerImage];
                 });
             });
         }

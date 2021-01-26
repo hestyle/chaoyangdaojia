@@ -63,6 +63,7 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
  *处理get请求
  */
 - (void)getDataWithUrl:(NSString *)url parameters:(NSDictionary *)paramters success:(Success)success failure:(Failure)failure {
+    __weak __typeof__(self) weakSelf = self;
     [afHttpSessionManager GET:url parameters:paramters headers:mutableHeaders.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         // 将返回的结果转成dict
         NSError *error = nil;
@@ -70,7 +71,7 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
                                                             options:NSJSONReadingMutableContainers
                                                               error:&error];
         // 更新cookie
-        [self updateHeaders:task.response];
+        [weakSelf updateHeaders:task.response];
         if (error != nil) {
             failure(error);
         } else {
@@ -85,7 +86,7 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
  *处理post请求
  */
 - (void)postDataWithUrl:(NSString *)url parameters:(NSDictionary *)paramters success:(Success)success failure:(Failure)failure {
-    // afHttpSessionManager.requestSerializer = [AFJSONRequestSerializer serializer];
+    __weak __typeof__(self) weakSelf = self;
     [afHttpSessionManager POST:url parameters:paramters headers:mutableHeaders.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         // 将返回的结果转成dict
         NSError *error = nil;
@@ -93,7 +94,7 @@ static NSMutableDictionary <NSString *, NSString *> *mutableHeaders = nil;
                                                             options:NSJSONReadingMutableContainers
                                                               error:&error];
         // 更新cookie
-        [self updateHeaders:task.response];
+        [weakSelf updateHeaders:task.response];
         if (error != nil) {
             failure(error);
         } else {

@@ -75,8 +75,9 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    __weak __typeof__(self) weakSelf = self;
     [UIView animateWithDuration:0.1 animations:^{
-        [self.view setBackgroundColor:[UIColor colorWithWhite:0.3 alpha:0.5f]];
+        [weakSelf.view setBackgroundColor:[UIColor colorWithWhite:0.3 alpha:0.5f]];
     }];
     // 设置上次选择的规格
     if (self.selectIndexPath.section >= [self.specificationTitleArray count] || self.selectIndexPath.row >= [self.valArray[self.selectIndexPath.section] count]) {
@@ -94,8 +95,9 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    __weak __typeof__(self) weakSelf = self;
     [UIView animateWithDuration:0.05 animations:^{
-        [self.view setBackgroundColor:[UIColor clearColor]];
+        [weakSelf.view setBackgroundColor:[UIColor clearColor]];
     }];
 }
 
@@ -224,12 +226,13 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         self.buyCount = self.stockCount;
     }
     [self.buyCountLabel setText:[NSString stringWithFormat:@"%ld", self.buyCount]];
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURL *imageUrl = [NSURL URLWithString:dict[@"image"]];
         NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
         UIImage *image = [UIImage imageWithData:imageData];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.productImageView setImage:image];
+            [weakSelf.productImageView setImage:image];
         });
     });
 }
