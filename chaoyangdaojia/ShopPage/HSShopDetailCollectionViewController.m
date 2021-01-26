@@ -8,6 +8,7 @@
 
 #import "HSShopDetailCollectionViewController.h"
 #import "HSProductDetailViewController.h"
+#import "HSTools.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
@@ -39,6 +40,8 @@
 @property (nonatomic, strong) UISegmentedControl *detailSegmentedControl;
 
 @property (nonatomic, strong) UIView *emptyView;
+
+@property (nonatomic, strong) UIBarButtonItem *rightCartButtonItem;
 
 @end
 
@@ -94,6 +97,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     if ([self.shopProductArray count] == 0) {
         [self getShopProductByPage:1];
     }
+    [self.navigationItem setRightBarButtonItem:self.rightCartButtonItem];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
@@ -255,9 +259,15 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         }];
         
         UIImageView *addToCartImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"add_to_cart_icon"]];
+        [addToCartImageView setTag:indexPath.row];
+        // 添加点击事件
+        UITapGestureRecognizer *addToCartTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addToCartAction:)];
+        [addToCartTapGesture setNumberOfTapsRequired:1];
+        [addToCartImageView setUserInteractionEnabled:YES];
+        [addToCartImageView addGestureRecognizer:addToCartTapGesture];
         [productView addSubview:addToCartImageView];
         [addToCartImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(20, 20));
+            make.size.mas_equalTo(CGSizeMake(23, 23));
             make.right.mas_equalTo(productImageView);
             make.centerY.mas_equalTo(priceLabel.mas_bottom);
         }];
@@ -493,6 +503,52 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     [self.collectionView reloadData];
 }
 
+- (void)gotoCartAction {
+    [self.view makeToast:@"点击了购物车图标！" duration:3.f position:CSToastPositionCenter];
+}
+
+- (void)addToCartAction:(UITapGestureRecognizer *)sender {
+    NSInteger index = sender.view.tag;
+    NSDictionary *productDataDict = self.shopProductArray[index];
+    
+    NSDictionary *parameters = @{@"buynum":[NSString stringWithFormat:@"%d", 1], @"gkey":productDataDict[@"defkey"], @"sid":[NSString stringWithFormat:@"%@", productDataDict[@"id"]]};
+    
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager postDataWithUrl:kAddProductToCartUrl parameters:parameters success:^(NSDictionary *responseDict) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:responseDict[@"msg"] duration:2.f position:CSToastPositionCenter];
+        });
+        // 添加成功
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 获取cell在self.view的rect
+                UICollectionViewCell * cell = (UICollectionViewCell *)[weakSelf.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+                CGRect cellAtCollectionViewRect = [weakSelf.collectionView convertRect:cell.frame toView:weakSelf.collectionView];
+                CGRect cellAtViewRect = [weakSelf.collectionView convertRect:cellAtCollectionViewRect toView:weakSelf.view];
+                UIView *view = [[UIView alloc] initWithFrame:cellAtViewRect];
+                [view.layer setContents:(id)((UIImage *)productDataDict[@"productImage"]).CGImage];
+                // 获取抖动图标以及frame
+                UIView *rightCartButtonItemView = (UIView *)[weakSelf.rightCartButtonItem valueForKey:@"_view"];
+                CGRect rightCartRect = [rightCartButtonItemView convertRect:rightCartButtonItemView.bounds toView:nil];
+                CGPoint finishPoint = CGPointMake(rightCartRect.origin.x + rightCartRect.size.width / 2, rightCartRect.origin.y + rightCartRect.size.height);
+                
+                HSAddToCartAnimation *addToCartAnimation = [HSAddToCartAnimation shareInstance];
+                [addToCartAnimation startAnimationWithView:view rect:cellAtViewRect finishPoint:finishPoint finishBlock:^(BOOL finish) {
+                    NSLog(@"动画完成播放！");
+                    UIView *rightCartButtonItemView = (UIView *)[weakSelf.rightCartButtonItem valueForKey:@"_view"];
+                    [HSAddToCartAnimation shakeAnimation:rightCartButtonItemView];
+                }];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
+}
+
 #pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
@@ -652,6 +708,8 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         make.centerX.mas_equalTo(self.emptyView);
         make.top.mas_equalTo(noMemberPointImageView.mas_bottom).mas_offset(5);
     }];
+    
+    self.rightCartButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"cart_white_icon"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoCartAction)];
 }
 
 - (void)getShopDetail {

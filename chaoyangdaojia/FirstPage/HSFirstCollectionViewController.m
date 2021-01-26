@@ -14,6 +14,7 @@
 #import "HSCategoryDetailViewController.h"
 #import "HSMemberWalletViewController.h"
 #import "HSProductDetailViewController.h"
+#import "HSTools.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import <Masonry/Masonry.h>
@@ -584,12 +585,18 @@ static const CGFloat mProductCellHeight = 260.f;
         }];
         
         UIImageView *addToCartImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"add_to_cart_icon"]];
+        [addToCartImageView setTag:indexPath.row];
         [productView addSubview:addToCartImageView];
         [addToCartImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(20, 20));
+            make.size.mas_equalTo(CGSizeMake(23, 23));
             make.right.mas_equalTo(productImageView);
             make.centerY.mas_equalTo(priceLabel.mas_bottom);
         }];
+        // 添加点击事件
+        UITapGestureRecognizer *addToCartTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addToCartAction:)];
+        [addToCartTapGesture setNumberOfTapsRequired:1];
+        [addToCartImageView setUserInteractionEnabled:YES];
+        [addToCartImageView addGestureRecognizer:addToCartTapGesture];
         if ([[productDataDict allKeys] containsObject:@"productImage"]) {
             [productImageView setImage:productDataDict[@"productImage"]];
         } else {
@@ -798,6 +805,45 @@ static const CGFloat mProductCellHeight = 260.f;
 - (void)gotoMemberWalletAction {
     HSMemberWalletViewController *controller = [HSMemberWalletViewController new];
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)addToCartAction:(UITapGestureRecognizer *)sender {
+    NSInteger index = sender.view.tag;
+    NSDictionary *productDataDict = self.productArray[index];
+    
+    NSDictionary *parameters = @{@"buynum":[NSString stringWithFormat:@"%d", 1], @"gkey":productDataDict[@"defkey"], @"sid":[NSString stringWithFormat:@"%@", productDataDict[@"id"]]};
+    
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager postDataWithUrl:kAddProductToCartUrl parameters:parameters success:^(NSDictionary *responseDict) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:responseDict[@"msg"] duration:2.f position:CSToastPositionCenter];
+        });
+        // 添加成功
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 获取cell在self.view的rect
+                UICollectionViewCell * cell = (UICollectionViewCell *)[weakSelf.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:3]];
+                CGRect cellAtCollectionViewRect = [weakSelf.collectionView convertRect:cell.frame toView:weakSelf.collectionView];
+                CGRect cellAtViewRect = [weakSelf.collectionView convertRect:cellAtCollectionViewRect toView:weakSelf.view];
+                UIView *view = [[UIView alloc] initWithFrame:cellAtViewRect];
+                [view.layer setContents:(id)((UIImage *)productDataDict[@"productImage"]).CGImage];
+                
+                HSAddToCartAnimation *addToCartAnimation = [HSAddToCartAnimation shareInstance];
+                [addToCartAnimation startAnimationWithView:view rect:cellAtViewRect finishPoint:CGPointMake(SCREEN_WIDTH / 5 * 3.5, SCREEN_HEIGHT - 49) finishBlock:^(BOOL finish) {
+                    NSLog(@"动画完成播放！");
+                    // 获取需要抖动的图标
+                    UIView *cartTabBarItemView = (UIView *)[weakSelf.tabBarController.tabBar.items[3] valueForKey:@"_view"];
+                    [HSAddToCartAnimation shakeAnimation:cartTabBarItemView];
+                }];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 #pragma mark - Private
