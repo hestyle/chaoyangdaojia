@@ -12,6 +12,9 @@
 #import "ShopPage/HSShopTableViewController.h"
 #import "CartPage/HSCartViewController.h"
 #import "MyPage/HSMyViewController.h"
+#import "HSAccount.h"
+#import "HSNetwork.h"
+#import "HSCommon.h"
 
 @interface HSMainTableBarController ()
 
@@ -55,6 +58,23 @@
     [myViewController.tabBarItem setSelectedImage:[[UIImage imageNamed:@"menu_myaccount_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
     self.viewControllers = @[firstViewController, sortViewController, shopTableViewController, cartViewController, myViewController];
+    
+    [self getCartProductCount];
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
+        }
+    } failure:^(NSError *error) {
+        NSLog(@"%@", error);
+    }];
 }
 
 @end

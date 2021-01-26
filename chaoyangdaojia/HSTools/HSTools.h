@@ -9,3 +9,4 @@
 #import <UIKit/UIKit.h>
 
 #import "HSAlertView.h"
+#import "HSAddToCartAnimation.h"

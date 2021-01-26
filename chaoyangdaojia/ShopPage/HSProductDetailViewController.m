@@ -13,6 +13,7 @@
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -54,6 +55,8 @@
 
 @property (nonatomic, strong) UIView *tableViewFooterView;
 @property (nonatomic, strong) UIImageView *collectionImageView;
+@property (nonatomic, strong) UIImageView *cartImageView;
+@property (nonatomic, strong) UILabel *cartCountLabel;
 
 @property (nonatomic, strong) UIView *refreshView;
 @property (nonatomic, strong) UIImageView *refreshImageView;
@@ -92,6 +95,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     
     self.productId = productId;
     
+    // 注册接收完成商品规格选择的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseProductSpecificationAction:) name:kChooseProductSpecificationNotificationKey object:nil];
+    // 注册接收成功添加商品到购物车的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addProductToCartAction:) name:kAddProductToCartNotificationKey object:nil];
+    
     return self;
 }
 
@@ -126,6 +134,14 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.navigationController setNavigationBarHidden:NO];
     
     [self startCarouselAutoChange];
+    
+    HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+    if (userAccountManger.cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", userAccountManger.cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -133,7 +149,15 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.productSegmentedControl removeFromSuperview];
     [self setTitle:@"商品详情"];
     
+    // 注销成功添加商品到购物车的通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddProductToCartNotificationKey object:nil];
+    
     [self stopCarouselAutoChange];
+}
+
+- (void)dealloc {
+    // 注销完成商品规格选择的通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kChooseProductSpecificationNotificationKey object:nil];
 }
 
 #pragma mark - Table view data source
@@ -749,15 +773,16 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     if (scrollView == self.tableView) {
         if (self.refreshView.tag == -1) {
+            __weak __typeof__(self) weakSelf = self;
             [UIView animateWithDuration:.3 animations:^{
-                self.refreshLabel.text = @"加载中";
+                weakSelf.refreshLabel.text = @"加载中";
                 scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
             }];
             //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 [UIView animateWithDuration:.3 animations:^{
-                    self.refreshView.tag = 0;
-                    self.refreshLabel.text = @"下拉刷新";
+                    weakSelf.refreshView.tag = 0;
+                    weakSelf.refreshLabel.text = @"下拉刷新";
                     scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
                     NSLog(@"已触发下拉刷新！");
                 }];
@@ -819,6 +844,49 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)collectionChangeAction {
     // 访问网络请求修改收藏状态
     [self updateCollectionStatusById:self.productId];
+}
+
+#pragma mark - Notification
+- (void)chooseProductSpecificationAction:(NSNotification *)notification {
+    // 更新商品详情页面中选择的商品规格信息
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSString *specificationKey = specificationDataDict[@"specificationKey"];
+    if (specificationKey == nil || [specificationKey isEqualToString:@"no"]) {
+        specificationKey = @"默认规格";
+    }
+    [self.specificationLabel setText:specificationKey];
+}
+
+- (void)addProductToCartAction:(NSNotification *)notification {
+    // 获取当前购物车中的商品数
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSInteger cartCount = 0;
+    if (specificationDataDict[@"cartCount"] != nil && ![specificationDataDict[@"cartCount"] isEqual:[NSNull null]]) {
+        cartCount = [specificationDataDict[@"cartCount"] integerValue];
+    }
+    [self.view makeToast:@"已成功加入购物车！" duration:2.f position:CSToastPositionCenter];
+    
+    // 显示动画
+    // 获取carouselCurrentImageView在self.view的rect
+    CGRect carouselCurrentImageViewRect = [self.carouselCurrentImageView convertRect:self.carouselCurrentImageView.frame toView:nil];
+    UIView *view = [[UIView alloc] initWithFrame:carouselCurrentImageViewRect];
+    [view.layer setContents:(id)(self.carouselCurrentImageView.image).CGImage];
+    // 获取抖动图标以及frame
+    CGRect cartImageViewRect = [self.cartImageView convertRect:self.cartImageView.bounds toView:nil];
+    CGPoint finishPoint = CGPointMake(cartImageViewRect.origin.x + cartImageViewRect.size.width / 2, cartImageViewRect.origin.y + cartImageViewRect.size.height);
+    
+    HSAddToCartAnimation *addToCartAnimation = [HSAddToCartAnimation shareInstance];
+    [addToCartAnimation startAnimationWithView:view rect:carouselCurrentImageViewRect finishPoint:finishPoint finishBlock:^(BOOL finish) {
+        NSLog(@"动画完成播放！");
+        [HSAddToCartAnimation shakeAnimation:self.cartImageView];
+    }];
+    
+    if (cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
+    }
 }
 
 #pragma mark - Private
@@ -1174,20 +1242,37 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.top.mas_equalTo(buyLabel);
         make.centerX.mas_equalTo(collectionView).mas_offset(distance);
     }];
-    UIImageView *cartImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cart_icon"]];
-    [cartView addSubview:cartImageView];
-    [cartImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.cartImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cart_icon"]];
+    [cartView addSubview:self.cartImageView];
+    [self.cartImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(25, 25));
         make.centerX.mas_equalTo(cartView);
         make.top.mas_equalTo(cartView);
     }];
+    
+    self.cartCountLabel = [UILabel new];
+    [self.cartCountLabel setHidden:YES];
+    [self.cartCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.cartCountLabel setTextColor:[UIColor whiteColor]];
+    [self.cartCountLabel.layer setCornerRadius:9.f];
+    [self.cartCountLabel.layer setBorderWidth:0.05f];
+    [self.cartCountLabel.layer setBackgroundColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel.layer setBorderColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
+    [self.cartImageView addSubview:self.cartCountLabel];
+    [self.cartCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(18, 18));
+        make.centerY.mas_equalTo(self.cartImageView.mas_top).mas_offset(3);
+        make.centerX.mas_equalTo(self.cartImageView.mas_right).mas_offset(-3);
+    }];
+    
     UILabel *cartLabel = [UILabel new];
     [cartLabel setText:@"购物车"];
     [cartLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
     [cartView addSubview:cartLabel];
     [cartLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(cartView);
-        make.top.mas_equalTo(cartImageView.mas_bottom);
+        make.top.mas_equalTo(self.cartImageView.mas_bottom);
         make.bottom.mas_equalTo(cartView);
         make.width.mas_equalTo(cartView);
     }];
@@ -1272,7 +1357,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
                 dataMutableDict[@"image"] = image;
                 weakSelf.productImageArray[currentPage] = dataMutableDict.copy;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.carouselCurrentImageView setImage:image];
+                    [weakSelf.carouselCurrentImageView setImage:image];
                 });
             });
         }
@@ -1291,7 +1376,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
                 dataMutableDict[@"image"] = image;
                 weakSelf.productImageArray[leftPage] = dataMutableDict.copy;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.carouselLeftImageView setImage:image];
+                    [weakSelf.carouselLeftImageView setImage:image];
                 });
             });
         }
@@ -1310,7 +1395,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
                 dataMutableDict[@"image"] = image;
                 weakSelf.productImageArray[rightPage] = dataMutableDict.copy;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.carouselRightImageView setImage:image];
+                    [weakSelf.carouselRightImageView setImage:image];
                 });
             });
         }

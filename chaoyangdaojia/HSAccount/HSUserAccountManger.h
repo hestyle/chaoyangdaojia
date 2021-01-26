@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *avatarPath;
 }
 
+@property (nonatomic) NSInteger cartCount;
+
 /*
  * 获取单例对象
  */

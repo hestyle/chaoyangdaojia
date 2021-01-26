@@ -11,6 +11,7 @@
 #import "HSLoginViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -50,6 +51,15 @@ static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 @implementation HSCartViewController
+
+- (instancetype)init {
+    self = [super init];
+    
+    // 注册接收购物车中商品数量变更的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCartCountAction:) name:kUpdateCartCountNotificationKey object:nil];
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -96,6 +106,13 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         }
         [self getCartData];
     }
+    
+    HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+    if (userAccountManger.cartCount != 0) {
+        [self.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%ld", userAccountManger.cartCount]];
+    } else {
+        [self.tabBarItem setBadgeValue:@""];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -103,6 +120,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     // 移除tabBarController两侧的按钮
     [self.navigationController.navigationItem setLeftBarButtonItem:nil];
     [self.navigationController.navigationItem setRightBarButtonItem:nil];
+}
+
+- (void)dealloc {
+    // 注销购物车中商品数量变更的通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUpdateCartCountNotificationKey object:nil];
 }
 
 #pragma mark - Table view data source
@@ -307,15 +329,16 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     if (self.refreshView.tag == -1) {
+        __weak __typeof__(self) weakSelf = self;
         [UIView animateWithDuration:.3 animations:^{
-            self.refreshLabel.text = @"加载中";
+            weakSelf.refreshLabel.text = @"加载中";
             scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
         }];
         //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:.3 animations:^{
-                self.refreshView.tag = 0;
-                self.refreshLabel.text = @"下拉刷新";
+                weakSelf.refreshView.tag = 0;
+                weakSelf.refreshLabel.text = @"下拉刷新";
                 scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
                 NSLog(@"已触发下拉刷新！");
             }];
@@ -409,9 +432,10 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
         });
-        // 获取成功
+        // 删除成功
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
             [weakSelf getCartData];
+            [weakSelf getCartProductCount];
         } else {
             NSLog(@"接口 %@ 返回数据格式错误! responseDict = %@", kDelCartProductUrl, responseDict);
         }
@@ -497,6 +521,20 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 - (void)settlementAction {
     [self.view makeToast:@"点击了结算！" duration:3.f position:CSToastPositionCenter];
+}
+
+- (void)updateCartCountAction:(NSNotification *)notification {
+    // 获取当前购物车中的商品数
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSInteger cartCount = 0;
+    if (specificationDataDict[@"cartCount"] != nil && ![specificationDataDict[@"cartCount"] isEqual:[NSNull null]]) {
+        cartCount = [specificationDataDict[@"cartCount"] integerValue];
+    }
+    if (cartCount != 0) {
+        [self.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%ld", cartCount]];
+    } else {
+        [self.tabBarItem setBadgeValue:@""];
+    }
 }
 
 #pragma mark - Private
@@ -686,6 +724,28 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     }
     [self.settlementButton setTitle:[NSString stringWithFormat:@"结算(%ld)", self.settlementCount] forState:UIControlStateNormal];
     [self.sumPriceLabel setText:[NSString stringWithFormat:@"￥%0.2f", self.settlementPrice]];
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 @end

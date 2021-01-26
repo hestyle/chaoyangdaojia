@@ -8,7 +8,10 @@
 
 #import "HSShopDetailCollectionViewController.h"
 #import "HSProductDetailViewController.h"
+#import "HSTools.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
+#import "HSAccount.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -40,6 +43,9 @@
 
 @property (nonatomic, strong) UIView *emptyView;
 
+@property (nonatomic, strong) UIBarButtonItem *rightCartButtonItem;
+@property (nonatomic, strong) UILabel *cartCountLabel;
+
 @end
 
 @implementation HSShopDetailCollectionViewController
@@ -63,6 +69,10 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
     self = [super initWithCollectionViewLayout:flowLayout];
+    
+    // 注册接收购物车中商品数量变更的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCartCountAction:) name:kUpdateCartCountNotificationKey object:nil];
+    
     return self;
 }
 
@@ -94,6 +104,19 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     if ([self.shopProductArray count] == 0) {
         [self getShopProductByPage:1];
     }
+    [self.navigationItem setRightBarButtonItem:self.rightCartButtonItem];
+    
+    HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+    if (userAccountManger.cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", userAccountManger.cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
+    }
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUpdateCartCountNotificationKey object:nil];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
@@ -255,9 +278,15 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         }];
         
         UIImageView *addToCartImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"add_to_cart_icon"]];
+        [addToCartImageView setTag:indexPath.row];
+        // 添加点击事件
+        UITapGestureRecognizer *addToCartTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addToCartAction:)];
+        [addToCartTapGesture setNumberOfTapsRequired:1];
+        [addToCartImageView setUserInteractionEnabled:YES];
+        [addToCartImageView addGestureRecognizer:addToCartTapGesture];
         [productView addSubview:addToCartImageView];
         [addToCartImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(20, 20));
+            make.size.mas_equalTo(CGSizeMake(23, 23));
             make.right.mas_equalTo(productImageView);
             make.centerY.mas_equalTo(priceLabel.mas_bottom);
         }];
@@ -493,6 +522,68 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     [self.collectionView reloadData];
 }
 
+- (void)gotoCartAction {
+    [self.view makeToast:@"点击了购物车图标！" duration:3.f position:CSToastPositionCenter];
+}
+
+- (void)addToCartAction:(UITapGestureRecognizer *)sender {
+    NSInteger index = sender.view.tag;
+    NSDictionary *productDataDict = self.shopProductArray[index];
+    
+    NSDictionary *parameters = @{@"buynum":[NSString stringWithFormat:@"%d", 1], @"gkey":productDataDict[@"defkey"], @"sid":[NSString stringWithFormat:@"%@", productDataDict[@"id"]]};
+    
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager postDataWithUrl:kAddProductToCartUrl parameters:parameters success:^(NSDictionary *responseDict) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:responseDict[@"msg"] duration:2.f position:CSToastPositionCenter];
+        });
+        // 添加成功
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 获取cell在self.view的rect
+                UICollectionViewCell * cell = (UICollectionViewCell *)[weakSelf.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+                CGRect cellAtCollectionViewRect = [weakSelf.collectionView convertRect:cell.frame toView:weakSelf.collectionView];
+                CGRect cellAtViewRect = [weakSelf.collectionView convertRect:cellAtCollectionViewRect toView:weakSelf.view];
+                UIView *view = [[UIView alloc] initWithFrame:cellAtViewRect];
+                [view.layer setContents:(id)((UIImage *)productDataDict[@"productImage"]).CGImage];
+                // 获取抖动图标以及frame
+                UIView *rightCartButtonItemView = (UIView *)[weakSelf.rightCartButtonItem valueForKey:@"_view"];
+                CGRect rightCartRect = [rightCartButtonItemView convertRect:rightCartButtonItemView.bounds toView:nil];
+                CGPoint finishPoint = CGPointMake(rightCartRect.origin.x + rightCartRect.size.width / 2, rightCartRect.origin.y + rightCartRect.size.height);
+                
+                HSAddToCartAnimation *addToCartAnimation = [HSAddToCartAnimation shareInstance];
+                [addToCartAnimation startAnimationWithView:view rect:cellAtViewRect finishPoint:finishPoint finishBlock:^(BOOL finish) {
+                    NSLog(@"动画完成播放！");
+                    UIView *rightCartButtonItemView = (UIView *)[weakSelf.rightCartButtonItem valueForKey:@"_view"];
+                    [HSAddToCartAnimation shakeAnimation:rightCartButtonItemView];
+                    [weakSelf getCartProductCount];
+                }];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
+}
+
+- (void)updateCartCountAction:(NSNotification *)notification {
+    // 获取当前购物车中的商品数
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSInteger cartCount = 0;
+    if (specificationDataDict[@"cartCount"] != nil && ![specificationDataDict[@"cartCount"] isEqual:[NSNull null]]) {
+        cartCount = [specificationDataDict[@"cartCount"] integerValue];
+    }
+    if (cartCount != 0) {
+        [self.cartCountLabel setHidden:NO];
+        [self.cartCountLabel setText:[NSString stringWithFormat:@"%ld", cartCount]];
+    } else {
+        [self.cartCountLabel setHidden:YES];
+    }
+}
+
 #pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
@@ -529,15 +620,16 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     if (self.refreshView.tag == -1) {
+        __weak __typeof__(self) weakSelf = self;
         [UIView animateWithDuration:.3 animations:^{
-            self.refreshLabel.text = @"加载中";
+            weakSelf.refreshLabel.text = @"加载中";
             scrollView.contentInset = UIEdgeInsetsMake(mRefreshViewHeight, 0.0f, 0.0f, 0.0f);
         }];
         //数据加载成功后执行；这里为了模拟加载效果，一秒后执行恢复原状代码
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:.3 animations:^{
-                self.refreshView.tag = 0;
-                self.refreshLabel.text = @"下拉刷新";
+                weakSelf.refreshView.tag = 0;
+                weakSelf.refreshLabel.text = @"下拉刷新";
                 scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
                 NSLog(@"已触发下拉刷新！");
             }];
@@ -652,6 +744,30 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         make.centerX.mas_equalTo(self.emptyView);
         make.top.mas_equalTo(noMemberPointImageView.mas_bottom).mas_offset(5);
     }];
+    
+    UIButton *rightCartButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [rightCartButton setBackgroundImage:[UIImage imageNamed:@"cart_white_icon"] forState:UIControlStateNormal];
+    [[rightCartButton.widthAnchor constraintEqualToConstant:30.f] setActive:YES];
+    [[rightCartButton.heightAnchor constraintEqualToConstant:30.f] setActive:YES];
+    [rightCartButton addTarget:self action:@selector(gotoCartAction) forControlEvents:UIControlEventTouchUpInside];
+    self.rightCartButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightCartButton];
+    
+    self.cartCountLabel = [UILabel new];
+    [self.cartCountLabel setHidden:YES];
+    [self.cartCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.cartCountLabel setTextColor:[UIColor whiteColor]];
+    [self.cartCountLabel.layer setCornerRadius:9.f];
+    [self.cartCountLabel.layer setBorderWidth:0.05f];
+    [self.cartCountLabel.layer setBackgroundColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel.layer setBorderColor:[[UIColor redColor] CGColor]];
+    [self.cartCountLabel setFont:[UIFont systemFontOfSize:[UIFont systemFontSize] - 1]];
+    [rightCartButton addSubview:self.cartCountLabel];
+    [self.cartCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(18, 18));
+        make.centerY.mas_equalTo(rightCartButton.mas_top).mas_offset(3);
+        make.centerX.mas_equalTo(rightCartButton.mas_right).mas_offset(-3);
+    }];
+    
 }
 
 - (void)getShopDetail {
@@ -890,6 +1006,28 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
             }
         }];
     }
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 @end

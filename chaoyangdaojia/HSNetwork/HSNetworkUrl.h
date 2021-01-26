@@ -80,6 +80,8 @@ extern NSString * const kGetCartDataUrl;
 extern NSString * const kEditCartProductBuyNumUrl;
 // 删除购物车中的某些商品
 extern NSString * const kDelCartProductUrl;
+// 获取当前购物车中的商品数
+extern NSString * const kGetCartProductCountUrl;
 
 NS_ASSUME_NONNULL_BEGIN
 

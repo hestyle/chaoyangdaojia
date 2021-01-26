@@ -9,6 +9,8 @@
 #import "HSProductSpecificationViewController.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
+#import "HSCommon.h"
+#import "HSAccount.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -74,8 +76,9 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    __weak __typeof__(self) weakSelf = self;
     [UIView animateWithDuration:0.1 animations:^{
-        [self.view setBackgroundColor:[UIColor colorWithWhite:0.3 alpha:0.5f]];
+        [weakSelf.view setBackgroundColor:[UIColor colorWithWhite:0.3 alpha:0.5f]];
     }];
     // 设置上次选择的规格
     if (self.selectIndexPath.section >= [self.specificationTitleArray count] || self.selectIndexPath.row >= [self.valArray[self.selectIndexPath.section] count]) {
@@ -93,8 +96,9 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    __weak __typeof__(self) weakSelf = self;
     [UIView animateWithDuration:0.05 animations:^{
-        [self.view setBackgroundColor:[UIColor clearColor]];
+        [weakSelf.view setBackgroundColor:[UIColor clearColor]];
     }];
 }
 
@@ -223,12 +227,13 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         self.buyCount = self.stockCount;
     }
     [self.buyCountLabel setText:[NSString stringWithFormat:@"%ld", self.buyCount]];
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURL *imageUrl = [NSURL URLWithString:dict[@"image"]];
         NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
         UIImage *image = [UIImage imageWithData:imageData];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.productImageView setImage:image];
+            [weakSelf.productImageView setImage:image];
         });
     });
 }
@@ -423,6 +428,9 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 #pragma mark - Event
 - (void)dismiss {
+    // 发送完成商品规格选择的通知
+    [[NSNotificationCenter defaultCenter] postNotificationName:kChooseProductSpecificationNotificationKey object:self userInfo:@{@"productId":@(self.productId), @"specificationKey":self.selectSpecificationKey, @"buyCount":@(self.buyCount)}];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -450,13 +458,38 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     HSNetworkManager *manager = [HSNetworkManager shareManager];
     __weak __typeof__(self) weakSelf = self;
     [manager postDataWithUrl:kAddProductToCartUrl parameters:parameters success:^(NSDictionary *responseDict) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.contentView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
-        });
-        // 添加成功
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 添加成功
+            [weakSelf getCartProductCount];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.contentView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.contentView makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            // 添加成功
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf dismiss];
+            });
+            HSUserAccountManger *userAccountManger = [HSUserAccountManger shareManager];
+            [userAccountManger setCartCount:[responseDict[@"cartnum"] integerValue]];
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kAddProductToCartNotificationKey object:weakSelf userInfo:@{@"productId":@(weakSelf.productId), @"specificationKey":weakSelf.selectSpecificationKey, @"buyCount":@(weakSelf.buyCount), @"cartCount":responseDict[@"cartnum"]}];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.contentView makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
             });
         }
     } failure:^(NSError *error) {
