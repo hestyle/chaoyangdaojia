@@ -9,6 +9,7 @@
 #import "HSProductSpecificationViewController.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -423,6 +424,9 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 #pragma mark - Event
 - (void)dismiss {
+    // 发送完成商品规格选择的通知
+    [[NSNotificationCenter defaultCenter] postNotificationName:kChooseProductSpecificationNotificationKey object:self userInfo:@{@"productId":@(self.productId), @"specificationKey":self.selectSpecificationKey, @"buyCount":@(self.buyCount)}];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

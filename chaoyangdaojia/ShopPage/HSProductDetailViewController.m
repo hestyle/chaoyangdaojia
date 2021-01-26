@@ -13,6 +13,7 @@
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -92,6 +93,9 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     
     self.productId = productId;
     
+    // 注册接收完成商品规格选择的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseProductSpecificationAction:) name:kChooseProductSpecificationNotificationKey object:nil];
+    
     return self;
 }
 
@@ -134,6 +138,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self setTitle:@"商品详情"];
     
     [self stopCarouselAutoChange];
+}
+
+- (void)dealloc {
+    // 注销完成商品规格选择的通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kChooseProductSpecificationNotificationKey object:nil];
 }
 
 #pragma mark - Table view data source
@@ -819,6 +828,17 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)collectionChangeAction {
     // 访问网络请求修改收藏状态
     [self updateCollectionStatusById:self.productId];
+}
+
+#pragma mark - Notification
+- (void)chooseProductSpecificationAction:(NSNotification *)notification {
+    // 更新商品详情页面中选择的商品规格信息
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSString *specificationKey = specificationDataDict[@"specificationKey"];
+    if (specificationKey == nil || [specificationKey isEqualToString:@"no"]) {
+        specificationKey = @"默认规格";
+    }
+    [self.specificationLabel setText:specificationKey];
 }
 
 #pragma mark - Private
