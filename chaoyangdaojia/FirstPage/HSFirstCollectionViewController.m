@@ -17,6 +17,7 @@
 #import "HSTools.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -836,6 +837,7 @@ static const CGFloat mProductCellHeight = 260.f;
                     // 获取需要抖动的图标
                     UIView *cartTabBarItemView = (UIView *)[weakSelf.tabBarController.tabBar.items[3] valueForKey:@"_view"];
                     [HSAddToCartAnimation shakeAnimation:cartTabBarItemView];
+                    [weakSelf getCartProductCount];
                 }];
             });
         }
@@ -1426,6 +1428,26 @@ static const CGFloat mProductCellHeight = 260.f;
         // 设置默认头像
         [self.memberImageView setImage:[UIImage imageNamed:@"noavatar"]];
     }
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 @end

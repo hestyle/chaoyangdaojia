@@ -11,6 +11,7 @@
 #import "HSLoginViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -50,6 +51,15 @@ static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 @implementation HSCartViewController
+
+- (instancetype)init {
+    self = [super init];
+    
+    // 注册接收购物车中商品数量变更的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCartCountAction:) name:kUpdateCartCountNotificationKey object:nil];
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -103,6 +113,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     // 移除tabBarController两侧的按钮
     [self.navigationController.navigationItem setLeftBarButtonItem:nil];
     [self.navigationController.navigationItem setRightBarButtonItem:nil];
+}
+
+- (void)dealloc {
+    // 注销购物车中商品数量变更的通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUpdateCartCountNotificationKey object:nil];
 }
 
 #pragma mark - Table view data source
@@ -410,9 +425,10 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
         });
-        // 获取成功
+        // 删除成功
         if ([responseDict[@"errcode"] isEqual:@(0)]) {
             [weakSelf getCartData];
+            [weakSelf getCartProductCount];
         } else {
             NSLog(@"接口 %@ 返回数据格式错误! responseDict = %@", kDelCartProductUrl, responseDict);
         }
@@ -498,6 +514,20 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 - (void)settlementAction {
     [self.view makeToast:@"点击了结算！" duration:3.f position:CSToastPositionCenter];
+}
+
+- (void)updateCartCountAction:(NSNotification *)notification {
+    // 获取当前购物车中的商品数
+    NSDictionary *specificationDataDict = notification.userInfo;
+    NSInteger cartCount = 0;
+    if (specificationDataDict[@"cartCount"] != nil && ![specificationDataDict[@"cartCount"] isEqual:[NSNull null]]) {
+        cartCount = [specificationDataDict[@"cartCount"] integerValue];
+    }
+    if (cartCount != 0) {
+        [self.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%ld", cartCount]];
+    } else {
+        [self.tabBarItem setBadgeValue:@""];
+    }
 }
 
 #pragma mark - Private
@@ -687,6 +717,26 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     }
     [self.settlementButton setTitle:[NSString stringWithFormat:@"结算(%ld)", self.settlementCount] forState:UIControlStateNormal];
     [self.sumPriceLabel setText:[NSString stringWithFormat:@"￥%0.2f", self.settlementPrice]];
+}
+
+- (void)getCartProductCount {
+    HSNetworkManager *manager = [HSNetworkManager shareManager];
+    __weak __typeof__(self) weakSelf = self;
+    [manager getDataWithUrl:kGetCartProductCountUrl parameters:@{} success:^(NSDictionary *responseDict) {
+        if ([responseDict[@"errcode"] isEqual:@(0)]) {
+            // 发送通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateCartCountNotificationKey object:weakSelf userInfo:@{@"cartCount":responseDict[@"cartnum"]}];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.view makeToast:responseDict[@"msg"] duration:3 position:CSToastPositionCenter];
+            });
+        }
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.view makeToast:@"获取失败，接口请求错误！" duration:3 position:CSToastPositionCenter];
+        });
+        NSLog(@"%@", error);
+    }];
 }
 
 @end
