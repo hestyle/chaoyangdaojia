@@ -47,8 +47,6 @@ static BOOL isHadGotoLoginViewController = NO;
 static const CGFloat mTableViewFooterViewHeight = 45.f;
 
 static const NSInteger mRefreshViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 @implementation HSCartViewController
 
@@ -296,26 +294,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    static BOOL isSetContentInset = NO;
-    // 更新底部吸附footerview
-    if (self.tableView.contentOffset.y >= self.tableView.contentSize.height + mTableViewFooterViewHeight - [UIScreen mainScreen].bounds.size.height - mTableViewBaseContentOffsetY) {
-        if (!isSetContentInset) {
-            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, mTableViewFooterViewHeight, 0)];
-            isSetContentInset = YES;
-        }
-        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentSize.height);
-        }];
-    } else {
-        if (isSetContentInset) {
-            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
-            isSetContentInset = NO;
-        }
-        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY - mTableViewFooterViewHeight);
-        }];
-    }
-    if (scrollView.contentOffset.y <= -mRefreshViewHeight + mTableViewBaseContentOffsetY) {
+    [self updateTableViewFooterViewPosition];
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
@@ -546,7 +526,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.tableView.mas_top);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -602,7 +582,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.tableViewFooterView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(mTableViewFooterViewHeight);
         make.width.mas_equalTo(self.tableView);
-        make.top.mas_equalTo(self.tableView).mas_offset([UIScreen mainScreen].bounds.size.height - mTableViewFooterViewHeight + 3 * mTableViewBaseContentOffsetY);
+        make.top.mas_equalTo(self.tableView).mas_offset(SCREEN_HEIGHT - mTableViewFooterViewHeight + STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
         make.centerX.mas_equalTo(self.tableView);
     }];
     
@@ -694,10 +674,9 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
                 [weakSelf updateTableFooterViewData];
                 // 更新ui
                 [weakSelf.tableView performBatchUpdates:^{
-                    //[weakSelf.loadMoreView setHidden:YES];
                     [weakSelf.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
                 } completion:^(BOOL finished) {
-                    //[weakSelf updateLoadMoreView];
+                    [weakSelf updateTableViewFooterViewPosition];
                 }];
             });
         } else {
@@ -746,6 +725,28 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         });
         NSLog(@"%@", error);
     }];
+}
+
+- (void)updateTableViewFooterViewPosition {
+    static BOOL isSetContentInset = NO;
+    // 更新底部吸附footerView
+    if (self.tableView.contentOffset.y >= self.tableView.contentSize.height + mTableViewFooterViewHeight - SCREEN_HEIGHT + TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN) {
+        if (!isSetContentInset) {
+            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, mTableViewFooterViewHeight, 0)];
+            isSetContentInset = YES;
+        }
+        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentSize.height);
+        }];
+    } else {
+        if (isSetContentInset) {
+            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+            isSetContentInset = NO;
+        }
+        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + SCREEN_HEIGHT - TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN - mTableViewFooterViewHeight);
+        }];
+    }
 }
 
 @end
