@@ -113,6 +113,8 @@ static const CGFloat mProductCellHeight = 260.f;
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseHeaderIdentifier];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseCellIdentifier];
     
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"main_navigationbar_background"] forBarMetrics:UIBarMetricsDefault];
+    
     self.nextProductPage = 0;
     self.bannerArray = [NSMutableArray new];
     self.categoryArray = [NSMutableArray new];
@@ -126,7 +128,7 @@ static const CGFloat mProductCellHeight = 260.f;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tabBarController setTitle:@"首页"];
+    [self.navigationItem setTitle:@"首页"];
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationController.view addSubview:self.titleView];
 
@@ -651,18 +653,22 @@ static const CGFloat mProductCellHeight = 260.f;
     if (indexPath.section == 0) {
         NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
         HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.section == 1) {
         NSDictionary *productDataDict = self.qiangGouArray[indexPath.row];
         HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.section == 2) {
         NSDictionary *productDataDict = self.pinTuanArray[indexPath.row];
         HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.section == 3) {
         NSDictionary *productDataDict = self.productArray[indexPath.row];
         HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"id"] integerValue]];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
@@ -787,6 +793,7 @@ static const CGFloat mProductCellHeight = 260.f;
     NSInteger bannerId = [((NSDictionary *)self.bannerArray[currentPage])[@"id"] integerValue];
     HSBannerDetailViewController *controller = [HSBannerDetailViewController new];
     [controller setBannerId:bannerId];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -796,16 +803,19 @@ static const CGFloat mProductCellHeight = 260.f;
 
 - (void)gotoQiangGouDetailAction {
     HSQiangGouTableViewController *controller = [HSQiangGouTableViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoPinTuanDetailAction {
     HSPinTuanTableViewController *controller = [HSPinTuanTableViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoMemberWalletAction {
     HSMemberWalletViewController *controller = [HSMemberWalletViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -1409,8 +1419,9 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)sendDataToSortViewController {
-    HSSortCollectionViewController *controller = self.tabBarController.childViewControllers[1];
-    [controller setCategoryArray:self.categoryArray.mutableCopy];
+    UINavigationController *navigationController = self.tabBarController.childViewControllers[1];
+    HSSortCollectionViewController *sortController = navigationController.childViewControllers[0];
+    [sortController setCategoryArray:self.categoryArray.mutableCopy];
 }
 
 - (void)memberInfoViewSetData {

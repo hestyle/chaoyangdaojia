@@ -43,14 +43,16 @@ static const NSInteger mTabBarHeight = 64;
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
-    //[self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 64, 0)];
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"common_background"] forBarMetrics:UIBarMetricsDefault];
+    
     self.shopArray = [NSMutableArray new];
     [self initView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tabBarController setTitle:@"商家店铺"];
+    [self.navigationItem setTitle:@"商家店铺"];
     [self.navigationController setNavigationBarHidden:NO];
     
     [self.tableView setFrame:self.view.frame];
@@ -164,6 +166,7 @@ static const NSInteger mTabBarHeight = 64;
     NSInteger shopId = [shopDict[@"id"] integerValue];
     HSShopDetailCollectionViewController *controller = [HSShopDetailCollectionViewController new];
     [controller setShopId:shopId];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

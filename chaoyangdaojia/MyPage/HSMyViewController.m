@@ -83,6 +83,8 @@ static BOOL isHadGotoLoginViewController = NO;
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"common_background"] forBarMetrics:UIBarMetricsDefault];
+    
     // 绘制view
     [self initView];
 }
@@ -90,10 +92,10 @@ static BOOL isHadGotoLoginViewController = NO;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     // 显示两侧的tabBar按钮
-    [self.tabBarController setTitle:@"我的"];
+    [self.navigationItem setTitle:@"我的"];
     [self.navigationController setNavigationBarHidden:NO];
-    [self.tabBarController.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
-    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
+    [self.navigationItem setLeftBarButtonItem:self.leftSettingButtonItem];
+    [self.navigationItem setRightBarButtonItem:self.rightMessageButtonItem];
     
     [self getUserInfo];
 }
@@ -101,13 +103,13 @@ static BOOL isHadGotoLoginViewController = NO;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     // 移除tabBarController两侧的按钮
-    [self.tabBarController.navigationItem setLeftBarButtonItem:nil];
-    [self.tabBarController.navigationItem setRightBarButtonItem:nil];
+    [self.navigationItem setLeftBarButtonItem:nil];
+    [self.navigationItem setRightBarButtonItem:nil];
 }
 
 #pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (scrollView.contentOffset.y <= (mTableViewBaseContentOffsetY - mRefreshViewHeight)) {
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
@@ -142,16 +144,19 @@ static BOOL isHadGotoLoginViewController = NO;
 #pragma mark - Event
 - (void)gotoMyDetail {
     HSMyDetailTableViewController *controller = [[HSMyDetailTableViewController alloc] init];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoMemberPoint {
     HSMemberPointViewController *controller = [HSMemberPointViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoSettingsAction {
     HSSettingsTableViewController *controller = [HSSettingsTableViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -161,6 +166,7 @@ static BOOL isHadGotoLoginViewController = NO;
 
 - (void)gotoCollectionAction {
     HSProductCollectionViewController *controller = [[HSProductCollectionViewController alloc] init];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 #pragma mark - Private
@@ -219,8 +225,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.contentScrollView setDelegate:self];
     [self.contentScrollView setShowsVerticalScrollIndicator:NO];
     [self.contentScrollView setBackgroundColor:[UIColor colorWithWhite:0.85 alpha:1.0]];
-    [self.contentScrollView setContentSize:CGSizeMake(0, 80 + 122.5 + 500 + 15 + 100)];
-    [self.contentScrollView setContentOffset:CGPointMake(0, mTableViewBaseContentOffsetY)];
+    [self.contentScrollView setContentSize:CGSizeMake(0, 80 + 122.5 + 500 + 15 + 400)];
     [self.view addSubview:self.contentScrollView];
     
     self.refreshView = [UIView new];
