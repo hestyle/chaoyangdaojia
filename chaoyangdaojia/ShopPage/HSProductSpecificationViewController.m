@@ -136,7 +136,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 
 #pragma mark - UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    return CGSizeMake([UIScreen mainScreen].bounds.size.width, 25);
+    return CGSizeMake(SCREEN_WIDTH, 25);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {

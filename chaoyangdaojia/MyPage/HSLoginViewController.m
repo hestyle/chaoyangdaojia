@@ -38,7 +38,6 @@
     [self initView];
 }
 
-
 #pragma mark - Private
 - (void)initView {
     self.logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];

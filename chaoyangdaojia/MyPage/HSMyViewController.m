@@ -14,6 +14,7 @@
 #import "HSProductCollectionViewController.h"
 #import "HSNetwork.h"
 #import "HSAccount.h"
+#import "HSCommon.h"
 #import <Toast/Toast.h>
 #import <Masonry/Masonry.h>
 
@@ -71,8 +72,6 @@
 @end
 
 static const NSInteger mRefreshViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 /* 当前页面只有登录了才能显示，没登录就跳转到登录，需要防止从登录页面（未登录）状态下返回此页面 */
 static BOOL isHadGotoLoginViewController = NO;
 
@@ -234,7 +233,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.contentScrollView.mas_top);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -295,7 +294,7 @@ static BOOL isHadGotoLoginViewController = NO;
     [self.accountInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.refreshView.mas_bottom);
         make.centerX.mas_equalTo(self.contentScrollView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(80);
     }];
     // 添加点击事件
@@ -366,7 +365,7 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)initOrderView {
-    CGFloat mainWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat mainWidth = SCREEN_WIDTH;
     // 订单信息
     self.orderInfoView = [UIView new];
     [self.orderInfoView setBackgroundColor:[UIColor whiteColor]];
@@ -492,7 +491,7 @@ static BOOL isHadGotoLoginViewController = NO;
 }
 
 - (void)initMyFunctionView {
-    CGFloat mainWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat mainWidth = SCREEN_WIDTH;
     UIImage *gotoDetailImage = [UIImage imageNamed:@"goto_detail"];
     
     // 我的收藏

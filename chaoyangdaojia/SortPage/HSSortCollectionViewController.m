@@ -34,7 +34,6 @@ static const CGFloat mCategoryCellHeight = 90.f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self setEdgesForExtendedLayout:UIRectEdgeBottom];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.collectionView setBackgroundColor:[UIColor whiteColor]];

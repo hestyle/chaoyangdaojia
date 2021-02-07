@@ -19,6 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self setTitle:@"钱包明细"];
     [self.navigationController setNavigationBarHidden:NO];

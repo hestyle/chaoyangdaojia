@@ -9,6 +9,7 @@
 #import "HSPinTuanTableViewController.h"
 #import "HSProductDetailViewController.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -32,8 +33,6 @@ static const NSInteger mProductPerPage = 10;
 static const CGFloat mCellHeight = 370.f;
 static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mLoadMoreViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 static NSString * const reuseCellIdentifier = @"reusableCell";
 
@@ -41,6 +40,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 
@@ -247,12 +247,17 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.y <= -mRefreshViewHeight + mTableViewBaseContentOffsetY) {
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
         self.refreshView.tag = -1;
-    } else if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - ([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY)) {
+    } else {
+        // 下拉不足触发刷新
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+    if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - SCREEN_HEIGHT) {
         if (self.loadMoreView.hidden) {
             return;
         }
@@ -265,10 +270,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
         }
         self.loadMoreView.tag = 1;
     } else {
-        // 上拉不足触发加载、下拉不足触发刷新
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-        
+        // 上拉不足触发加载
         self.loadMoreView.tag = 0;
         if (self.nextProductPage != 0) {
             [self.loadMoreLabel setText:@"上拉加载更多"];
@@ -317,7 +319,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.tableView.mas_top);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -360,11 +362,11 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
     [self.loadMoreView.layer setBorderWidth:0.5];
     [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [self.tableView addSubview:self.loadMoreView];
-    self.mloadMoreViewOffset = [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY;
+    self.mloadMoreViewOffset = SCREEN_HEIGHT;
     [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tableView);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mLoadMoreViewHeight);
     }];
     self.loadMoreLabel = [UILabel new];
@@ -408,8 +410,6 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
                 } completion:^(BOOL finished) {
                     [weakSelf updateLoadMoreView];
                 }];
-                NSLog(@"[UIScreen mainScreen].bounds.size.height = %f", [UIScreen mainScreen].bounds.size.height);
-                NSLog(@"view.bounds.size.height = %f", weakSelf.view.bounds.size.height);
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{

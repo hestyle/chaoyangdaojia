@@ -59,8 +59,6 @@ static const CGFloat mCommentCellHeight = 160;
 
 static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mLoadMoreViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 static NSString * const reuseCellIdentifier = @"reusableCell";
 static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
@@ -591,7 +589,12 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
             self.refreshLabel.text = @"松开刷新";
         }
         self.refreshView.tag = -1;
-    } else if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - self.view.bounds.size.height) {
+    } else {
+        // 下拉不足触发刷新
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+    if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - self.view.bounds.size.height) {
         if (self.loadMoreView.tag == 0) {
             if (self.selectIndex == 0 && self.nextShopProductPage != 0) {
                 [self.loadMoreLabel setText:@"松开加载"];
@@ -603,10 +606,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
         }
         self.loadMoreView.tag = 1;
     } else {
-        // 上拉不足触发加载、下拉不足触发刷新
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-        
+        // 上拉不足触发加载        
         self.loadMoreView.tag = 0;
         if (self.selectIndex == 0 && self.nextShopProductPage != 0) {
             [self.loadMoreLabel setText:@"上拉加载更多"];
@@ -704,7 +704,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
     [self.loadMoreView.layer setBorderWidth:0.5];
     [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [self.collectionView addSubview:self.loadMoreView];
-    self.mloadMoreViewOffset = [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY;
+    self.mloadMoreViewOffset = SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT;
     [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView).mas_offset(self.mloadMoreViewOffset);
         make.centerX.mas_equalTo(self.collectionView.mas_centerX);
@@ -850,7 +850,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
                 } else {
                     collectionViewHeight += cellRow * mProductCellHeight + (cellRow - 1) * 20.f;
                 }
-                if (cellRow != 0 && collectionViewHeight >= weakSelf.view.bounds.size.height + mTableViewBaseContentOffsetY - mHeaderHeight) {
+                if (cellRow != 0 && collectionViewHeight >= SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - mHeaderHeight) {
                     // collectionView的contentSize.height > 屏幕高度
                     weakSelf.mloadMoreViewOffset = collectionViewHeight + mHeaderHeight;
                     [weakSelf.loadMoreView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -861,7 +861,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
                     }];
                 } else {
                     // collectionView内容过少
-                    weakSelf.mloadMoreViewOffset = [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY;
+                    weakSelf.mloadMoreViewOffset = SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT;
                     [weakSelf.loadMoreView mas_remakeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(weakSelf.collectionView).mas_offset(weakSelf.mloadMoreViewOffset);
                         make.centerX.mas_equalTo(weakSelf.collectionView.mas_centerX);
@@ -921,7 +921,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
                 } else {
                     collectionViewHeight += [weakSelf.shopCommentArray count] * mCommentCellHeight + ([weakSelf.shopCommentArray count] - 1) * 20.f;
                 }
-                if (collectionViewHeight >= weakSelf.view.bounds.size.height + mTableViewBaseContentOffsetY - mHeaderHeight) {
+                if (collectionViewHeight >= SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - mHeaderHeight) {
                     // collectionView的contentSize.height > 屏幕高度
                     weakSelf.mloadMoreViewOffset = collectionViewHeight + mHeaderHeight;
                     [weakSelf.loadMoreView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -932,7 +932,7 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
                     }];
                 } else {
                     // collectionView内容过少
-                    weakSelf.mloadMoreViewOffset = [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY;
+                    weakSelf.mloadMoreViewOffset = SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT;
                     [weakSelf.loadMoreView mas_remakeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(weakSelf.collectionView).mas_offset(weakSelf.mloadMoreViewOffset);
                         make.centerX.mas_equalTo(weakSelf.collectionView.mas_centerX);
