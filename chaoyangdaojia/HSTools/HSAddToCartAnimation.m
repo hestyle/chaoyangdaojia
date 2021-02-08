@@ -7,6 +7,7 @@
 //
 
 #import "HSAddToCartAnimation.h"
+#import "HSCommon.h"
 
 @interface HSAddToCartAnimation ()
 

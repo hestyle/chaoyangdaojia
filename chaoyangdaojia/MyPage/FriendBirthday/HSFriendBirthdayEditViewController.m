@@ -8,6 +8,7 @@
 
 #import "HSFriendBirthdayEditViewController.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 

@@ -74,8 +74,6 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 static const NSInteger mProductPerPage = 10;
 static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mLoadMoreViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 static const CGFloat mCategorySectionHeaderHeight = 160.f;
 static const CGFloat mQiangGouSectionHeaderHeight = 60.f;
@@ -113,6 +111,8 @@ static const CGFloat mProductCellHeight = 260.f;
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseHeaderIdentifier];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseCellIdentifier];
     
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"main_navigationbar_background"] forBarMetrics:UIBarMetricsDefault];
+    
     self.nextProductPage = 0;
     self.bannerArray = [NSMutableArray new];
     self.categoryArray = [NSMutableArray new];
@@ -126,7 +126,7 @@ static const CGFloat mProductCellHeight = 260.f;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tabBarController setTitle:@"首页"];
+    [self.navigationItem setTitle:@"首页"];
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationController.view addSubview:self.titleView];
 
@@ -148,7 +148,7 @@ static const CGFloat mProductCellHeight = 260.f;
     if (section == 0) {
         HSUserAccountManger *manager = [HSUserAccountManger shareManager];
         if (manager.isLogin) {
-            CGSize headerSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, mCategorySectionHeaderHeight + mMemberInfoViewHeight + 10);
+            CGSize headerSize = CGSizeMake(SCREEN_WIDTH, mCategorySectionHeaderHeight + mMemberInfoViewHeight + 10);
             [self.categorySectionHeaderView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.size.mas_equalTo(headerSize);
             }];
@@ -157,14 +157,14 @@ static const CGFloat mProductCellHeight = 260.f;
             return headerSize;
         } else {
             [self.memberInfoView setHidden:YES];
-            return CGSizeMake([UIScreen mainScreen].bounds.size.width, mCategorySectionHeaderHeight);
+            return CGSizeMake(SCREEN_WIDTH, mCategorySectionHeaderHeight);
         }
     } else if (section == 1) {
-        return CGSizeMake([UIScreen mainScreen].bounds.size.width, mQiangGouSectionHeaderHeight);
+        return CGSizeMake(SCREEN_WIDTH, mQiangGouSectionHeaderHeight);
     } else if (section == 2) {
-        return CGSizeMake([UIScreen mainScreen].bounds.size.width, mPinTuanSectionHeaderHeight);
+        return CGSizeMake(SCREEN_WIDTH, mPinTuanSectionHeaderHeight);
     } else if (section == 3) {
-        return CGSizeMake([UIScreen mainScreen].bounds.size.width, mProductSectionHeaderHeight);
+        return CGSizeMake(SCREEN_WIDTH, mProductSectionHeaderHeight);
     }
     return CGSizeZero;
 }
@@ -628,7 +628,7 @@ static const CGFloat mProductCellHeight = 260.f;
     } else if (indexPath.section == 1) {
         return CGSizeMake(mQiangGouCellWidth, mQiangGouCellHeight);
     } else if (indexPath.section == 2) {
-        return CGSizeMake([UIScreen mainScreen].bounds.size.width - 40, mPinTuanCellHeight);
+        return CGSizeMake(SCREEN_WIDTH - 40, mPinTuanCellHeight);
     } else if (indexPath.section == 3) {
         return CGSizeMake(mProductCellWidth, mProductCellHeight);
     }
@@ -651,18 +651,22 @@ static const CGFloat mProductCellHeight = 260.f;
     if (indexPath.section == 0) {
         NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
         HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.section == 1) {
         NSDictionary *productDataDict = self.qiangGouArray[indexPath.row];
         HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.section == 2) {
         NSDictionary *productDataDict = self.pinTuanArray[indexPath.row];
         HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.section == 3) {
         NSDictionary *productDataDict = self.productArray[indexPath.row];
         HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"id"] integerValue]];
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
@@ -701,19 +705,24 @@ static const CGFloat mProductCellHeight = 260.f;
     if (scrollView != self.collectionView) {
         return;
     }
-    if (self.gotoTopImageView.hidden && scrollView.contentOffset.y >= [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY) {
+    if (self.gotoTopImageView.hidden && scrollView.contentOffset.y >= SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN) {
         // 滚动超过一屏，则显示gotoTopImageView
         [self.gotoTopImageView setHidden:NO];
-    } else if (!self.gotoTopImageView.hidden && scrollView.contentOffset.y < [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY) {
+    } else if (!self.gotoTopImageView.hidden && scrollView.contentOffset.y < SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN) {
         // 否则隐藏
         [self.gotoTopImageView setHidden:YES];
     }
-    if (scrollView.contentOffset.y <= -mRefreshViewHeight + mTableViewBaseContentOffsetY) {
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
         self.refreshView.tag = -1;
-    } else if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - ([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY)) {
+    } else {
+        // 下拉不足触发刷新
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+    if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - SCREEN_HEIGHT + STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT + TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN) {
         if (self.loadMoreView.hidden) {
             return;
         }
@@ -726,10 +735,7 @@ static const CGFloat mProductCellHeight = 260.f;
         }
         self.loadMoreView.tag = 1;
     } else {
-        // 上拉不足触发加载、下拉不足触发刷新
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-        
+        // 上拉不足触发加载
         self.loadMoreView.tag = 0;
         if (self.nextProductPage != 0) {
             [self.loadMoreLabel setText:@"上拉加载更多"];
@@ -779,7 +785,7 @@ static const CGFloat mProductCellHeight = 260.f;
 
 - (void)gotoTopAction {
     [self.gotoTopImageView setHidden:YES];
-    [self.collectionView setContentOffset:CGPointMake(0, mTableViewBaseContentOffsetY) animated:YES];
+    [self.collectionView setContentOffset:CGPointMake(0, 0) animated:YES];
 }
 
 - (void)gotoCarouselImageDetailAction {
@@ -787,6 +793,7 @@ static const CGFloat mProductCellHeight = 260.f;
     NSInteger bannerId = [((NSDictionary *)self.bannerArray[currentPage])[@"id"] integerValue];
     HSBannerDetailViewController *controller = [HSBannerDetailViewController new];
     [controller setBannerId:bannerId];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -796,16 +803,19 @@ static const CGFloat mProductCellHeight = 260.f;
 
 - (void)gotoQiangGouDetailAction {
     HSQiangGouTableViewController *controller = [HSQiangGouTableViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoPinTuanDetailAction {
     HSPinTuanTableViewController *controller = [HSPinTuanTableViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)gotoMemberWalletAction {
     HSMemberWalletViewController *controller = [HSMemberWalletViewController new];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -858,7 +868,7 @@ static const CGFloat mProductCellHeight = 260.f;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.collectionView.mas_top);
         make.centerX.mas_equalTo(self.collectionView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -901,11 +911,11 @@ static const CGFloat mProductCellHeight = 260.f;
     [self.loadMoreView.layer setBorderWidth:0.5];
     [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [self.collectionView addSubview:self.loadMoreView];
-    self.mloadMoreViewOffset = [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY;
+    self.mloadMoreViewOffset = SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN;
     [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView).mas_offset(self.mloadMoreViewOffset);
         make.centerX.mas_equalTo(self.collectionView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mLoadMoreViewHeight);
     }];
     self.loadMoreLabel = [UILabel new];
@@ -933,7 +943,7 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)initTitleView {
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(20, 46, [UIScreen mainScreen].bounds.size.width - 40, 40)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(20, 46, SCREEN_WIDTH - 40, 40)];
     UIImageView *messageImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"app_message"]];
     [self.titleView addSubview:messageImageView];
     [messageImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -992,11 +1002,11 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)initCategorySectionHeaderView {
-    self.categorySectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, mCategorySectionHeaderHeight)];
+    self.categorySectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, mCategorySectionHeaderHeight)];
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"main_navigationbar_background"]];
     [self.categorySectionHeaderView addSubview:backgroundImageView];
     [backgroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake([UIScreen mainScreen].bounds.size.width, 180));
+        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, 180));
         make.top.mas_equalTo(self.categorySectionHeaderView).mas_offset(-mRefreshViewHeight);
         make.left.mas_equalTo(self.categorySectionHeaderView);
     }];
@@ -1014,7 +1024,7 @@ static const CGFloat mProductCellHeight = 260.f;
     [self.carouselScrollView setPagingEnabled:YES];
     [self.carouselScrollView setBackgroundColor:[UIColor grayColor]];
     [self.carouselScrollView setShowsHorizontalScrollIndicator:NO];
-    [self.carouselScrollView setContentSize:CGSizeMake(([UIScreen mainScreen].bounds.size.width - 40) * 3, 0)];
+    [self.carouselScrollView setContentSize:CGSizeMake((SCREEN_WIDTH - 40) * 3, 0)];
     [self.carouselView addSubview:self.carouselScrollView];
     [self.carouselScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(self.carouselView);
@@ -1199,7 +1209,7 @@ static const CGFloat mProductCellHeight = 260.f;
                 [weakSelf.qiangGouArray addObjectsFromArray:responseDict[@"qianggou"]];
             }
             // 抢购这个section只显示一列，所以需要计算一行屏幕能显示cell数量，20是边距
-            mQiangGouCellCount = ([UIScreen mainScreen].bounds.size.width - 20) / (mQiangGouCellWidth + 20);
+            mQiangGouCellCount = (SCREEN_WIDTH - 20) / (mQiangGouCellWidth + 20);
             
             [weakSelf.pinTuanArray removeAllObjects];
             if (![responseDict[@"pintuan"] isEqual:[NSNull null]]) {
@@ -1409,8 +1419,9 @@ static const CGFloat mProductCellHeight = 260.f;
 }
 
 - (void)sendDataToSortViewController {
-    HSSortCollectionViewController *controller = self.tabBarController.childViewControllers[1];
-    [controller setCategoryArray:self.categoryArray.mutableCopy];
+    UINavigationController *navigationController = self.tabBarController.childViewControllers[1];
+    HSSortCollectionViewController *sortController = navigationController.childViewControllers[0];
+    [sortController setCategoryArray:self.categoryArray.mutableCopy];
 }
 
 - (void)memberInfoViewSetData {

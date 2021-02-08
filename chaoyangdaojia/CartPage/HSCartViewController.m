@@ -47,8 +47,6 @@ static BOOL isHadGotoLoginViewController = NO;
 static const CGFloat mTableViewFooterViewHeight = 45.f;
 
 static const NSInteger mRefreshViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 @implementation HSCartViewController
 
@@ -70,6 +68,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.tableView setAllowsMultipleSelectionDuringEditing:YES];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:reuseCellIdentifier];
     
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"common_background"] forBarMetrics:UIBarMetricsDefault];
+    
     self.hadSelectedCount = 0;
     self.settlementCount = 0;
     self.settlementPrice = 0.f;
@@ -84,9 +84,9 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     // 显示两侧的tabBar按钮
-    [self.tabBarController setTitle:@"购物车"];
+    [self.navigationItem setTitle:@"购物车"];
     [self.navigationController setNavigationBarHidden:NO];
-    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightDeleteButtonItem];
+    [self.navigationItem setRightBarButtonItem:self.rightDeleteButtonItem];
     
     if ([self.productArray count] == 0) {
         HSUserAccountManger *userAccoutManager = [HSUserAccountManger shareManager];
@@ -95,6 +95,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
             if (!isHadGotoLoginViewController) {
                 // 之前未到登录页面，则直接跳转到登录页面
                 HSLoginViewController *loginViewController = [HSLoginViewController new];
+                [loginViewController setHidesBottomBarWhenPushed:YES];
                 [self.navigationController pushViewController:loginViewController animated:YES];
                 isHadGotoLoginViewController = YES;
             } else {
@@ -118,8 +119,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     // 移除tabBarController两侧的按钮
-    [self.navigationController.navigationItem setLeftBarButtonItem:nil];
-    [self.navigationController.navigationItem setRightBarButtonItem:nil];
+    [self.navigationItem setLeftBarButtonItem:nil];
+    [self.navigationItem setRightBarButtonItem:nil];
 }
 
 - (void)dealloc {
@@ -296,26 +297,8 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    static BOOL isSetContentInset = NO;
-    // 更新底部吸附footerview
-    if (self.tableView.contentOffset.y >= self.tableView.contentSize.height + mTableViewFooterViewHeight - [UIScreen mainScreen].bounds.size.height - mTableViewBaseContentOffsetY) {
-        if (!isSetContentInset) {
-            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, mTableViewFooterViewHeight, 0)];
-            isSetContentInset = YES;
-        }
-        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentSize.height);
-        }];
-    } else {
-        if (isSetContentInset) {
-            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
-            isSetContentInset = NO;
-        }
-        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY - mTableViewFooterViewHeight);
-        }];
-    }
-    if (scrollView.contentOffset.y <= -mRefreshViewHeight + mTableViewBaseContentOffsetY) {
+    [self updateTableViewFooterViewPosition];
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
@@ -410,6 +393,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     NSInteger index = sender.view.tag;
     NSDictionary *productDataDict = self.productArray[index];
     HSProductDetailViewController *controller = [[HSProductDetailViewController alloc] initWithProductId:[productDataDict[@"sid"] integerValue]];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -546,7 +530,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.tableView.mas_top);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -602,7 +586,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.tableViewFooterView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(mTableViewFooterViewHeight);
         make.width.mas_equalTo(self.tableView);
-        make.top.mas_equalTo(self.tableView).mas_offset([UIScreen mainScreen].bounds.size.height - mTableViewFooterViewHeight + 3 * mTableViewBaseContentOffsetY);
+        make.top.mas_equalTo(self.tableView).mas_offset(SCREEN_HEIGHT - mTableViewFooterViewHeight + STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
         make.centerX.mas_equalTo(self.tableView);
     }];
     
@@ -694,10 +678,9 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
                 [weakSelf updateTableFooterViewData];
                 // 更新ui
                 [weakSelf.tableView performBatchUpdates:^{
-                    //[weakSelf.loadMoreView setHidden:YES];
                     [weakSelf.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
                 } completion:^(BOOL finished) {
-                    //[weakSelf updateLoadMoreView];
+                    [weakSelf updateTableViewFooterViewPosition];
                 }];
             });
         } else {
@@ -746,6 +729,39 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         });
         NSLog(@"%@", error);
     }];
+}
+
+- (void)updateTableViewFooterViewPosition {
+    static BOOL isSetContentInset = NO;
+    // 更新底部吸附footerView
+    // maxBottomOffsetY计算滑动到tableView底部，tableFooterView的OffsetY
+    CGFloat maxBottomOffsetY = self.tableView.contentSize.height + mTableViewFooterViewHeight - SCREEN_HEIGHT + STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT + TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN;
+    if (self.tabBarController.tabBar.hidden) {
+        // 默认tabBar是显示状态
+        maxBottomOffsetY -= TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN;
+    }
+    if (self.tableView.contentOffset.y >= maxBottomOffsetY) {
+        if (!isSetContentInset) {
+            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, mTableViewFooterViewHeight, 0)];
+            isSetContentInset = YES;
+        }
+        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentSize.height);
+        }];
+    } else {
+        if (isSetContentInset) {
+            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+            isSetContentInset = NO;
+        }
+        [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
+            if (self.tabBarController.tabBar.hidden) {
+                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - mTableViewFooterViewHeight);
+            } else {
+                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN - mTableViewFooterViewHeight);
+            }
+            
+        }];
+    }
 }
 
 @end

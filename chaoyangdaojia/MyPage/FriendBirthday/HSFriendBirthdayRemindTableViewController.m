@@ -9,6 +9,7 @@
 #import "HSFriendBirthdayRemindTableViewController.h"
 #import "HSFriendBirthdayEditViewController.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -34,14 +35,13 @@ static const NSInteger mPerPage = 10;
 static const NSInteger mHeightForRow = 50;
 static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mLoadMoreViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 
 @implementation HSFriendBirthdayRemindTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
@@ -189,17 +189,22 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 #pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGFloat loadMoreOffset = mTableViewBaseContentOffsetY + mLoadMoreViewHeight;
-    if ([self.friendBirthdayArray count] * mHeightForRow > self.view.bounds.size.height + mTableViewBaseContentOffsetY) {
+    CGFloat loadMoreOffset = mLoadMoreViewHeight;
+    if ([self.friendBirthdayArray count] * mHeightForRow > SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) {
         // tableView的contentheight超过了navigationBar下方到屏幕底部的高度
-        loadMoreOffset += [self.friendBirthdayArray count] * mHeightForRow - (self.view.bounds.size.height + mTableViewBaseContentOffsetY);
+        loadMoreOffset += [self.friendBirthdayArray count] * mHeightForRow - (SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
     }
-    if (scrollView.contentOffset.y <= (mTableViewBaseContentOffsetY - mRefreshViewHeight)) {
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
         self.refreshView.tag = -1;
-    } else if (scrollView.contentOffset.y >= loadMoreOffset) {
+    } else {
+        // 下拉不足触发刷新
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+    if (scrollView.contentOffset.y >= loadMoreOffset) {
         if (self.loadMoreView.tag == 0) {
             if (self.nextLoadPage != 0) {
                 [self.loadMoreLabel setText:@"松开加载"];
@@ -209,10 +214,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         }
         self.loadMoreView.tag = 1;
     } else {
-        // 上拉不足触发加载、下拉不足触发刷新
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-        
+        // 上拉不足触发加载
         self.loadMoreView.tag = 0;
         if (self.nextLoadPage != 0) {
             [self.loadMoreLabel setText:@"上拉加载更多"];
@@ -259,7 +261,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tableView.mas_top).with.offset(-mRefreshViewHeight);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -303,9 +305,9 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [self.tableView addSubview:self.loadMoreView];
     [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.tableView).mas_offset([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY);
+        make.top.mas_equalTo(self.tableView).mas_offset(SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mLoadMoreViewHeight);
     }];
     self.loadMoreLabel = [UILabel new];
@@ -343,22 +345,20 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 更新ui
                 [weakSelf.tableView reloadData];
-                NSLog(@"[UIScreen mainScreen].bounds.size.height = %f", [UIScreen mainScreen].bounds.size.height);
-                NSLog(@"view.bounds.size.height = %f", weakSelf.view.bounds.size.height);
-                if ([weakSelf.friendBirthdayArray count] * mHeightForRow >= weakSelf.view.bounds.size.height + mTableViewBaseContentOffsetY) {
+                if ([weakSelf.friendBirthdayArray count] * mHeightForRow >= SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) {
                     // tableView的contentSize.height > 屏幕高度
                     [weakSelf.loadMoreView mas_updateConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo([weakSelf.friendBirthdayArray count] * mHeightForRow);
                         make.centerX.mas_equalTo(weakSelf.tableView.mas_centerX);
-                        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+                        make.width.mas_equalTo(SCREEN_WIDTH);
                         make.height.mas_equalTo(mLoadMoreViewHeight);
                     }];
                 } else {
                     // tableView内容过少
                     [weakSelf.loadMoreView mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.top.mas_equalTo(weakSelf.tableView).mas_offset([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY);
+                        make.top.mas_equalTo(weakSelf.tableView).mas_offset(SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
                         make.centerX.mas_equalTo(weakSelf.tableView.mas_centerX);
-                        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+                        make.width.mas_equalTo(SCREEN_WIDTH);
                         make.height.mas_equalTo(mLoadMoreViewHeight);
                     }];
                 }

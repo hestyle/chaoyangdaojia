@@ -10,6 +10,7 @@
 #import "HSCommentTableViewController.h"
 #import "HSProductSpecificationViewController.h"
 #import "HSAlertViewController.h"
+#import "HSCartViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
@@ -87,8 +88,6 @@ static const CGFloat mSectionFooterHeight = 8.f;
 static const CGFloat mTableViewFooterHeight = 80.f;
 
 static const NSInteger mRefreshViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 - (instancetype)initWithProductId:(NSInteger)productId {
     self = [super init];
@@ -740,7 +739,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     static BOOL isSetContentInset = NO;
     if (scrollView == self.tableView) {
         // 更新底部吸附footerview
-        if (self.tableView.contentOffset.y >= self.tableView.contentSize.height + mTableViewFooterHeight - [UIScreen mainScreen].bounds.size.height - mTableViewBaseContentOffsetY) {
+        if (self.tableView.contentOffset.y >= self.tableView.contentSize.height + mTableViewFooterHeight - (SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT)) {
             if (!isSetContentInset) {
                 [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, mTableViewFooterHeight, 0)];
                 isSetContentInset = YES;
@@ -754,7 +753,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
                 isSetContentInset = NO;
             }
             [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY - mTableViewFooterHeight);
+                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + (SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) - mTableViewFooterHeight);
             }];
         }
         if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
@@ -846,6 +845,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self updateCollectionStatusById:self.productId];
 }
 
+- (void)gotoCartAction {
+    HSCartViewController *controller = [HSCartViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 #pragma mark - Notification
 - (void)chooseProductSpecificationAction:(NSNotification *)notification {
     // 更新商品详情页面中选择的商品规格信息
@@ -912,7 +916,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tableView.mas_top).with.offset(-mRefreshViewHeight);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -974,7 +978,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)initProductInfoSectionHeaderView {
-    self.productInfoSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, mProductInfoSectionHeaderHeight)];
+    self.productInfoSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, mProductInfoSectionHeaderHeight)];
     self.carouselView = [UIView new];
     [self.carouselView setBackgroundColor:[UIColor whiteColor]];
     [self.productInfoSectionHeaderView addSubview:self.carouselView];
@@ -987,7 +991,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.carouselScrollView setPagingEnabled:YES];
     [self.carouselScrollView setBackgroundColor:[UIColor grayColor]];
     [self.carouselScrollView setShowsHorizontalScrollIndicator:NO];
-    [self.carouselScrollView setContentSize:CGSizeMake(([UIScreen mainScreen].bounds.size.width - 40) * 3, 0)];
+    [self.carouselScrollView setContentSize:CGSizeMake((SCREEN_WIDTH - 40) * 3, 0)];
     [self.carouselView addSubview:self.carouselScrollView];
     [self.carouselScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(self.carouselView);
@@ -1031,7 +1035,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)initSpecificationSectionHeaerView {
-    self.specificationInfoSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, mSpecificationInfoSectionHeaderHeight)];
+    self.specificationInfoSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, mSpecificationInfoSectionHeaderHeight)];
     [self.specificationInfoSectionHeaderView setBackgroundColor:[UIColor whiteColor]];
     UILabel *specificationTitleLabel = [UILabel new];
     [specificationTitleLabel setText:@"规格"];
@@ -1068,7 +1072,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)initCommentSectionHeaderView {
-    self.commentSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, mCommentInfoSectionHeaderHeight)];
+    self.commentSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, mCommentInfoSectionHeaderHeight)];
     [self.commentSectionHeaderView setBackgroundColor:[UIColor whiteColor]];
     self.commentTitleLabel = [UILabel new];
     [self.commentTitleLabel setText:@"用户评价"];
@@ -1101,7 +1105,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)initProductDecriptionSectionHeaderView {
-    self.productDecriptionSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, mProductInfoSectionHeaderHeight)];
+    self.productDecriptionSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, mProductInfoSectionHeaderHeight)];
     [self.productDecriptionSectionHeaderView setBackgroundColor:[UIColor whiteColor]];
     UILabel *productDecriptionTitleLabel = [UILabel new];
     [productDecriptionTitleLabel setText:@"商品详情"];
@@ -1126,7 +1130,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
 }
 
 - (void)initSuyuanInfoSectionHeaderView {
-    self.suyuanInfoSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, mSuyuanInfoSectionHeaderHeight)];
+    self.suyuanInfoSectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, mSuyuanInfoSectionHeaderHeight)];
     [self.suyuanInfoSectionHeaderView setBackgroundColor:[UIColor whiteColor]];
     UILabel *suyuanInfoTitleLabel = [UILabel new];
     [suyuanInfoTitleLabel setText:@"溯源信息"];
@@ -1147,7 +1151,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.width.mas_equalTo(self.tableView);
         make.centerX.mas_equalTo(self.tableView);
         make.height.mas_equalTo(mTableViewFooterHeight);
-        make.top.mas_equalTo(self.tableView.contentOffset.y + [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY - mTableViewFooterHeight);
+        make.top.mas_equalTo(self.tableView.contentOffset.y + (SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) - mTableViewFooterHeight);
     }];
     UILabel *buyLabel = [UILabel new];
     [buyLabel setBackgroundColor:[UIColor colorWithRed:230.0/255 green:82.0/255 blue:41.0/255 alpha:1.0]];
@@ -1172,7 +1176,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     }];
     [addToCartButton addTarget:self action:@selector(selectSpecificationAction) forControlEvents:UIControlEventTouchUpInside];
     
-    CGFloat distance = ([UIScreen mainScreen].bounds.size.width - 220.0 - 80) / 2;
+    CGFloat distance = (SCREEN_WIDTH - 220.0 - 80) / 2;
     
     UIView *supplierView = [UIView new];
     [self.tableViewFooterView addSubview:supplierView];
@@ -1249,6 +1253,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         make.centerX.mas_equalTo(cartView);
         make.top.mas_equalTo(cartView);
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoCartTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCartAction)];
+    [gotoCartTapGesture setNumberOfTapsRequired:1];
+    [cartView setUserInteractionEnabled:YES];
+    [cartView addGestureRecognizer:gotoCartTapGesture];
     
     self.cartCountLabel = [UILabel new];
     [self.cartCountLabel setHidden:YES];

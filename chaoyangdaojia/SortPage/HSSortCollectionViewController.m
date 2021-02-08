@@ -34,7 +34,6 @@ static const CGFloat mCategoryCellHeight = 90.f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self setEdgesForExtendedLayout:UIRectEdgeBottom];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.collectionView setBackgroundColor:[UIColor whiteColor]];
@@ -42,22 +41,24 @@ static const CGFloat mCategoryCellHeight = 90.f;
     // Register cell classes
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseCellIdentifier];
     
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"common_background"] forBarMetrics:UIBarMetricsDefault];
+    
     [self initView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO];
-    [self.tabBarController setTitle:@"分类"];
+    [self.navigationItem setTitle:@"分类"];
     
-    [self.tabBarController.navigationItem setRightBarButtonItem:self.rightSearchButtonItem];
+    [self.navigationItem setRightBarButtonItem:self.rightSearchButtonItem];
     [self.collectionView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    [self.tabBarController.navigationItem setRightBarButtonItem:nil];
+    [self.navigationItem setRightBarButtonItem:nil];
 }
 
 #pragma mark <UICollectionViewDataSource>
@@ -146,6 +147,7 @@ static const CGFloat mCategoryCellHeight = 90.f;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *categoryDataDict = self.categoryArray[indexPath.row];
     HSCategoryDetailViewController *controller = [[HSCategoryDetailViewController alloc] initWithCategoryData:categoryDataDict];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 

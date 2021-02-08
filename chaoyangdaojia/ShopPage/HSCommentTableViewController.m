@@ -8,6 +8,7 @@
 
 #import "HSCommentTableViewController.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -34,8 +35,6 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 
 static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mLoadMoreViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 @implementation HSCommentTableViewController
 
@@ -238,7 +237,12 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
             self.refreshLabel.text = @"松开刷新";
         }
         self.refreshView.tag = -1;
-    } else if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - ([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY)) {
+    } else {
+        // 下拉不足触发刷新
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+    if (scrollView.contentOffset.y >= (self.mloadMoreViewOffset + mLoadMoreViewHeight - (SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT))) {
         if (self.loadMoreView.hidden) {
             return;
         }
@@ -251,10 +255,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
         }
         self.loadMoreView.tag = 1;
     } else {
-        // 上拉不足触发加载、下拉不足触发刷新
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-        
+        // 上拉不足触发加载
         self.loadMoreView.tag = 0;
         if (self.nextCommentPage != 0) {
             [self.loadMoreLabel setText:@"上拉加载更多"];
@@ -303,7 +304,7 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.tableView.mas_top);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -346,11 +347,11 @@ static const NSInteger mTableViewBaseContentOffsetY = -88;
     [self.loadMoreView.layer setBorderWidth:0.5];
     [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [self.tableView addSubview:self.loadMoreView];
-    self.mloadMoreViewOffset = [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY;
+    self.mloadMoreViewOffset = SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT;
     [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tableView);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mLoadMoreViewHeight);
     }];
     self.loadMoreLabel = [UILabel new];

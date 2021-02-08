@@ -9,6 +9,7 @@
 #import "HSShopTableViewController.h"
 #import "HSShopDetailCollectionViewController.h"
 #import "HSNetwork.h"
+#import "HSCommon.h"
 #import <Masonry/Masonry.h>
 #import <Toast/Toast.h>
 
@@ -33,24 +34,24 @@ static const NSInteger mPerPage = 20;
 static const NSInteger mHeightForRow = 100;
 static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mLoadMoreViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
-static const NSInteger mTabBarHeight = 64;
 
 @implementation HSShopTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeBottom];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
-    //[self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 64, 0)];
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"common_background"] forBarMetrics:UIBarMetricsDefault];
+    
     self.shopArray = [NSMutableArray new];
     [self initView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tabBarController setTitle:@"商家店铺"];
+    [self.navigationItem setTitle:@"商家店铺"];
     [self.navigationController setNavigationBarHidden:NO];
     
     [self.tableView setFrame:self.view.frame];
@@ -164,6 +165,7 @@ static const NSInteger mTabBarHeight = 64;
     NSInteger shopId = [shopDict[@"id"] integerValue];
     HSShopDetailCollectionViewController *controller = [HSShopDetailCollectionViewController new];
     [controller setShopId:shopId];
+    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -174,17 +176,22 @@ static const NSInteger mTabBarHeight = 64;
 
 #pragma mark - UIScrollView Delegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGFloat loadMoreOffset = mTableViewBaseContentOffsetY + mLoadMoreViewHeight;
-    if ([self.shopArray count] * mHeightForRow > self.view.bounds.size.height + mTableViewBaseContentOffsetY) {
+    CGFloat loadMoreOffset = mLoadMoreViewHeight;
+    if ([self.shopArray count] * mHeightForRow > SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) {
         // tableView的contentheight超过了navigationBar下方到屏幕底部的高度
-        loadMoreOffset += [self.shopArray count] * mHeightForRow - (self.view.bounds.size.height + mTableViewBaseContentOffsetY);
+        loadMoreOffset += [self.shopArray count] * mHeightForRow - (SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
     }
-    if (scrollView.contentOffset.y <= (mTableViewBaseContentOffsetY - mRefreshViewHeight)) {
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
         if (self.refreshView.tag == 0) {
             self.refreshLabel.text = @"松开刷新";
         }
         self.refreshView.tag = -1;
-    } else if (scrollView.contentOffset.y >= loadMoreOffset + mTabBarHeight) {
+    } else {
+        // 下拉不足触发刷新
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+    if (scrollView.contentOffset.y >= loadMoreOffset + TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN) {
         if (self.loadMoreView.tag == 0) {
             if (self.nextLoadPage != 0) {
                 [self.loadMoreLabel setText:@"松开加载"];
@@ -194,10 +201,7 @@ static const NSInteger mTabBarHeight = 64;
         }
         self.loadMoreView.tag = 1;
     } else {
-        // 上拉不足触发加载、下拉不足触发刷新
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-        
+        // 上拉不足触发加载
         self.loadMoreView.tag = 0;
         if (self.nextLoadPage != 0) {
             [self.loadMoreLabel setText:@"上拉加载更多"];
@@ -244,7 +248,7 @@ static const NSInteger mTabBarHeight = 64;
     [self.refreshView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tableView.mas_top).with.offset(-mRefreshViewHeight);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mRefreshViewHeight);
     }];
     
@@ -288,9 +292,9 @@ static const NSInteger mTabBarHeight = 64;
     [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [self.tableView addSubview:self.loadMoreView];
     [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.tableView).mas_offset([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY);
+        make.top.mas_equalTo(self.tableView).mas_offset(SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
         make.centerX.mas_equalTo(self.tableView.mas_centerX);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+        make.width.mas_equalTo(SCREEN_WIDTH);
         make.height.mas_equalTo(mLoadMoreViewHeight);
     }];
     self.loadMoreLabel = [UILabel new];
@@ -303,7 +307,6 @@ static const NSInteger mTabBarHeight = 64;
         make.height.mas_equalTo(20);
     }];
 }
-
 
 - (void)getShopsByPage:(NSUInteger)page {
     HSNetworkManager *manager = [HSNetworkManager shareManager];
@@ -329,22 +332,20 @@ static const NSInteger mTabBarHeight = 64;
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 更新ui
                 [weakSelf.tableView reloadData];
-                NSLog(@"[UIScreen mainScreen].bounds.size.height = %f", [UIScreen mainScreen].bounds.size.height);
-                NSLog(@"view.bounds.size.height = %f", weakSelf.view.bounds.size.height);
-                if ([weakSelf.shopArray count] * mHeightForRow >= weakSelf.view.bounds.size.height + mTableViewBaseContentOffsetY) {
+                if ([weakSelf.shopArray count] * mHeightForRow >= SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) {
                     // tableView的contentSize.height > 屏幕高度
                     [weakSelf.loadMoreView mas_remakeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo([weakSelf.shopArray count] * mHeightForRow);
                         make.centerX.mas_equalTo(weakSelf.tableView.mas_centerX);
-                        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+                        make.width.mas_equalTo(SCREEN_WIDTH);
                         make.height.mas_equalTo(mLoadMoreViewHeight);
                     }];
                 } else {
                     // tableView内容过少
                     [weakSelf.loadMoreView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                        make.top.mas_equalTo(weakSelf.tableView).mas_offset([UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY);
+                        make.top.mas_equalTo(weakSelf.tableView).mas_offset(SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT);
                         make.centerX.mas_equalTo(weakSelf.tableView.mas_centerX);
-                        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+                        make.width.mas_equalTo(SCREEN_WIDTH);
                         make.height.mas_equalTo(mLoadMoreViewHeight);
                     }];
                 }

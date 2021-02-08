@@ -8,6 +8,7 @@
 
 #import "HSCategoryDetailViewController.h"
 #import "HSProductDetailViewController.h"
+#import "HSCartViewController.h"
 #import "HSTools.h"
 #import "HSNetwork.h"
 #import "HSCommon.h"
@@ -49,8 +50,6 @@ static const NSInteger mLeftListCellHeight = 40;
 static const NSInteger mRightContentCellHeight = 90;
 static const NSInteger mRefreshViewHeight = 60;
 static const NSInteger mLoadMoreViewHeight = 60;
-/* navigationBar高度44、状态栏（狗啃屏）高度44，contentInsetAdjustmentBehavior */
-static const NSInteger mTableViewBaseContentOffsetY = -88;
 
 static NSString * const reuseCellIdentifier = @"reusableCell";
 
@@ -69,6 +68,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
     [self initView];
@@ -274,7 +274,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.y <= -mRefreshViewHeight + mTableViewBaseContentOffsetY) {
+    if (scrollView.contentOffset.y <= -mRefreshViewHeight) {
         if (self.loadMoreView.hidden) {
             return;
         }
@@ -282,7 +282,12 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
             self.refreshLabel.text = @"松开刷新";
         }
         self.refreshView.tag = -1;
-    } else if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - [UIScreen mainScreen].bounds.size.height) {
+    } else {
+        // 下拉不足触发刷新
+        self.refreshView.tag = 0;
+        self.refreshLabel.text = @"下拉刷新";
+    }
+    if (scrollView.contentOffset.y >= self.mloadMoreViewOffset + mLoadMoreViewHeight - SCREEN_HEIGHT + STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT) {
         if (self.loadMoreView.hidden) {
             return;
         }
@@ -295,10 +300,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
         }
         self.loadMoreView.tag = 1;
     } else {
-        // 上拉不足触发加载、下拉不足触发刷新
-        self.refreshView.tag = 0;
-        self.refreshLabel.text = @"下拉刷新";
-        
+        // 上拉不足触发加载
         self.loadMoreView.tag = 0;
         if (self.nextProductPage != 0) {
             [self.loadMoreLabel setText:@"上拉加载更多"];
@@ -346,7 +348,8 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
 }
 
 - (void)gotoCartAction {
-    [self.view makeToast:@"点击了购物车图标" duration:3.f position:CSToastPositionCenter];
+    HSCartViewController *controller = [HSCartViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)addToCartAction:(UITapGestureRecognizer *)sender {
@@ -482,7 +485,7 @@ static NSString * const reuseCellIdentifier = @"reusableCell";
     [self.loadMoreView.layer setBorderWidth:0.5];
     [self.loadMoreView.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [self.rightContentTableView addSubview:self.loadMoreView];
-    self.mloadMoreViewOffset = [UIScreen mainScreen].bounds.size.height + mTableViewBaseContentOffsetY;
+    self.mloadMoreViewOffset = SCREEN_HEIGHT;
     [self.loadMoreView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.rightContentTableView);
         make.centerX.mas_equalTo(self.rightContentTableView);
