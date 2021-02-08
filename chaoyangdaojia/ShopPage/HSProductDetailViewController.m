@@ -10,6 +10,7 @@
 #import "HSCommentTableViewController.h"
 #import "HSProductSpecificationViewController.h"
 #import "HSAlertViewController.h"
+#import "HSCartViewController.h"
 #import "HSAccount.h"
 #import "HSNetwork.h"
 #import "HSTools.h"
@@ -844,6 +845,11 @@ static const NSInteger mRefreshViewHeight = 60;
     [self updateCollectionStatusById:self.productId];
 }
 
+- (void)gotoCartAction {
+    HSCartViewController *controller = [HSCartViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 #pragma mark - Notification
 - (void)chooseProductSpecificationAction:(NSNotification *)notification {
     // 更新商品详情页面中选择的商品规格信息
@@ -1247,6 +1253,11 @@ static const NSInteger mRefreshViewHeight = 60;
         make.centerX.mas_equalTo(cartView);
         make.top.mas_equalTo(cartView);
     }];
+    // 添加点击事件
+    UITapGestureRecognizer *gotoCartTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCartAction)];
+    [gotoCartTapGesture setNumberOfTapsRequired:1];
+    [cartView setUserInteractionEnabled:YES];
+    [cartView addGestureRecognizer:gotoCartTapGesture];
     
     self.cartCountLabel = [UILabel new];
     [self.cartCountLabel setHidden:YES];

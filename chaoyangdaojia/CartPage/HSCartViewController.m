@@ -734,7 +734,13 @@ static const NSInteger mRefreshViewHeight = 60;
 - (void)updateTableViewFooterViewPosition {
     static BOOL isSetContentInset = NO;
     // 更新底部吸附footerView
-    if (self.tableView.contentOffset.y >= self.tableView.contentSize.height + mTableViewFooterViewHeight - SCREEN_HEIGHT + STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT + TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN) {
+    // maxBottomOffsetY计算滑动到tableView底部，tableFooterView的OffsetY
+    CGFloat maxBottomOffsetY = self.tableView.contentSize.height + mTableViewFooterViewHeight - SCREEN_HEIGHT + STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT + TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN;
+    if (self.tabBarController.tabBar.hidden) {
+        // 默认tabBar是显示状态
+        maxBottomOffsetY -= TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN;
+    }
+    if (self.tableView.contentOffset.y >= maxBottomOffsetY) {
         if (!isSetContentInset) {
             [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, mTableViewFooterViewHeight, 0)];
             isSetContentInset = YES;
@@ -748,7 +754,12 @@ static const NSInteger mRefreshViewHeight = 60;
             isSetContentInset = NO;
         }
         [self.tableViewFooterView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN - mTableViewFooterViewHeight);
+            if (self.tabBarController.tabBar.hidden) {
+                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - mTableViewFooterViewHeight);
+            } else {
+                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(self.tableView.contentOffset.y + SCREEN_HEIGHT - STATUS_BAR_AND_NAVIGATION_BAR_HEIGHT - TAB_BAR_HEIGHT_AND_SAFE_BOTTOM_MARGIN - mTableViewFooterViewHeight);
+            }
+            
         }];
     }
 }

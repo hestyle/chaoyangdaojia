@@ -8,6 +8,7 @@
 
 #import "HSShopDetailCollectionViewController.h"
 #import "HSProductDetailViewController.h"
+#import "HSCartViewController.h"
 #import "HSTools.h"
 #import "HSNetwork.h"
 #import "HSCommon.h"
@@ -521,7 +522,8 @@ static NSString * const reuseHeaderIdentifier = @"reusableHeaderView";
 }
 
 - (void)gotoCartAction {
-    [self.view makeToast:@"点击了购物车图标！" duration:3.f position:CSToastPositionCenter];
+    HSCartViewController *controller = [HSCartViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)addToCartAction:(UITapGestureRecognizer *)sender {
